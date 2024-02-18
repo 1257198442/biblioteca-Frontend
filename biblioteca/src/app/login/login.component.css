@@ -1,0 +1,23 @@
+.registration{
+  color: white;
+  text-decoration: underline;
+  display: block;
+}
+main{
+  background-color: #3BAFBE;
+}
+h3{
+  color: white!important;
+  font-size: 25px!important;
+}
+mat-form-field{
+  width: 90%;
+}
+mat-dialog-actions button{
+  --mdc-filled-button-container-color: #3BAFBE!important;
+  --mdc-filled-button-label-text-color: white !important;
+  font-size: 20px;
+}
+mat-dialog-content{
+  padding-bottom: 0!important;
+}

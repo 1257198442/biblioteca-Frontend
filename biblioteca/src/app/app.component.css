@@ -1,0 +1,182 @@
+body{
+  font-size: 16px;
+  text-align: center;
+  min-width: 1100px;
+
+}
+
+.logo{
+  font-weight: 600;
+  font-size: 22px;
+  color: white;
+}
+
+ul{
+  background-color: #3BAFBE;
+  margin: 0;
+  text-align: center;
+  height: 55px;
+  overflow: hidden;
+  padding: 0;
+  user-select: none;
+}
+
+li{
+  list-style-type: none;
+  display: inline-block;
+  height: 55px;
+  line-height: 55px;
+}
+
+.nav-display a{
+  text-decoration: none;
+  color: white;
+  font-family: system-ui;
+  font-size: 1.25rem;
+  margin: 0 20px 0 20px;
+}
+
+.information{
+  float: right;
+  padding: 20px 20px 20px 20px;
+  background-color: #FFD166;
+  width: 160px;
+  height: 25px;
+}
+
+.information a{
+  color: #3BAFBE;
+  width:  calc(100% - 40px);
+  display: block;
+  text-align: center;
+}
+li:first-child:hover{
+  background-color: #3BAFBE;
+}
+li:first-child{
+  width: 180px;
+  text-align: center;
+}
+
+
+.information:hover +.personal,.personal:hover{
+  transform: translateY(-55px);
+}
+
+.personal{
+  width: 200px;
+  padding: 8px;
+  position: absolute;
+  right: 0;
+  z-index: 100;
+  transform: translateY(-800px);
+  transition: 0.75s ease-in-out;
+  text-align: center;
+}
+
+
+.personal p{
+  margin-bottom: 4px;
+}
+
+.description{
+  font-size: 16px;
+  font-weight: 200;
+}
+
+.user-name{
+  font-size: 20px!important;
+  transform: translateY(-16px);
+  margin: 0;
+}
+
+mat-card-content{
+  text-align: left;
+}
+
+mat-card-footer{
+  text-align: right;
+}
+
+mat-card-footer p{
+  font-size: 12px !important;
+  margin-top: 4px;
+  margin-bottom: 0;
+  font-weight: 200;
+}
+
+.personal a{
+  color: black;
+  font-size: 1.05rem;
+  font-weight: 200;
+  display: inherit;
+  height: 38px;
+  line-height: 38px;
+  padding-left: 8px;
+  border-radius: 8px;
+  margin: 0!important;
+}
+
+.personal a:hover{
+  background-color: #E3E5E7;
+}
+
+
+li:hover{
+  background-color: #2f8e98;
+}
+
+section{
+  min-height: 547px ;
+}
+
+@media screen and (max-width: 767px) {
+  .nav-display {
+    text-align: left;
+    display: none;
+  }
+
+  .nav-hidden{
+    display: block;
+  }
+
+  body{
+    min-width:767px ;
+  }
+
+}
+@media screen and (min-width: 768px) {
+  .nav-display {
+    text-align: left;
+    display: block;
+  }
+
+  .nav-hidden{
+    display: none;
+  }
+
+}
+.menu-btn{
+  color: white;
+  font-weight: 600;
+}
+
+a{
+  color: black;
+  text-decoration: none;
+}
+
+.menu{
+  position: absolute;
+  right: 12px;
+  top: 4px;
+}
+
+.name{
+  display: block;
+  position: absolute;
+  left: 12px;
+  top: 16px;
+  color: #f2f2f2;
+  font-weight: 600;
+}
