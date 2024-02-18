@@ -1,0 +1,73 @@
+<body>
+<nav>
+  <ul class="nav-display">
+    <li><p class="logo">LIBRARY</p></li>
+    <li><a routerLink="" routerLinkActive="active">Home</a></li>
+    <li ><a>Book</a></li>
+    <li *ngIf="!isLogin"><a>Sign up</a></li>
+
+    <li *ngIf="isLogin"> <a>Post Article</a></li>
+    <li *ngIf="isLogin"> <a>Management</a></li>
+    <li *ngIf="isLogin">
+      <a mat-button [matMenuTriggerFor]="menu">Records</a>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>Borrow Records</button>
+        <button mat-menu-item>Article Records</button>
+      </mat-menu>
+    </li>
+    <div *ngIf="isLogin" class="information"><a>{{userData.name}}</a></div>
+    <div *ngIf="!isLogin" class="information"><a (click)="login()"> Login</a></div>
+
+    <mat-card class="personal" *ngIf="isLogin">
+      <mat-card-title>
+        <p class="user-name">{{userData.name}}</p>
+      </mat-card-title>
+
+      <mat-card-content>
+        <a><mat-icon>person</mat-icon> Personal page</a>
+        <a><mat-icon>bookmark</mat-icon> My Bookmark</a>
+        <a (click)="logout()"><mat-icon>logout</mat-icon> Logout</a>
+      </mat-card-content>
+      <mat-card-footer>
+        <p>{{userData.createTime}}</p>
+      </mat-card-footer>
+    </mat-card>
+
+  </ul>
+  <ul class="nav-hidden">
+    <h1 class="name" *ngIf="library">{{library.name}}</h1>
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="menu">
+      <mat-icon class="menu-btn">menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" class="menu-nav">
+      <button mat-menu-item >
+        <a routerLink="" routerLinkActive="active">Home</a>
+      </button>
+      <button mat-menu-item *ngIf="!isLogin">
+        <a  (click)="login()">Login</a>
+      </button>
+      <button mat-menu-item *ngIf="isLogin">
+        <a routerLink="home" routerLinkActive="active" (click)="logout()">Logout</a>
+      </button>
+      <button mat-menu-item *ngIf="isLogin">
+        <a>Post Article</a>
+      </button>
+      <button mat-menu-item *ngIf="isLogin">
+        <a>Article Record</a>
+      </button>
+      <button mat-menu-item *ngIf="isLogin">
+        <a>Management</a>
+      </button>
+      <button mat-menu-item *ngIf="isLogin">
+        <a>Borrow Records</a>
+      </button>
+      <button mat-menu-item *ngIf="isLogin">
+        <a>Personal page</a>
+      </button>
+    </mat-menu>
+  </ul>
+</nav>
+<section>
+  <router-outlet ></router-outlet>
+</section>
+</body>
