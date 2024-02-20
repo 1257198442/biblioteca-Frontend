@@ -12,17 +12,21 @@ import {MatOptionModule} from "@angular/material/core";
 import {MatInputModule} from "@angular/material/input";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatSelectModule} from "@angular/material/select";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatButtonModule} from "@angular/material/button";
+import {SignUpComponent} from "./sign-up/sign-up.component";
+import {AlertDialogComponent} from "./sign-up/alert-dialog.component";
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    SignUpComponent,
+    AlertDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +42,9 @@ import {MatButtonModule} from "@angular/material/button";
     HttpClientModule,
     MatSnackBarModule,
     BrowserAnimationsModule,
-    MatButtonModule
+    MatButtonModule,
+    ReactiveFormsModule,
+
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

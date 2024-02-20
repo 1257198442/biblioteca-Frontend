@@ -8,6 +8,7 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Login} from "../model/user.model";
 import {EndPoints} from "../endPoints";
 import {countriesDialCodes} from "../model/countryDialCode.model";
+import {SignUpComponent} from "../sign-up/sign-up.component";
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -19,6 +20,7 @@ export class LoginComponent {
      constructor(private http:HttpClient,
                  private snackBar: MatSnackBar,
                  private loginService:authService,
+                 private dialog:MatDialog,
                  public dialogRef: MatDialogRef<LoginComponent>) {
        this.loginData=new Login("","");
      }
@@ -48,6 +50,12 @@ export class LoginComponent {
            )
        }
      }
+  registration():void{
+    this.dialog.open(SignUpComponent,
+      {
+        width:"470px",
+      });
+  }
   public showError(notification: string): void {
       this.snackBar.open(notification, 'Error', {duration: 5000});
   }
