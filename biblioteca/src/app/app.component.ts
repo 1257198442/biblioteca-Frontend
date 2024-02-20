@@ -14,7 +14,6 @@ import {SignUpComponent} from "./sign-up/sign-up.component";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent{
-  avatarUrl:string = "";
   isLogin:boolean = false;
   userData:UserClass=new UserClass("","",new Date(),"","",false);
   library:any;
@@ -84,6 +83,10 @@ export class AppComponent{
         this.showError(error)
       }
     )
+  }
+
+  admin():boolean{
+    return this.userData.admin==="ADMINISTRATOR"||this.userData.admin==="ROOT"
   }
 
   public showError(notification: string): void {
