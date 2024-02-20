@@ -6,6 +6,7 @@ import {HttpClient} from "@angular/common/http";
 import {UserClass} from "./model/user.model";
 import {LoginComponent} from "./login/login.component";
 import {authService} from "./AuthService";
+import {SignUpComponent} from "./sign-up/sign-up.component";
 
 @Component({
   selector: 'app-root',
@@ -65,6 +66,14 @@ export class AppComponent{
     this.userAdmin="";
     sessionStorage.removeItem('jwtToken');
     this.isLogin=false;
+  }
+
+  registration():void{
+    this.dialog.open(SignUpComponent,
+      {
+        width:"470px",
+      }).afterClosed()
+      .subscribe(()=>this.login());
   }
 
   getUserData(){
