@@ -7,7 +7,7 @@
     <li *ngIf="!isLogin"><a (click)="registration()">Sign up</a></li>
 
     <li *ngIf="isLogin"> <a>Post Article</a></li>
-    <li *ngIf="isLogin"> <a>Management</a></li>
+    <li *ngIf="admin()&&isLogin"> <a>Management</a></li>
     <li *ngIf="isLogin">
       <a mat-button [matMenuTriggerFor]="menu">Records</a>
       <mat-menu #menu="matMenu">
@@ -55,7 +55,7 @@
       <button mat-menu-item *ngIf="isLogin">
         <a>Article Record</a>
       </button>
-      <button mat-menu-item *ngIf="isLogin">
+      <button mat-menu-item *ngIf="admin()&&isLogin">
         <a>Management</a>
       </button>
       <button mat-menu-item *ngIf="isLogin">
