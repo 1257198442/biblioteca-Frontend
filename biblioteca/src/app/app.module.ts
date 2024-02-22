@@ -19,6 +19,12 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatButtonModule} from "@angular/material/button";
 import {SignUpComponent} from "./sign-up/sign-up.component";
 import {AlertDialogComponent} from "./sign-up/alert-dialog.component";
+import {HomeComponent} from "./home/home.component";
+import {ManagementComponent} from "./management/management.component";
+import {MatTableModule} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 @NgModule({
@@ -26,7 +32,9 @@ import {AlertDialogComponent} from "./sign-up/alert-dialog.component";
     AppComponent,
     LoginComponent,
     SignUpComponent,
-    AlertDialogComponent
+    AlertDialogComponent,
+    HomeComponent,
+    ManagementComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +52,10 @@ import {AlertDialogComponent} from "./sign-up/alert-dialog.component";
     BrowserAnimationsModule,
     MatButtonModule,
     ReactiveFormsModule,
+    MatTableModule,
+    MatSortModule,
+    MatTabsModule,
+    MatPaginatorModule,
 
   ],
   providers: [DatePipe],
