@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {EndPoints} from "./endPoints";
+
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
@@ -7,6 +7,7 @@ import {UserClass} from "./model/user.model";
 import {LoginComponent} from "./login/login.component";
 import {authService} from "./AuthService";
 import {SignUpComponent} from "./sign-up/sign-up.component";
+import {endPoints} from "./endPoints";
 
 @Component({
   selector: 'app-root',
@@ -76,7 +77,7 @@ export class AppComponent{
   }
 
   getUserData(){
-    this.http.get(EndPoints.user+"/"+this.userTelephone,this.transmit.optionsAuthorization2()).subscribe(
+    this.http.get(endPoints.user+"/"+this.userTelephone,this.transmit.optionsAuthorization2()).subscribe(
       (data:any)=>{
         this.userData=data.body;
       },(error)=>{
@@ -86,7 +87,7 @@ export class AppComponent{
   }
 
   admin():boolean{
-    return this.userData.admin==="ADMINISTRATOR"||this.userData.admin==="ROOT"
+    return this.userData.role==="ADMINISTRATOR"||this.userData.role==="ROOT"
   }
 
   public showError(notification: string): void {

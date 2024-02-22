@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {EndPoints} from "../endPoints";
+import {endPoints} from "../endPoints";
 import {RegistrationClass} from "../model/registration.model";
 
 import {FormControl, Validators} from "@angular/forms";
@@ -30,7 +30,7 @@ export class SignUpComponent {
     this.registrationData.telephone=this.dialCode+this.registrationData.telephone;
 
     if(this.notNull()){
-      this.http.post(EndPoints.user,this.registrationData)
+      this.http.post(endPoints.user,this.registrationData)
         .subscribe((data:any)=>{
           const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
             width:'500px',

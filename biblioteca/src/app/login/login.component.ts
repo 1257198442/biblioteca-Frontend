@@ -6,7 +6,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {authService} from "../AuthService";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Login} from "../model/user.model";
-import {EndPoints} from "../endPoints";
+import {endPoints} from "../endPoints";
 import {countriesDialCodes} from "../model/countryDialCode.model";
 import {SignUpComponent} from "../sign-up/sign-up.component";
 @Component({
@@ -28,7 +28,7 @@ export class LoginComponent {
      login():void {
        this.loginData.telephone=this.dialCode+this.loginData.telephone;
        if (this.loginData.telephone != "" && this.loginData.password != "") {
-         this.http.post(EndPoints.user + "/login", {},this.loginService.optionsAuthorization1(this.loginData))
+         this.http.post(endPoints.user + "/login", {},this.loginService.optionsAuthorization1(this.loginData))
            .subscribe(
              (response:any) => {
                 const token = response.body.token;
