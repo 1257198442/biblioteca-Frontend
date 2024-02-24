@@ -50,6 +50,61 @@
         <mat-paginator #userPaginator [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator>
       </mat-tab>
 
+      <mat-tab label="LIBRARY">
+        <mat-card-title>
+          <h1>Library Setting</h1>
+        </mat-card-title>
+        <mat-card-content>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData" >
+            <mat-label>Phone</mat-label>
+            <input matInput  [(ngModel)]="updateLibraryData.telephone" [disabled]="!isRoot()">
+          </mat-form-field>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
+            <mat-label>Email</mat-label>
+            <input matInput  [(ngModel)]="updateLibraryData.email" [disabled]="!isRoot()">
+          </mat-form-field>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
+            <mat-label>address</mat-label>
+            <input matInput  [(ngModel)]="updateLibraryData.address" [disabled]="!isRoot()">
+          </mat-form-field>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
+            <mat-label>Postal Code</mat-label>
+            <input matInput  [(ngModel)]="updateLibraryData.postalCode" [disabled]="!isRoot()">
+          </mat-form-field>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
+            <mat-label>Business Hours</mat-label>
+            <input matInput  [(ngModel)]="updateLibraryData.businessHours" [disabled]="!isRoot()">
+          </mat-form-field>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
+            <mat-label>Introduction</mat-label>
+            <textarea matInput  [(ngModel)]="updateLibraryData.introduction" maxlength="150" [disabled]="!isRoot()"></textarea>
+            <mat-hint>Maximum 150 characters</mat-hint>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
+            <mat-label>Google Mail Address</mat-label>
+            <input matInput  [(ngModel)]="updateLibraryData.googleMail" [disabled]="!isRoot()">
+          </mat-form-field>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
+            <mat-label>Instagram Address</mat-label>
+            <input matInput  [(ngModel)]="updateLibraryData.instagram" [disabled]="!isRoot()">
+          </mat-form-field>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
+            <mat-label>Facebook Address</mat-label>
+            <input matInput  [(ngModel)]="updateLibraryData.facebook" [disabled]="!isRoot()">
+          </mat-form-field>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
+            <mat-label>Discord Address</mat-label>
+            <input matInput  [(ngModel)]="updateLibraryData.discord" [disabled]="!isRoot()">
+          </mat-form-field>
+          <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
+            <mat-label>Twitter Address</mat-label>
+            <input matInput  [(ngModel)]="updateLibraryData.twitter" [disabled]="!isRoot()">
+          </mat-form-field>
+          <br>
+          <button mat-flat-button (click)="updateLibrary()" *ngIf="isRoot()">OK</button>
+        </mat-card-content>
+      </mat-tab>
+
     </mat-tab-group>
   </mat-card-content>
 </mat-card>

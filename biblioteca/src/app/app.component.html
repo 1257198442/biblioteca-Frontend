@@ -26,7 +26,7 @@
       <mat-card-content>
         <a><mat-icon>person</mat-icon> Personal page</a>
         <a><mat-icon>bookmark</mat-icon> My Bookmark</a>
-        <a (click)="logout()"><mat-icon>logout</mat-icon> Logout</a>
+        <a routerLink="home" routerLinkActive="active"  (click)="logout()"><mat-icon>logout</mat-icon> Logout</a>
       </mat-card-content>
       <mat-card-footer>
         <p>{{userData.createTime}}</p>

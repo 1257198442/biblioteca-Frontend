@@ -18,13 +18,7 @@ import {AlertDialogComponent} from "../sign-up/alert-dialog.component";
 })
 export class ManagementComponent{
   @ViewChild('userPaginator') userPaginator!: MatPaginator;
-  @ViewChild('bookPaginator') bookPaginator!: MatPaginator;
-  @ViewChild('authorPaginator') authorPaginator!: MatPaginator;
-
   @ViewChild('userSort') userSort!: MatSort;
-  @ViewChild('bookSort') bookSort!: MatSort;
-  @ViewChild('authorSort') authorSort!: MatSort;
-
   lowForUserList:string[]=["telephone","name","email","admin","modify_permissions","view"];
   rolesListROOT:string[]=["ADMINISTRATOR","CLIENT","BAN"];
   rolesListADMINISTRATOR:string[]=["ADMINISTRATOR","CLIENT"];
@@ -32,6 +26,8 @@ export class ManagementComponent{
   private errorNotification = undefined;
   userAdmin:string="";
   userTelephone:string=""
+  origenLibraryData:any;
+  updateLibraryData:any;
   constructor(private http:HttpClient,
               private user:authService,
               private dialog:MatDialog,
@@ -50,6 +46,7 @@ export class ManagementComponent{
   init(){
     if(this.userTelephone != ""){
       this.getAllUserList();
+      this.getLibraryData();
     }
   }
   userDataSource:any;
@@ -65,6 +62,14 @@ export class ManagementComponent{
       },(error)=>{console.log(error)})
     }
 
+  getLibraryData(){
+    this.http.get(endPoints.library+"/BIBLIOTECA").subscribe((data:any)=>{
+      this.origenLibraryData = data;
+      this.updateLibraryData = Object.assign({}, this.origenLibraryData);
+    },(error)=>{
+      console.log(error)
+    })
+  }
 
   userDataInit() {
     this.userDataSource.paginator = this.userPaginator;
@@ -191,5 +196,36 @@ export class ManagementComponent{
     }
     return true;
   }
+
+  updateLibrary(){
+    if(this.origenLibraryData !== this.updateLibraryData){
+      const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
+        width:'500px',
+        data:{
+          title:'Reminders',
+          message:'Confirmation of changes to library data? This will modify the data displayed in the footer!!',
+          confirm:true
+        }
+      })
+      dialogRef.afterClosed().subscribe(res=>{
+        if(res==='confirm'){
+          this.http.put(endPoints.library+"/BIBLIOTECA",this.updateLibraryData,this.user.optionsAuthorization2())
+            .subscribe((data:any)=>{
+                this.dialog.open(AlertDialogComponent,{
+                  width:"500px",
+                  data:{
+                    title:'Reminders',
+                    message:'Modified successfully',
+                    confirm:false
+                  }
+                })
+              this.getLibraryData();
+                }
+              ,(error)=>{console.log(error)})
+        }
+      })
+    }
+  }
+
 }
 
