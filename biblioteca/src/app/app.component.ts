@@ -8,24 +8,27 @@ import {LoginComponent} from "./login/login.component";
 import {authService} from "./AuthService";
 import {SignUpComponent} from "./sign-up/sign-up.component";
 import {endPoints} from "./endPoints";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent{
+export class AppComponent implements OnInit{
   isLogin:boolean = false;
   userData:UserClass=new UserClass("","",new Date(),"","",false);
   library:any;
   userAdmin:string="";
   userTelephone:string=""
   storedToken:any;
+
   constructor(private http:HttpClient,
               private dialog:MatDialog,
               private transmit:authService,
-              private snackBar: MatSnackBar) {
-
+              private snackBar: MatSnackBar,
+              private router: Router) {
+    this.getLibraryData();
     setInterval(() => {
       const currentToken = sessionStorage.getItem('jwtToken');
       if (currentToken !== this.storedToken) {
@@ -92,6 +95,21 @@ export class AppComponent{
 
   public showError(notification: string): void {
     this.snackBar.open(notification, 'Error', {duration: 5000});
+  }
+
+  getLibraryData(){
+    this.http.get(endPoints.library+"/BIBLIOTECA")
+      .subscribe((data:any)=>{
+        this.library = data;
+      },(error)=>{this.showError(error)})
+  }
+
+  ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.getLibraryData()
+      }
+    });
   }
 }
 

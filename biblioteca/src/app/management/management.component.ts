@@ -211,7 +211,7 @@ export class ManagementComponent{
         if(res==='confirm'){
           this.http.put(endPoints.library+"/BIBLIOTECA",this.updateLibraryData,this.user.optionsAuthorization2())
             .subscribe((data:any)=>{
-                this.dialog.open(AlertDialogComponent,{
+                const dialogRef1 =this.dialog.open(AlertDialogComponent,{
                   width:"500px",
                   data:{
                     title:'Reminders',
@@ -219,6 +219,9 @@ export class ManagementComponent{
                     confirm:false
                   }
                 })
+              dialogRef1.afterClosed().subscribe(()=>{
+                this.router.navigateByUrl('/home');
+              })
               this.getLibraryData();
                 }
               ,(error)=>{console.log(error)})
