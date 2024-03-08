@@ -59,15 +59,15 @@ export class ManagementComponent{
       this.http.get(endPoints.user,this.user.optionsAuthorization2()).subscribe((data:any)=>{
         this.userDataSource = new MatTableDataSource(data.body);
         this.userDataInit();
-      },(error)=>{console.log(error)})
+      },(error)=>{this.showError(error.message)})
     }
 
   getLibraryData(){
-    this.http.get(endPoints.library+"/BIBLIOTECA").subscribe((data:any)=>{
+    this.http.get(endPoints.library).subscribe((data:any)=>{
       this.origenLibraryData = data;
       this.updateLibraryData = Object.assign({}, this.origenLibraryData);
     },(error)=>{
-      console.log(error)
+      this.showError(error.message)
     })
   }
 
@@ -105,7 +105,7 @@ export class ManagementComponent{
           if(res==='confirm'){
             this.http.put(endPoints.user+"/"+telephone+"/role","ADMINISTRATOR",this.user.optionsAuthorization2()).subscribe(
               (data:any)=>{this.getAllUserList()},(error)=>{
-                console.log(error)
+                this.showError(error.message)
               }
             )
           }
@@ -125,7 +125,7 @@ export class ManagementComponent{
       if(res==='confirm'){
         this.http.put(endPoints.user+"/"+telephone+"/role","CLIENT",this.user.optionsAuthorization2()).subscribe(
           (data:any)=>{this.getAllUserList()},(error)=>{
-            console.log(error)
+            this.showError(error.message)
           }
         )
       }
@@ -146,7 +146,7 @@ export class ManagementComponent{
         this.http.put(endPoints.user+"/"+telephone+"/role","BAN",this.user.optionsAuthorization2()).subscribe(
           (data:any)=>{
             this.getAllUserList()},(error)=>{
-            console.log(error)
+            this.showError(error.message)
           }
         )
       }
@@ -188,10 +188,10 @@ export class ManagementComponent{
     if (this.userTelephone === element.telephone) {
       return false;
     }
-    if (element.admin === 'ROOT') {
+    if (element.role === 'ROOT') {
       return false;
     }
-    if (this.userAdmin === 'ADMINISTRATOR' && (element.admin === 'ADMINISTRATOR' || element.admin === 'BAN')) {
+    if (this.userAdmin === 'ADMINISTRATOR' && (element.role === 'ADMINISTRATOR' || element.role === 'BAN')) {
       return false;
     }
     return true;
@@ -209,7 +209,7 @@ export class ManagementComponent{
       })
       dialogRef.afterClosed().subscribe(res=>{
         if(res==='confirm'){
-          this.http.put(endPoints.library+"/BIBLIOTECA",this.updateLibraryData,this.user.optionsAuthorization2())
+          this.http.put(endPoints.library,this.updateLibraryData,this.user.optionsAuthorization2())
             .subscribe((data:any)=>{
                 const dialogRef1 =this.dialog.open(AlertDialogComponent,{
                   width:"500px",
@@ -224,11 +224,12 @@ export class ManagementComponent{
               })
               this.getLibraryData();
                 }
-              ,(error)=>{console.log(error)})
+              ,(error)=>{this.showError(error.message)})
         }
       })
     }
   }
+
 
 }
 

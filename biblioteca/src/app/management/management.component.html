@@ -28,7 +28,7 @@
             <td mat-cell *matCellDef="let element" > {{element.role}} </td>
           </ng-container>
           <ng-container matColumnDef="modify_permissions">
-            <th mat-header-cell *matHeaderCellDef> Permissions </th>
+            <th mat-header-cell *matHeaderCellDef> Role </th>
             <td mat-cell *matCellDef="let element">
               <div *ngIf="shouldDisplayElement(element)">
                   <select #select [ngModel]="element.role" class="admin-list">

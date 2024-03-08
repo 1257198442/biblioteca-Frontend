@@ -10,8 +10,8 @@ export class authService {
   constructor(public router:Router) {
   }
 
-  public optionsAuthorization1(loginData:any){
-    const heard = new HttpHeaders().append('Authorization', 'Basic ' + btoa(loginData.telephone + ":" + loginData.password))
+  public optionsAuthorization1(loginData:any,dialCode:string){
+    const heard = new HttpHeaders().append('Authorization', 'Basic ' + btoa(dialCode+loginData.telephone + ":" + loginData.password))
     const options: any = {
       headers: heard,
       params: new HttpParams(),

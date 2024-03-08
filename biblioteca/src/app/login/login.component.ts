@@ -26,9 +26,8 @@ export class LoginComponent {
      }
 
      login():void {
-       this.loginData.telephone=this.dialCode+this.loginData.telephone;
        if (this.loginData.telephone != "" && this.loginData.password != "") {
-         this.http.post(endPoints.user + "/login", {},this.loginService.optionsAuthorization1(this.loginData))
+         this.http.post(endPoints.user + "/login", {},this.loginService.optionsAuthorization1(this.loginData,this.dialCode))
            .subscribe(
              (response:any) => {
                 const token = response.body.token;

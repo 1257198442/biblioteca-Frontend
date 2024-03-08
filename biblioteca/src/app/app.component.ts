@@ -84,7 +84,7 @@ export class AppComponent implements OnInit{
       (data:any)=>{
         this.userData=data.body;
       },(error)=>{
-        this.showError(error)
+        this.showError(error.message)
       }
     )
   }
@@ -98,10 +98,10 @@ export class AppComponent implements OnInit{
   }
 
   getLibraryData(){
-    this.http.get(endPoints.library+"/BIBLIOTECA")
+    this.http.get(endPoints.library)
       .subscribe((data:any)=>{
         this.library = data;
-      },(error)=>{this.showError(error)})
+      },(error)=>{this.showError(error.message)})
   }
 
   ngOnInit() {
