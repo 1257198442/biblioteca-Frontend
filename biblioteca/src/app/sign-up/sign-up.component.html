@@ -1,0 +1,44 @@
+<main>
+<h3 mat-dialog-title>Sign up</h3>
+<mat-dialog-content>
+  <mat-form-field>
+    <input [(ngModel)]="registrationData.name" matInput placeholder="Name" type="text"/>
+    <button (click)="registrationData.name=''" *ngIf="registrationData.name" aria-label="Clear"  mat-icon-button
+            matSuffix>
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <br>
+  <mat-form-field style="width: 33%">
+    <mat-select value="+34" (change)="onSelectCountryDialCode($event)" >
+      <mat-option [value]="countryDialCode.dialCode"  *ngFor="let countryDialCode of countriesDialCodes" >
+        {{countryDialCode.dialCode}}[{{countryDialCode.abbreviation}}]
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field style="width: 55%;margin-left: 2%">
+    <input [(ngModel)]="registrationData.telephone" matInput placeholder="Telephone" type="tel"/>
+    <button (click)="registrationData.telephone=''" *ngIf="registrationData.telephone" aria-label="Clear" mat-icon-button
+            matSuffix>
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
+    <mat-error *ngIf="emailCorrectFormat(1)">
+      Please enter a valid email address
+    </mat-error>
+    <mat-error *ngIf="emailCorrectFormat(2)">
+      Email is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input [(ngModel)]="registrationData.password" matInput placeholder="Password" type="password"/>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button mat-dialog-close>Cancel</button>
+  <button (click)="Registration()" [disabled]="!notNull()" mat-flat-button>OK</button>
+</mat-dialog-actions>
+</main>

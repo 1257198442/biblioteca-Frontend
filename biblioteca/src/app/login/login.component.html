@@ -1,0 +1,31 @@
+<main>
+<h3 mat-dialog-title>Library Login</h3>
+<mat-dialog-content>
+  <mat-form-field style="width: 33%">
+    <mat-select value="+34" (change)="onSelectCountryDialCode($event)" >
+      <mat-option [value]="countryDialCode.dialCode"  *ngFor="let countryDialCode of countriesDialCodes" >
+        {{countryDialCode.dialCode}}[{{countryDialCode.abbreviation}}]
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="tel" style="width: 55%;margin-left: 2%;transform: translateY(8px)">
+    <mat-label>Telephone</mat-label>
+    <input [(ngModel)]="loginData.telephone" matInput placeholder="Telephone" type="text"/>
+    <button (click)="loginData.telephone='';loginData.password=''" *ngIf="loginData.telephone" aria-label="Clear" mat-icon-button
+            matSuffix>
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input [(ngModel)]="loginData.password" matInput placeholder="Password" type="password"/>
+  </mat-form-field>
+  <a class="registration" (click)="registration()">I don't have an account</a>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button mat-dialog-close>CANCEL</button>
+  <button (click)="login()" mat-flat-button>LOGIN</button>
+</mat-dialog-actions>
+</main>
+
+
