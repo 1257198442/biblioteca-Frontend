@@ -21,6 +21,9 @@ export class PersonalPageComponent {
   maxDate: Date;
   userUpdate:any;
   editProfileState= 0;
+  avatarUrl:string="";
+  avatarSelectUrl:string="";
+  file: File | undefined;
 
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
               private user:authService,
@@ -43,6 +46,7 @@ export class PersonalPageComponent {
   getUserData(telephone:string){
     this.http.get(endPoints.user+"/"+telephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
       this.userData = data.body;
+      this.getAvatar();
       this.getWallet();
       this.userUpdate={
         name:this.userData.name,
@@ -58,9 +62,7 @@ export class PersonalPageComponent {
     if(this.isLoginUser()||this.userAdmin=='ROOT'){
       this.http.get(endPoints.wallet+"/"+this.userData.telephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
         this.wallet = data.body.balance;
-      },(error)=>{
-        this.showError(error)
-      })
+      },error=> this.showError(error))
     }
 
   }
@@ -85,9 +87,40 @@ export class PersonalPageComponent {
       console.log(time)
       this.http.put(endPoints.user+"/"+this.userData.telephone,this.userUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
         this.getUserData(this.userData.telephone);
-      },(error)=>{
-        console.log(error);
-      })
+      },error=>this.showError(error)
+      )
+    }
+  }
+
+  getAvatar(){
+    this.http.get(endPoints.avatar+"/"+this.userData.telephone).subscribe((data:any)=>{
+      this.avatarUrl = data.url;
+      this.avatarSelectUrl = this.avatarUrl;
+    },error=> this.showError(error)
+    )
+  }
+
+  onFileSelected(event: any): void {
+    this.file = event.target.files[0];
+    const reader: FileReader = new FileReader();
+    reader.onload = (e: any) => {
+      this.avatarSelectUrl = e.target.result;
+    };
+    // @ts-ignore
+    if(this.file){
+      reader.readAsDataURL(this.file);
+    }else {
+      this.avatarSelectUrl = this.avatarUrl;
+    }
+  }
+
+  avatarUpdate(){
+    if(this.avatarSelectUrl!=""){
+      const formData = new FormData();
+      formData.append('file', this.file as Blob);
+      this.http.put(endPoints.avatar+"/"+this.userData.telephone,formData,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+        this.getUserData(this.userData.telephone);
+      },error => this.showError(error))
     }
   }
 
