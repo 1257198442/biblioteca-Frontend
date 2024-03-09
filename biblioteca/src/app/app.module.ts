@@ -25,6 +25,7 @@ import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {PersonalPageComponent} from "./home/personal-page/personal-page.component";
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     SignUpComponent,
     AlertDialogComponent,
     HomeComponent,
-    ManagementComponent
+    ManagementComponent,
+    PersonalPageComponent
   ],
   imports: [
     BrowserModule,

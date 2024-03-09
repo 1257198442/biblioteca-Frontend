@@ -3,12 +3,13 @@ import {Component, OnInit} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
-import {UserClass} from "./model/user.model";
+import {setting, UserClass} from "./model/user.model";
 import {LoginComponent} from "./login/login.component";
 import {authService} from "./AuthService";
 import {SignUpComponent} from "./sign-up/sign-up.component";
 import {endPoints} from "./endPoints";
 import {NavigationEnd, Router} from "@angular/router";
+import {PersonalPageComponent} from "./home/personal-page/personal-page.component";
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ import {NavigationEnd, Router} from "@angular/router";
 })
 export class AppComponent implements OnInit{
   isLogin:boolean = false;
-  userData:UserClass=new UserClass("","",new Date(),"","",false);
+  userData:UserClass=new UserClass("","",new Date(),"","","",true,"",new setting(true,true));
   library:any;
   userAdmin:string="";
   userTelephone:string=""
@@ -41,7 +42,6 @@ export class AppComponent implements OnInit{
       }
     }, 1000);
   }
-
 
   login():void{
     this.dialog.open(LoginComponent, {
@@ -110,6 +110,20 @@ export class AppComponent implements OnInit{
         this.getLibraryData()
       }
     });
+  }
+
+  openPersonalPage(){
+    this.dialog.open(PersonalPageComponent,{
+      width:"800px",
+      minWidth:"800px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        telephone:this.userData.telephone,
+      }
+    }).afterClosed().subscribe(()=>{
+      this.getUserData()
+    })
   }
 }
 

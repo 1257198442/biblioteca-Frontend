@@ -1,0 +1,110 @@
+mat-card{
+  text-align: center;
+  padding: 20px;
+}
+
+mat-card-content{
+  text-align: left;
+}
+
+mat-card-content p{
+  width: 500px;
+  height: auto;
+  font-weight: 200;
+}
+
+.avatar{
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+.avatarBox{
+  position: absolute;
+  right: 150px;
+  top:70px;
+  float: left;
+}
+
+.wallet{
+  display: initial;
+}
+
+.modify{
+  margin-top: 12px;
+}
+
+mat-expansion-panel{
+  margin-bottom: 20px!important;
+}
+
+.recharge{
+  display: initial;
+  border: 1px black solid;
+  padding: 2px;
+  margin-left: 20px;
+}
+
+.billing-records{
+  display: initial;
+  border: 1px black solid;
+  padding: 2px;
+  margin-left: 20px;
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+.setting-box{
+  text-align: left;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: #F2F2F2;
+}
+
+.avatar-save{
+  position: absolute;
+  left: 28px;
+  height: 24px;
+  top: 63px;
+}
+
+.overlay label{
+  width:120px;
+  height: 120px;
+  text-align: center;
+  position: absolute;
+  bottom: 4px;
+}
+
+label h3{
+  width: 100%;
+  position: absolute;
+  bottom: 4px;
+  margin: 0;
+}
+
+.image-container:hover .overlay {
+  opacity: 1;
+}
+
+.fileInput{
+  position: absolute;
+  clip: rect(0 0 0 0);
+}
+
+.confirm_password{
+  text-align: left;
+  color: #FF6B6B;
+  margin: 0;
+}
