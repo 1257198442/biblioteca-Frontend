@@ -23,6 +23,7 @@ export class AppComponent implements OnInit{
   userAdmin:string="";
   userTelephone:string=""
   storedToken:any;
+  avatarUrl:string = "";
 
   constructor(private http:HttpClient,
               private dialog:MatDialog,
@@ -46,8 +47,7 @@ export class AppComponent implements OnInit{
   login():void{
     this.dialog.open(LoginComponent, {
       width:"470px",
-    })
-      .afterClosed().subscribe(()=> {
+    }).afterClosed().subscribe(()=> {
       this.getClientData();
       if(this.userTelephone!=""){
         this.getUserData();
@@ -55,6 +55,7 @@ export class AppComponent implements OnInit{
       }
     });
   }
+
   getClientData(){
     const jwtToken = sessionStorage.getItem('jwtToken');
     if (jwtToken) {
@@ -64,6 +65,7 @@ export class AppComponent implements OnInit{
       this.userAdmin = decodedPayload.role;
     }
   }
+
   logout():void{
     this.userTelephone="";
     this.userAdmin="";
@@ -83,6 +85,7 @@ export class AppComponent implements OnInit{
     this.http.get(endPoints.user+"/"+this.userTelephone,this.transmit.optionsAuthorization2()).subscribe(
       (data:any)=>{
         this.userData=data.body;
+        this.getAvatar();
       },(error)=>{
         this.showError(error.message)
       }
@@ -125,5 +128,12 @@ export class AppComponent implements OnInit{
       this.getUserData()
     })
   }
-}
 
+  getAvatar():void{
+    this.http.get(endPoints.avtar+"/"+this.userTelephone)
+      .subscribe(
+        (data:any)=>{this.avatarUrl=data.url},
+        (error:any)=>{this.showError(error)}
+      )
+  }
+}

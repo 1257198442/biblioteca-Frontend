@@ -10,6 +10,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {AlertDialogComponent} from "../sign-up/alert-dialog.component";
+import {PersonalPageComponent} from "../home/personal-page/personal-page.component";
 
 @Component({
   selector: 'app-management',
@@ -229,7 +230,19 @@ export class ManagementComponent{
       })
     }
   }
-
+  openPersonalPage(telephone:string){
+    this.dialog.open(PersonalPageComponent,{
+      width:"800px",
+      minWidth:"800px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        telephone:telephone,
+      }
+    }).afterClosed().subscribe(()=>{
+      this.getAllUserList()
+    })
+  }
 
 }
 
