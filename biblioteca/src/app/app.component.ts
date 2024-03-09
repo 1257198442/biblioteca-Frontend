@@ -130,7 +130,7 @@ export class AppComponent implements OnInit{
   }
 
   getAvatar():void{
-    this.http.get(endPoints.avtar+"/"+this.userTelephone)
+    this.http.get(endPoints.avatar+"/"+this.userTelephone)
       .subscribe(
         (data:any)=>{this.avatarUrl=data.url},
         (error:any)=>{this.showError(error)}

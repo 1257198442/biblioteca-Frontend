@@ -14,6 +14,16 @@
       <p class="billing-records">Billing records</p>
     </div>
 
+    <div class="avatarBox">
+      <div class="image-container">
+        <img [src]="avatarSelectUrl" alt="404_no fount" class="avatar">
+        <div class="overlay" *ngIf="isLoginUser()||userAdmin=='ROOT'"><label for="sf"><h3>Change avatar</h3></label>
+          <input type="file" (change)="onFileSelected($event)" id="sf" class="fileInput">
+        </div>
+        <button class="avatar-save" mat-flat-button *ngIf="avatarUrl!=avatarSelectUrl" (click)="avatarUpdate()">SAVE</button>
+      </div>
+    </div>
+
     <mat-expansion-panel class="modify" [expanded]= "editProfileState === 1" (opened)="editProfileState=1" (closed)="editProfileState=0" *ngIf="isLoginUser()||userAdmin=='ROOT'">
       <mat-expansion-panel-header>
         <mat-panel-title>
