@@ -55,11 +55,14 @@ export class PersonalPageComponent {
   }
 
   getWallet(){
-    this.http.get(endPoints.wallet+"/"+this.userData.telephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      this.wallet = data.body.balance;
-    },(error)=>{
-      this.showError(error)
-    })
+    if(this.isLoginUser()||this.userAdmin=='ROOT'){
+      this.http.get(endPoints.wallet+"/"+this.userData.telephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+        this.wallet = data.body.balance;
+      },(error)=>{
+        this.showError(error)
+      })
+    }
+
   }
 
   isLoginUser(){
