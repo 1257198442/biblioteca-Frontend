@@ -8,11 +8,45 @@
     <p>description: {{userData.description}}</p>
     <p>Registration Time: {{userData.createTime}}</p>
     <div *ngIf="isLoginUser()||userAdmin=='ROOT'">
-    <p class="wallet">E-wallet balance:{{wallet}}€</p>
-    <p class="recharge" >Recharge</p>
-    <p class="billing-records">Withdraw Money</p>
-    <p class="billing-records">Billing records</p>
+      <p class="wallet">E-wallet balance:{{wallet}}€</p>
+      <p class="recharge" >Recharge</p>
+      <p class="billing-records">Withdraw Money</p>
+      <p class="billing-records">Billing records</p>
     </div>
+
+    <mat-expansion-panel class="modify" [expanded]= "editProfileState === 1" (opened)="editProfileState=1" (closed)="editProfileState=0" *ngIf="isLoginUser()||userAdmin=='ROOT'">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Modify personal data
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-card>
+        <mat-form-field *ngIf="userUpdate">
+          <mat-label>Name</mat-label>
+          <input matInput  [(ngModel)]="userUpdate.name">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="userUpdate">
+          <mat-label>Select your birthday date</mat-label>
+          <input matInput [max]="maxDate" [matDatepicker]="picker" [(ngModel)]="userUpdate.birthdays" >
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="userUpdate">
+          <mat-label>Email</mat-label>
+          <input matInput  [(ngModel)]="userUpdate.email">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="userUpdate">
+          <mat-label>Description</mat-label>
+          <textarea matInput  [(ngModel)]="userUpdate.description" maxlength="150"></textarea>
+          <mat-hint>Maximum 150 characters</mat-hint>
+        </mat-form-field>
+        <button mat-flat-button (click)="upDateUser();editProfileState=0">SAVE</button>
+      </mat-card>
+    </mat-expansion-panel>
 
   </mat-card-content>
 </mat-card>

@@ -6,6 +6,7 @@ import {authService} from "../../AuthService";
 import {setting, UserClass} from "../../model/user.model";
 import {endPoints} from "../../endPoints";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-personal-page',
@@ -18,6 +19,8 @@ export class PersonalPageComponent {
   userTelephone:string=""
   wallet:number=0;
   maxDate: Date;
+  userUpdate:any;
+  editProfileState= 0;
 
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
               private user:authService,
@@ -41,6 +44,13 @@ export class PersonalPageComponent {
     this.http.get(endPoints.user+"/"+telephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
       this.userData = data.body;
       this.getWallet();
+      this.userUpdate={
+        name:this.userData.name,
+        description:this.userData.description,
+        email:this.userData.email,
+        birthdays:this.userData.birthdays,
+        setting:this.userData.setting
+      }
     },error => this.showError(error))
   }
 
@@ -57,6 +67,25 @@ export class PersonalPageComponent {
   }
   public showError(notification: string): void {
     this.snackBar.open(notification, 'Error', {duration: 5000});
+  }
+
+  upDateUser(){
+    const userOrigen = {
+      name:this.userData.name,
+      description:this.userData.description,
+      email:this.userData.email,
+      birthdays:this.userData.birthdays}
+    if(this.userUpdate!==userOrigen){
+      const datePipe = new DatePipe('en-US');
+      const time = datePipe.transform(this.userUpdate.birthdays, 'yyyy-MM-dd');
+      this.userUpdate.birthdays=time;
+      console.log(time)
+      this.http.put(endPoints.user+"/"+this.userData.telephone,this.userUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+        this.getUserData(this.userData.telephone);
+      },(error)=>{
+        console.log(error);
+      })
+    }
   }
 
 }
