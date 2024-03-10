@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
 import {HttpClient} from "@angular/common/http";
 import {authService} from "../../AuthService";
@@ -21,9 +21,11 @@ export class PersonalPageComponent {
   maxDate: Date;
   userUpdate:any;
   editProfileState= 0;
+  editSettingState=0;
   avatarUrl:string="";
   avatarSelectUrl:string="";
   file: File | undefined;
+  settingUpdate:any;
 
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
               private user:authService,
@@ -55,6 +57,10 @@ export class PersonalPageComponent {
         birthdays:this.userData.birthdays,
         setting:this.userData.setting
       }
+      this.settingUpdate = {
+        hideMyProfile: this.userData.setting.hideMyProfile,
+        emailWhenOrderIsGenerated:this.userData.setting.emailWhenOrderIsGenerated
+      };
     },error => this.showError(error))
   }
 
@@ -74,7 +80,7 @@ export class PersonalPageComponent {
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 
-  upDateUser(){
+  updateInformation(){
     const userOrigen = {
       name:this.userData.name,
       description:this.userData.description,
@@ -82,12 +88,21 @@ export class PersonalPageComponent {
       birthdays:this.userData.birthdays}
     if(this.userUpdate!==userOrigen){
       const datePipe = new DatePipe('en-US');
-      const time = datePipe.transform(this.userUpdate.birthdays, 'yyyy-MM-dd');
-      this.userUpdate.birthdays=time;
-      console.log(time)
+      this.userUpdate.birthdays=datePipe.transform(this.userUpdate.birthdays, 'yyyy-MM-dd');
       this.http.put(endPoints.user+"/"+this.userData.telephone,this.userUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
         this.getUserData(this.userData.telephone);
       },error=>this.showError(error)
+      )
+    }
+  }
+
+  updateSetting(){
+    const settingOrigen = this.userData.setting;
+    console.log(settingOrigen,this.settingUpdate)
+    if(this.settingUpdate!==settingOrigen){
+      this.http.put(endPoints.user+"/"+this.userData.telephone+"/setting",this.settingUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+          this.getUserData(this.userData.telephone);
+        },error=>this.showError(error)
       )
     }
   }
