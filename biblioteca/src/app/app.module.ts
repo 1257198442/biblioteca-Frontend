@@ -30,6 +30,10 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {PersonalPageComponent} from "./home/personal-page/personal-page.component";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {RechargeComponent} from "./home/personal-page/recharge/recharge.component";
+import {ExpirationDateDirective} from "./home/personal-page/recharge/expiration-date.directive";
+import {CardNumberDirective} from "./home/personal-page/recharge/card-number.directive";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 @NgModule({
@@ -41,7 +45,10 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     HomeComponent,
     ManagementComponent,
     PersonalPageComponent,
-    AlertDialogComponent
+    AlertDialogComponent,
+    RechargeComponent,
+    ExpirationDateDirective,
+    CardNumberDirective
   ],
   imports: [
     BrowserModule,
@@ -67,6 +74,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     MatDatepickerModule,
     MatNativeDateModule,
     MatCheckboxModule,
+    MatProgressSpinnerModule,
 
   ],
   providers: [DatePipe],

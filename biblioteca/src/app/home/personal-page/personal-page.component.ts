@@ -8,6 +8,7 @@ import {endPoints} from "../../endPoints";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DatePipe} from "@angular/common";
 import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
+import {RechargeComponent} from "./recharge/recharge.component";
 
 @Component({
   selector: 'app-personal-page',
@@ -217,4 +218,17 @@ export class PersonalPageComponent {
     }
   }
 
+  openRechargePage(){
+    this.dialog.open(RechargeComponent,{
+      width:"600px",
+      minWidth:"600px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        telephone:this.userData.telephone
+      }
+    }).afterClosed().subscribe(()=>{
+      this.getWallet();
+    })
+  }
 }
