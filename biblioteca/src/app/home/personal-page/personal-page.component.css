@@ -108,3 +108,6 @@ label h3{
   color: #FF6B6B;
   margin: 0;
 }
+.resetPassword,.changePassword{
+  width: 50%;
+}
