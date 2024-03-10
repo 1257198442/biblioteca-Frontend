@@ -29,6 +29,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {PersonalPageComponent} from "./home/personal-page/personal-page.component";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 @NgModule({
@@ -64,6 +65,7 @@ import {PersonalPageComponent} from "./home/personal-page/personal-page.componen
     MatExpansionModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatCheckboxModule,
 
   ],
   providers: [DatePipe],

@@ -54,9 +54,25 @@
           <textarea matInput  [(ngModel)]="userUpdate.description" maxlength="150"></textarea>
           <mat-hint>Maximum 150 characters</mat-hint>
         </mat-form-field>
-        <button mat-flat-button (click)="upDateUser();editProfileState=0">SAVE</button>
+        <button mat-flat-button (click)="updateInformation();editProfileState=0">SAVE</button>
       </mat-card>
     </mat-expansion-panel>
+
+    <mat-expansion-panel class="modify" [expanded]= "editSettingState === 1" (opened)="editSettingState=1" (closed)="editSettingState=0" *ngIf="isLoginUser()||userAdmin=='ROOT'">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Setting personal
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-card>
+        <section class="setting-box">
+          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrderIsGenerated">I would like to receive email alerts of successful transactions</mat-checkbox>
+          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.hideMyProfile">I want to hide my Profile</mat-checkbox>
+        </section>
+        <button mat-flat-button (click)="updateSetting();editSettingState=0">OK</button>
+      </mat-card>
+    </mat-expansion-panel>
+
 
   </mat-card-content>
 </mat-card>
