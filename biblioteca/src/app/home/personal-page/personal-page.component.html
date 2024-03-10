@@ -66,13 +66,35 @@
       </mat-expansion-panel-header>
       <mat-card>
         <section class="setting-box">
-          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrderIsGenerated">I would like to receive email alerts of successful transactions</mat-checkbox>
           <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.hideMyProfile">I want to hide my Profile</mat-checkbox>
+          <br>
+          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrderIsGenerated">I would like to receive email alerts of successful transactions</mat-checkbox>
+
         </section>
         <button mat-flat-button (click)="updateSetting();editSettingState=0">OK</button>
       </mat-card>
     </mat-expansion-panel>
 
+    <mat-expansion-panel [expanded]= "editPasswordState === 1" (opened)="editPasswordState=1" (closed)="editPasswordState=0" *ngIf="isLoginUser()||userAdmin=='ROOT'">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Modify Password
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-card>
+        <mat-form-field class="example-full-width" >
+          <mat-label>New Password</mat-label>
+          <input matInput type="password" [(ngModel)] = "newPassword">
+        </mat-form-field>
+        <mat-label *ngIf="confirmPassword != '' && newPassword != confirmPassword" class="confirm_password">The password entered twice is different</mat-label>
+        <mat-form-field class="example-full-width" >
+          <mat-label >Confirm Password</mat-label>
+          <input matInput type="password" [(ngModel)]="confirmPassword">
+        </mat-form-field>
+        <button mat-flat-button *ngIf="userAdmin=='ROOT'" (click)="resetPassword()" class="resetPassword">Reset Password</button>
+        <button mat-flat-button *ngIf="newPassword.length!==0&&newPassword==confirmPassword" (click)="changePassword()" class="changePassword">OK</button>
+      </mat-card>
+    </mat-expansion-panel>
 
   </mat-card-content>
 </mat-card>

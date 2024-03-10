@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {HttpClient} from "@angular/common/http";
 import {authService} from "../../AuthService";
@@ -7,6 +7,7 @@ import {setting, UserClass} from "../../model/user.model";
 import {endPoints} from "../../endPoints";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DatePipe} from "@angular/common";
+import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
 
 @Component({
   selector: 'app-personal-page',
@@ -20,16 +21,20 @@ export class PersonalPageComponent {
   wallet:number=0;
   maxDate: Date;
   userUpdate:any;
-  editProfileState= 0;
-  editSettingState=0;
   avatarUrl:string="";
   avatarSelectUrl:string="";
   file: File | undefined;
   settingUpdate:any;
+  newPassword:string="";
+  confirmPassword:string="";
+  editProfileState= 0;
+  editSettingState=0;
+  editPasswordState=0;
 
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
               private user:authService,
               private http:HttpClient,
+              private dialog:MatDialog,
               private snackBar: MatSnackBar) {
     const jwtToken=sessionStorage.getItem("jwtToken");
     if(jwtToken){
@@ -105,6 +110,79 @@ export class PersonalPageComponent {
         },error=>this.showError(error)
       )
     }
+  }
+
+  changePassword(){
+    if(this.confirmPassword===this.newPassword){
+      const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
+        width:'500px',
+        data:{
+          title:'Password verification',
+          message:'Old Password',
+          input:true,
+          confirm:true
+        }
+      })
+      dialogRef.afterClosed().subscribe(res=>{
+        if(res.confirm==='confirm'){
+          const changePassword={
+            oldPassword:res.input,
+            newPassword:this.newPassword
+          }
+          this.http.put(endPoints.user+"/"+this.userData.telephone+"/password",changePassword,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+            const dialogRef1 =this.dialog.open(AlertDialogComponent,{
+              width:"500px",
+              data:{
+                title:'Reminders',
+                message:'Password modified successfully',
+                confirm:false
+              }
+            })
+            dialogRef1.afterClosed().subscribe(()=>{
+              this.newPassword="";
+              this.confirmPassword="";
+              this.editPasswordState=0;
+            })
+            },error=>this.showError(error)
+          )
+        }
+      })
+    }else {
+      this.showError("Confirm Password is not the same as the new password")
+    }
+  }
+
+  resetPassword(){
+    const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
+      width:'500px',
+      data:{
+        title:'Reminders',
+        message:'Clicking confirm will reset the password for user ('+this.userData.telephone+').',
+        input:false,
+        confirm:true
+      }
+    })
+    dialogRef.afterClosed().subscribe(res=>{
+      if(res=="confirm"){
+        this.http.put(endPoints.user+"/"+this.userData.telephone+"/resetPassword",{},this.user.optionsAuthorization2())
+          .subscribe((data:any)=>{
+              const dialogRef1 =this.dialog.open(AlertDialogComponent,{
+                width:"500px",
+                data:{
+                  title:'Reminders',
+                  message:'Password reset successfully',
+                  confirm:false
+                }
+              })
+              dialogRef1.afterClosed().subscribe(()=>{
+                this.newPassword="";
+                this.confirmPassword="";
+                this.editPasswordState=0;
+              })
+            },error=>this.showError(error)
+          )
+      }
+    })
   }
 
   getAvatar(){

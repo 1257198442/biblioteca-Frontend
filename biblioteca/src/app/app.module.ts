@@ -40,7 +40,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     AlertDialogComponent,
     HomeComponent,
     ManagementComponent,
-    PersonalPageComponent
+    PersonalPageComponent,
+    AlertDialogComponent
   ],
   imports: [
     BrowserModule,
