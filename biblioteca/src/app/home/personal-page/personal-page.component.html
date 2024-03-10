@@ -9,7 +9,7 @@
     <p>Registration Time: {{userData.createTime}}</p>
     <div *ngIf="isLoginUser()||userAdmin=='ROOT'">
       <p class="wallet">E-wallet balance:{{wallet}}€</p>
-      <p class="recharge" >Recharge</p>
+      <p class="recharge" (click)="openRechargePage()">Recharge</p>
       <p class="billing-records">Withdraw Money</p>
       <p class="billing-records">Billing records</p>
     </div>
