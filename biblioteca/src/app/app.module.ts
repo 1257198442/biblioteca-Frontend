@@ -34,6 +34,7 @@ import {RechargeComponent} from "./home/personal-page/recharge/recharge.componen
 import {ExpirationDateDirective} from "./home/personal-page/recharge/expiration-date.directive";
 import {CardNumberDirective} from "./home/personal-page/recharge/card-number.directive";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {WithdrawMoneyComponent} from "./home/personal-page/withdraw-money/withdraw-money.component";
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     AlertDialogComponent,
     RechargeComponent,
     ExpirationDateDirective,
-    CardNumberDirective
+    CardNumberDirective,
+    WithdrawMoneyComponent
   ],
   imports: [
     BrowserModule,

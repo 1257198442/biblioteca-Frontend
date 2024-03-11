@@ -9,6 +9,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {DatePipe} from "@angular/common";
 import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
 import {RechargeComponent} from "./recharge/recharge.component";
+import {WithdrawMoneyComponent} from "./withdraw-money/withdraw-money.component";
 
 @Component({
   selector: 'app-personal-page',
@@ -67,14 +68,14 @@ export class PersonalPageComponent {
         hideMyProfile: this.userData.setting.hideMyProfile,
         emailWhenOrderIsGenerated:this.userData.setting.emailWhenOrderIsGenerated
       };
-    },error => this.showError(error))
+    },error => this.showError(error.status+error.message))
   }
 
   getWallet(){
     if(this.isLoginUser()||this.userAdmin=='ROOT'){
       this.http.get(endPoints.wallet+"/"+this.userData.telephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
         this.wallet = data.body.balance;
-      },error=> this.showError(error))
+      },error=> this.showError(error.status+error.message))
     }
 
   }
@@ -97,7 +98,7 @@ export class PersonalPageComponent {
       this.userUpdate.birthdays=datePipe.transform(this.userUpdate.birthdays, 'yyyy-MM-dd');
       this.http.put(endPoints.user+"/"+this.userData.telephone,this.userUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
         this.getUserData(this.userData.telephone);
-      },error=>this.showError(error)
+      },error=>this.showError(error.status+error.message)
       )
     }
   }
@@ -108,7 +109,7 @@ export class PersonalPageComponent {
     if(this.settingUpdate!==settingOrigen){
       this.http.put(endPoints.user+"/"+this.userData.telephone+"/setting",this.settingUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
           this.getUserData(this.userData.telephone);
-        },error=>this.showError(error)
+        },error=>this.showError(error.status+error.message)
       )
     }
   }
@@ -144,7 +145,7 @@ export class PersonalPageComponent {
               this.confirmPassword="";
               this.editPasswordState=0;
             })
-            },error=>this.showError(error)
+            },error=>this.showError(error.status+error.message)
           )
         }
       })
@@ -220,6 +221,20 @@ export class PersonalPageComponent {
 
   openRechargePage(){
     this.dialog.open(RechargeComponent,{
+      width:"600px",
+      minWidth:"600px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        telephone:this.userData.telephone
+      }
+    }).afterClosed().subscribe(()=>{
+      this.getWallet();
+    })
+  }
+
+  openWithdrawMoneyPage(){
+    this.dialog.open(WithdrawMoneyComponent,{
       width:"600px",
       minWidth:"600px",
       height:"auto",
