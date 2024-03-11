@@ -1,0 +1,35 @@
+.records{
+  text-align: center;
+}
+
+.records-card{
+  width: 100%;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.purpose{
+  display: initial;
+  font-size: 20px;
+}
+
+.amount{
+  display: initial;
+  float: right;
+  font-size: 20px;
+}
+
+mat-expansion-panel-header{
+  height: 100px;
+  padding: 0;
+  display: contents;
+}
+
+.records-list-card{
+  width: 100%;
+}
+
+div p{
+  font-size: 20px;
+  font-weight: 300;
+}

@@ -1,0 +1,23 @@
+<mat-card class="records" >
+  <mat-card-content *ngFor="let i of recordsList">
+<mat-card class="records-card">
+  <mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+      <mat-card-content class="records-list-card">
+        <p>{{i.reference}}</p>
+        <p class="purpose">{{i.purpose}}</p>
+        <p class="amount"><span *ngIf="i.amount>0">+</span><span *ngIf="i.amount<0">-</span> €{{Math.abs(i.amount)}}</p>
+        <p>{{i.timestampTime}}</p>
+      </mat-card-content>
+    </mat-expansion-panel-header>
+    <div *ngIf="i.transactionDetails">
+    <p *ngIf="i.transactionDetails.lastName!=''">Name:{{i.transactionDetails.firstName}}&ngsp;&ngsp;{{i.transactionDetails.lastName}}</p>
+    <p *ngIf="i.transactionDetails.city!=''">City:{{i.transactionDetails.city}}</p>
+    <p *ngIf="i.transactionDetails.postalCode!=''">PostalCode:{{i.transactionDetails.postalCode}}</p>
+    <p *ngIf="i.transactionDetails.billingAddress!=''">BillingAddress:{{i.transactionDetails.billingAddress}}</p>
+    </div>
+  </mat-expansion-panel>
+
+</mat-card>
+  </mat-card-content>
+</mat-card>
