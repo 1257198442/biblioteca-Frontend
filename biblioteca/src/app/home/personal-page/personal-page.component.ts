@@ -10,6 +10,7 @@ import {DatePipe} from "@angular/common";
 import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
 import {RechargeComponent} from "./recharge/recharge.component";
 import {WithdrawMoneyComponent} from "./withdraw-money/withdraw-money.component";
+import {BillingRecordsComponent} from "./billing-records/billing-records.component";
 
 @Component({
   selector: 'app-personal-page',
@@ -244,6 +245,17 @@ export class PersonalPageComponent {
       }
     }).afterClosed().subscribe(()=>{
       this.getWallet();
+    })
+  }
+  openBillingRecordsPage(){
+    this.dialog.open(BillingRecordsComponent,{
+      width:"600px",
+      minWidth:"600px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        telephone:this.userData.telephone
+      }
     })
   }
 }
