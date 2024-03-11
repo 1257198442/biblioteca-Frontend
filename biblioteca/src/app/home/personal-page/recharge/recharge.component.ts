@@ -35,11 +35,9 @@ export class RechargeComponent {
     this.getBalance();
   }
   recharge(){
-    this.rechargeBtn=true;
-    this.spinner=true;
+    this.btnStatus(true)
     if(this.rechargeDataIsError()) {
-      this.rechargeBtn=false;
-      this.spinner=false;
+      this.btnStatus(false)
     }else {
       this.transactionRecord={
         purpose:"Recharge with "+this.card+" card [Card Number:*"+this.cardNumber.replace(/\s+/g, '').slice(-6)+"]",
@@ -48,8 +46,7 @@ export class RechargeComponent {
         transactionDetails:this.transactionDetails
       }
       this.http.post(endPoints.wallet+"/recharge",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=>{
-        this.rechargeBtn=false;
-        this.spinner=false;
+        this.btnStatus(false)
         this.dialog.open(AlertDialogComponent,{
           width:'500px',
           data:{
@@ -60,13 +57,8 @@ export class RechargeComponent {
         })
         this.dialogRef.close();
       },(error)=>{
-        this.rechargeBtn=false;
-        this.spinner=false;
-        if(error.status==="404"){
-          this.showError(error.status+":)telephone ERROR")
-        }else {
-          this.showError(error)
-        }
+        this.btnStatus(false)
+          this.showError(error.status+error.message)
       })
     }
   }
@@ -88,6 +80,7 @@ export class RechargeComponent {
       return false;
     }
   }
+
   public showError(notification: string): void {
       this.snackBar.open(notification, 'Error', {duration: 5000});
   }
@@ -96,6 +89,11 @@ export class RechargeComponent {
     this.http.get(endPoints.wallet+"/"+this.telephone,this.user.optionsAuthorization2())
       .subscribe((data:any)=>
       this.balance = data.body.balance)
+  }
+
+  btnStatus(status:boolean){
+    this.rechargeBtn=status;
+    this.spinner=status;
   }
 
 }

@@ -1,0 +1,40 @@
+mat-card h3{
+  font-size: 2rem;
+}
+
+mat-card p{
+  color: #555555;
+  font-weight: 200;
+}
+
+mat-card-title{
+  padding: 10px 20px 0px 20px;
+}
+
+.cardNumber{
+  width: 420px;
+}
+
+.payType{
+  width: 420px;
+}
+
+.date{
+  width: 200px;
+}
+
+.cvv{
+  width: 200px;
+  margin-left:20px ;
+}
+
+.mat-card-content{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.spinner{
+  position: fixed;
+  z-index: 100;
+  top: 330px;
+  left: calc(50% - 50px);
+}

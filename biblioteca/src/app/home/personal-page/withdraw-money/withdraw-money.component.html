@@ -1,0 +1,59 @@
+<mat-card>
+  <mat-card-title>
+    <h3>Withdraw Money</h3>
+    <p>Account [TELEPHONE: {{telephone}}]</p>
+    <p>Balance: {{balance}} €</p>
+  </mat-card-title>
+  <mat-card-content>
+<mat-form-field >
+  <mat-label>Sum of money</mat-label>
+  <input matInput type="number" [max]="balance" [(ngModel)]="sumOfMoney">
+</mat-form-field>
+    <br>
+    <mat-form-field class="payType">
+      <mat-label>Please select card type</mat-label>
+      <mat-select disableRipple [(ngModel)]="card">
+        <mat-option value="VISA">VISA</mat-option>
+        <mat-option value="MASTERCARD">MASTERCARD</mat-option>
+        <mat-option value="UNION PAY">UNION PAY</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+<mat-form-field class="cardNumber">
+  <mat-label>Card number</mat-label>
+  <input matInput type="text" maxlength="19" appCardNumber placeholder="0000 0000 0000 0000" [(ngModel)]="cardNumber">
+</mat-form-field>
+    <br>
+    <br>
+    <mat-form-field class="date">
+      <mat-label>First Name</mat-label>
+      <input matInput [(ngModel)]="transactionDetails.firstName">
+    </mat-form-field>
+    <mat-form-field class="cvv">
+      <mat-label>Last Name</mat-label>
+      <input matInput [(ngModel)]="transactionDetails.lastName">
+    </mat-form-field>
+    <br>
+    <mat-form-field class="date">
+      <mat-label>City</mat-label>
+      <input matInput [(ngModel)]="transactionDetails.city">
+    </mat-form-field>
+    <mat-form-field class="cvv">
+    <mat-label>Postal Code</mat-label>
+    <input matInput maxlength="5" [(ngModel)]="transactionDetails.postalCode">
+  </mat-form-field>
+    <br>
+    <mat-form-field class="cardNumber">
+      <mat-label>Billing Address</mat-label>
+      <input matInput [(ngModel)]="transactionDetails.billingAddress">
+    </mat-form-field>
+
+    <mat-spinner *ngIf="spinner" class="spinner"></mat-spinner>
+
+    <br>
+    <button mat-flat-button [disabled]="WithdrawMoneyBtn" (click)="withdrawMoney()">Withdraw Money</button>
+    <button mat-flat-button  mat-dialog-close>Close</button>
+  </mat-card-content>
+
+</mat-card>
+
