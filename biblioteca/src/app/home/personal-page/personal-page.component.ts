@@ -1,8 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-
 import {HttpClient} from "@angular/common/http";
-import {authService} from "../../AuthService";
+import {authService} from "../../authService";
 import {setting, UserClass} from "../../model/user.model";
 import {endPoints} from "../../endPoints";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -78,7 +77,6 @@ export class PersonalPageComponent {
         this.wallet = data.body.balance;
       },error=> this.showError(error.status+error.message))
     }
-
   }
 
   isLoginUser(){
@@ -182,7 +180,7 @@ export class PersonalPageComponent {
                 this.confirmPassword="";
                 this.editPasswordState=0;
               })
-            },error=>this.showError(error)
+            },error=>this.showError(error.status+error.message)
           )
       }
     })
@@ -192,7 +190,7 @@ export class PersonalPageComponent {
     this.http.get(endPoints.avatar+"/"+this.userData.telephone).subscribe((data:any)=>{
       this.avatarUrl = data.url;
       this.avatarSelectUrl = this.avatarUrl;
-    },error=> this.showError(error)
+    },error=> this.showError(error.status+error.message)
     )
   }
 
@@ -216,7 +214,7 @@ export class PersonalPageComponent {
       formData.append('file', this.file as Blob);
       this.http.put(endPoints.avatar+"/"+this.userData.telephone,formData,this.user.optionsAuthorization2()).subscribe((data:any)=>{
         this.getUserData(this.userData.telephone);
-      },error => this.showError(error))
+      },error => this.showError(error.status+error.message))
     }
   }
 

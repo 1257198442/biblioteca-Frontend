@@ -1,9 +1,8 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
-
 import {HttpClient} from "@angular/common/http";
-import {authService} from "../../../AuthService";
+import {authService} from "../../../authService";
 import {endPoints} from "../../../endPoints";
 import {Record} from "../../../model/record.model";
 

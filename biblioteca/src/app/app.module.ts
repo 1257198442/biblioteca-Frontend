@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {DatePipe} from "@angular/common";
@@ -25,7 +24,6 @@ import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatPaginatorModule} from "@angular/material/paginator";
-
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {PersonalPageComponent} from "./home/personal-page/personal-page.component";
@@ -79,7 +77,6 @@ import {BillingRecordsComponent} from "./home/personal-page/billing-records/bill
     MatNativeDateModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
-
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

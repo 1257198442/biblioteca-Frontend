@@ -1,9 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {authService} from "../AuthService";
+import {authService} from "../authService";
 import {endPoints} from "../endPoints";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatPaginator} from "@angular/material/paginator";
@@ -60,16 +59,14 @@ export class ManagementComponent{
       this.http.get(endPoints.user,this.user.optionsAuthorization2()).subscribe((data:any)=>{
         this.userDataSource = new MatTableDataSource(data.body);
         this.userDataInit();
-      },(error)=>{this.showError(error.message)})
+      },error=> this.showError(error.status+error.message))
     }
 
   getLibraryData(){
     this.http.get(endPoints.library).subscribe((data:any)=>{
       this.origenLibraryData = data;
       this.updateLibraryData = Object.assign({}, this.origenLibraryData);
-    },(error)=>{
-      this.showError(error.message)
-    })
+    },error=> this.showError(error.status+error.message))
   }
 
   userDataInit() {
@@ -105,9 +102,8 @@ export class ManagementComponent{
         dialogRef.afterClosed().subscribe(res=>{
           if(res==='confirm'){
             this.http.put(endPoints.user+"/"+telephone+"/role","ADMINISTRATOR",this.user.optionsAuthorization2()).subscribe(
-              (data:any)=>{this.getAllUserList()},(error)=>{
-                this.showError(error.message)
-              }
+              (data:any)=>{this.getAllUserList()},
+                error=> this.showError(error.status+error.message)
             )
           }
         })
@@ -125,9 +121,8 @@ export class ManagementComponent{
     dialogRef.afterClosed().subscribe(res=>{
       if(res==='confirm'){
         this.http.put(endPoints.user+"/"+telephone+"/role","CLIENT",this.user.optionsAuthorization2()).subscribe(
-          (data:any)=>{this.getAllUserList()},(error)=>{
-            this.showError(error.message)
-          }
+          (data:any)=>{this.getAllUserList()},
+            error=> this.showError(error.status+error.message)
         )
       }
     })
@@ -146,9 +141,8 @@ export class ManagementComponent{
       if(res==='confirm'){
         this.http.put(endPoints.user+"/"+telephone+"/role","BAN",this.user.optionsAuthorization2()).subscribe(
           (data:any)=>{
-            this.getAllUserList()},(error)=>{
-            this.showError(error.message)
-          }
+            this.getAllUserList()},
+          error=> this.showError(error.status+error.message)
         )
       }
     })

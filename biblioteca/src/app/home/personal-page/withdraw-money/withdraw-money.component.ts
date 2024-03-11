@@ -1,10 +1,9 @@
 import {Component, Inject} from '@angular/core';
-
 import {HttpClient} from "@angular/common/http";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {RechargeComponent} from "../recharge/recharge.component";
-import {authService} from "../../../AuthService";
+import {authService} from "../../../authService";
 import {AlertDialogComponent} from "../../../sign-up/alert-dialog.component";
 import {endPoints} from "../../../endPoints";
 
