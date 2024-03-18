@@ -223,7 +223,7 @@ export class PersonalPageComponent {
       width:"600px",
       minWidth:"600px",
       height:"auto",
-      maxHeight:"600px",
+      maxHeight:"800px",
       data:{
         telephone:this.userData.telephone
       }
@@ -237,7 +237,7 @@ export class PersonalPageComponent {
       width:"600px",
       minWidth:"600px",
       height:"auto",
-      maxHeight:"600px",
+      maxHeight:"800px",
       data:{
         telephone:this.userData.telephone
       }

@@ -5,7 +5,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
 import {setting, UserClass} from "./model/user.model";
 import {LoginComponent} from "./login/login.component";
-import {authService} from "./AuthService";
+import {authService} from "./authService";
 import {SignUpComponent} from "./sign-up/sign-up.component";
 import {endPoints} from "./endPoints";
 import {NavigationEnd, Router} from "@angular/router";
