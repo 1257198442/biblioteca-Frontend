@@ -3,12 +3,13 @@ import { Component } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {authService} from "../AuthService";
+import {authService} from "../authService";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {Login} from "../model/user.model";
+
 import {endPoints} from "../endPoints";
 import {countriesDialCodes} from "../model/countryDialCode.model";
 import {SignUpComponent} from "../sign-up/sign-up.component";
+import {Login} from "../model/login.model";
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

@@ -27,10 +27,15 @@ export class SignUpComponent {
   }
   Registration(){
     this.registrationData.email=this.emailFormControl.value==null?"":this.emailFormControl.value;
-    this.registrationData.telephone=this.dialCode+this.registrationData.telephone;
 
     if(this.notNull()){
-      this.http.post(endPoints.user,this.registrationData)
+      const registrationData1 = {
+        name:this.registrationData.name,
+        telephone:this.dialCode+this.registrationData.telephone,
+        email:this.registrationData.email,
+        password:this.registrationData.password
+      }
+      this.http.post(endPoints.user,registrationData1)
         .subscribe((data:any)=>{
           const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
             width:'500px',
@@ -43,13 +48,7 @@ export class SignUpComponent {
           dialogRef.afterClosed().subscribe(()=>{
             this.dialogRef.close();
           })
-        },(error:any)=>{
-          if(error.status==409){
-            this.showError("Conflict Exception. Telephone "+this.registrationData.telephone +" is exist")
-          }else {
-            this.showError("Unknown error")
-          }
-        })
+        },error=> this.showError(error.status+error.message))
     }else {
       alert("Empty with data")
     }

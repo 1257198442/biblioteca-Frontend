@@ -1,4 +1,4 @@
-export interface LibraryEntity {
+export interface Library {
   address: string;
   name: string;
   telephone: string;

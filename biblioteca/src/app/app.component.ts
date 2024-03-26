@@ -3,12 +3,13 @@ import {Component, OnInit} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
-import {UserClass} from "./model/user.model";
+import {setting, UserClass} from "./model/user.model";
 import {LoginComponent} from "./login/login.component";
-import {authService} from "./AuthService";
+import {authService} from "./authService";
 import {SignUpComponent} from "./sign-up/sign-up.component";
 import {endPoints} from "./endPoints";
 import {NavigationEnd, Router} from "@angular/router";
+import {PersonalPageComponent} from "./home/personal-page/personal-page.component";
 
 @Component({
   selector: 'app-root',
@@ -17,11 +18,12 @@ import {NavigationEnd, Router} from "@angular/router";
 })
 export class AppComponent implements OnInit{
   isLogin:boolean = false;
-  userData:UserClass=new UserClass("","",new Date(),"","",false);
+  userData:UserClass=new UserClass("","",new Date(),"","","",true,"",new setting(true,true));
   library:any;
   userAdmin:string="";
   userTelephone:string=""
   storedToken:any;
+  avatarUrl:string = "";
 
   constructor(private http:HttpClient,
               private dialog:MatDialog,
@@ -42,12 +44,10 @@ export class AppComponent implements OnInit{
     }, 1000);
   }
 
-
   login():void{
     this.dialog.open(LoginComponent, {
       width:"470px",
-    })
-      .afterClosed().subscribe(()=> {
+    }).afterClosed().subscribe(()=> {
       this.getClientData();
       if(this.userTelephone!=""){
         this.getUserData();
@@ -55,6 +55,7 @@ export class AppComponent implements OnInit{
       }
     });
   }
+
   getClientData(){
     const jwtToken = sessionStorage.getItem('jwtToken');
     if (jwtToken) {
@@ -64,6 +65,7 @@ export class AppComponent implements OnInit{
       this.userAdmin = decodedPayload.role;
     }
   }
+
   logout():void{
     this.userTelephone="";
     this.userAdmin="";
@@ -83,6 +85,7 @@ export class AppComponent implements OnInit{
     this.http.get(endPoints.user+"/"+this.userTelephone,this.transmit.optionsAuthorization2()).subscribe(
       (data:any)=>{
         this.userData=data.body;
+        this.getAvatar();
       },(error)=>{
         this.showError(error.message)
       }
@@ -111,5 +114,26 @@ export class AppComponent implements OnInit{
       }
     });
   }
-}
 
+  openPersonalPage(){
+    this.dialog.open(PersonalPageComponent,{
+      width:"800px",
+      minWidth:"800px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        telephone:this.userData.telephone,
+      }
+    }).afterClosed().subscribe(()=>{
+      this.getUserData()
+    })
+  }
+
+  getAvatar():void{
+    this.http.get(endPoints.avatar+"/"+this.userTelephone)
+      .subscribe(
+        (data:any)=>{this.avatarUrl=data.url},
+        (error:any)=>{this.showError(error)}
+      )
+  }
+}

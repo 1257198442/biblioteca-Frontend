@@ -1,0 +1,100 @@
+<mat-card>
+      <mat-card-title>Personal Page</mat-card-title>
+  <mat-card-content>
+    <mat-card-title-group>Personal Information</mat-card-title-group>
+    <p>Name: {{userData.name}}</p>
+    <p>Email: {{userData.email}}</p>
+    <p>Birthdays: {{userData.birthdays}}</p>
+    <p>description: {{userData.description}}</p>
+    <p>Registration Time: {{userData.createTime}}</p>
+    <div *ngIf="isLoginUser()||userAdmin=='ROOT'">
+      <p class="wallet">E-wallet balance:{{wallet}}€</p>
+      <p class="recharge" (click)="openRechargePage()">Recharge</p>
+      <p class="billing-records" (click)="openWithdrawMoneyPage()">Withdraw Money</p>
+      <p class="billing-records" (click)="openBillingRecordsPage()">Billing records</p>
+    </div>
+
+    <div class="avatarBox">
+      <div class="image-container">
+        <img [src]="avatarSelectUrl" alt="404_no fount" class="avatar">
+        <div class="overlay" *ngIf="isLoginUser()||userAdmin=='ROOT'"><label for="sf"><h3>Change avatar</h3></label>
+          <input type="file" (change)="onFileSelected($event)" id="sf" class="fileInput">
+        </div>
+        <button class="avatar-save" mat-flat-button *ngIf="avatarUrl!=avatarSelectUrl" (click)="avatarUpdate()">SAVE</button>
+      </div>
+    </div>
+
+    <mat-expansion-panel class="modify" [expanded]= "editProfileState === 1" (opened)="editProfileState=1" (closed)="editProfileState=0" *ngIf="isLoginUser()||userAdmin=='ROOT'">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Modify personal data
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-card>
+        <mat-form-field *ngIf="userUpdate">
+          <mat-label>Name</mat-label>
+          <input matInput  [(ngModel)]="userUpdate.name">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="userUpdate">
+          <mat-label>Select your birthday date</mat-label>
+          <input matInput [max]="maxDate" [matDatepicker]="picker" [(ngModel)]="userUpdate.birthdays" >
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="userUpdate">
+          <mat-label>Email</mat-label>
+          <input matInput  [(ngModel)]="userUpdate.email">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="userUpdate">
+          <mat-label>Description</mat-label>
+          <textarea matInput  [(ngModel)]="userUpdate.description" maxlength="150"></textarea>
+          <mat-hint>Maximum 150 characters</mat-hint>
+        </mat-form-field>
+        <button mat-flat-button (click)="updateInformation();editProfileState=0">SAVE</button>
+      </mat-card>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="modify" [expanded]= "editSettingState === 1" (opened)="editSettingState=1" (closed)="editSettingState=0" *ngIf="isLoginUser()||userAdmin=='ROOT'">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Setting personal
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-card>
+        <section class="setting-box">
+          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.hideMyProfile">I want to hide my Profile</mat-checkbox>
+          <br>
+          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenSuccessfulTransaction">I would like to receive email alerts of successful transactions</mat-checkbox>
+
+        </section>
+        <button mat-flat-button (click)="updateSetting();editSettingState=0">OK</button>
+      </mat-card>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel [expanded]= "editPasswordState === 1" (opened)="editPasswordState=1" (closed)="editPasswordState=0" *ngIf="isLoginUser()||userAdmin=='ROOT'">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Modify Password
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-card>
+        <mat-form-field class="example-full-width" >
+          <mat-label>New Password</mat-label>
+          <input matInput type="password" [(ngModel)] = "newPassword">
+        </mat-form-field>
+        <mat-label *ngIf="confirmPassword != '' && newPassword != confirmPassword" class="confirm_password">The password entered twice is different</mat-label>
+        <mat-form-field class="example-full-width" >
+          <mat-label >Confirm Password</mat-label>
+          <input matInput type="password" [(ngModel)]="confirmPassword">
+        </mat-form-field>
+        <button mat-flat-button *ngIf="userAdmin=='ROOT'" (click)="resetPassword()" class="resetPassword">Reset Password</button>
+        <button mat-flat-button *ngIf="newPassword.length!==0&&newPassword==confirmPassword" (click)="changePassword()" class="changePassword">OK</button>
+      </mat-card>
+    </mat-expansion-panel>
+
+  </mat-card-content>
+</mat-card>
