@@ -4,4 +4,5 @@ export class endPoints {
   static wallet : string = "https://localhost/wallet";
   static avatar:string = "https://localhost/avatar";
   static transaction : string = "https://localhost/transaction";
+  static book : string = "https://localhost/book";
 }
