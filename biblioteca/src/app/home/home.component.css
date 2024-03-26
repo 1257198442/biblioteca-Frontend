@@ -1,0 +1,88 @@
+mat-card{
+  display: inline-block;
+  text-align: center;
+  padding: 20px;
+}
+.random-box{
+  margin: 13px;
+  width: 255px;
+  height: 200px;
+  padding: 0;
+  text-align: left;
+  border-radius: 10px;
+}
+.random-image{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.random-text-box{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 215px;
+  height: 165px;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(1px);
+  border-radius: 10px;
+  transition:0.3s ease;
+}
+
+.random-text-box:hover{
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.random-text-box:hover .tap{
+  opacity:1;
+  transform: translateY(-50px);
+}
+
+.day{
+  color: #f2f2f2;
+  margin-top: 8px;
+  font-size: 48px;
+  font-weight: 400;
+}
+.months{
+  color: #f2f2f2;
+  font-size: 20px;
+}
+
+.random-content-box{
+  position: absolute;
+  bottom: 0;
+}
+
+.random-description{
+  max-height: 56px;
+  width: 215px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 18px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.tap{
+  position: absolute;
+  top: 20px;
+  color: #3BAFBE !important;
+  text-align: center;
+  opacity:0;
+  transition:0.5s ease;
+  font-size: 24px;
+}
+
+.articles-box{
+  margin-top: 20px;
+  width: 765px;
+  display: inline-block;
+  text-align: left;
+}
+.random-name,.random-author{
+  color: #f2f2f2;
+}

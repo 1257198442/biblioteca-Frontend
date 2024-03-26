@@ -11,6 +11,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {AlertDialogComponent} from "../sign-up/alert-dialog.component";
 import {PersonalPageComponent} from "../home/personal-page/personal-page.component";
 
+
 @Component({
   selector: 'app-management',
   templateUrl: './management.component.html',

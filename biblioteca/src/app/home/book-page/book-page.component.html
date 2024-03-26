@@ -1,0 +1,33 @@
+
+<mat-card [style.background-color]="book?.status=='ENABLE' ? '#3BAFBE' : book?.status == 'OCCUPIED' ? '#FF6B6B' : '#FFD166'">
+  <main>
+  <img [src]="book?.imgUrl" *ngIf="book?.imgUrl" alt="">
+  <mat-card class="left">
+    <p>  BookId: {{book?.bookID}}</p>
+    <p>  Barcode: {{book?.barcode}}</p>
+    <p>  Book Name: {{book?.name}}</p>
+    <p *ngIf="book?.isbn">  ISBN: {{book?.isbn}}</p>
+    <p *ngIf="book?.issn">  ISSN: {{book?.issn}}</p>
+    <p>  Language: {{book?.language}}</p>
+    <p *ngIf="book?.publisher">  Publisher: {{book?.publisher}}</p>
+    <p *ngIf="book?.deposit">  Deposit: €{{book?.deposit}}</p>
+    <p *ngIf="book?.author&&book?.author.length!=0">Author:<span class="author-name" *ngFor="let author of book?.author" [matTooltip]="author.description">{{author.name}}[{{author.nationality}}]</span></p>
+    <p *ngIf="book?.bookType&&book?.bookType!=0" class="book-type-box" >  Book Type:</p>
+    <mat-card-content *ngIf="book?.bookType">
+      <mat-chip *ngFor="let type of book?.bookType" matTooltip="{{type.description}}">
+        {{type.name}}
+      </mat-chip>
+    </mat-card-content>
+    <p *ngIf="book?.entryTime">  Published time: {{book?.entryTime}}</p>
+    <p *ngIf="book?.borrowCount!=null">  Number of borrowed copies: {{book?.borrowCount}}</p>
+    <p *ngIf="book?.description">  Description: {{book?.description}}</p>
+  </mat-card>
+
+  </main>
+
+</mat-card>
+
+
+
+
+

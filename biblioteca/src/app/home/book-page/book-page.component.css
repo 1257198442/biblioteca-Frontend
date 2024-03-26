@@ -1,0 +1,135 @@
+mat-card{
+  padding: 20px;
+}
+main{
+  justify-content: space-between;
+}
+img{
+  margin-left: 20px;
+  width: 320px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.left{
+  width: 400px;
+  height: 320px;
+  float: left;
+  background-color: transparent;
+  overflow: scroll;
+}
+p{
+  font-family: system-ui;
+  color: white;
+  font-weight: 400;
+}
+.borrow{
+  background-color: transparent;
+  padding: 4px;
+}
+.borrowB{
+  margin: auto;
+  text-align: center;
+  padding: 4px;
+  background-color: transparent;
+}
+.btn{
+  margin-top: 16px;
+  --mdc-filled-button-container-color: #3BAFBE!important;
+  --mdc-filled-button-label-text-color: white !important;
+}
+.bc{
+  display: block;
+}
+mat-expansion-panel{
+  margin-bottom: 16px;
+}
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+.aa{
+  transform: translateY(2px);
+}
+.image{
+  margin-bottom: 20px;
+  margin-left: 0;
+}
+.fileInput{
+  position: absolute;
+  clip: rect(0 0 0 0);
+}
+.uiInputFile{
+  border-radius: 4px;
+  background-color: #3BAFBE;
+  color: #F2F2F2;
+  font-size: 16px;
+  padding: 10px 20px 10px 20px;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+}
+.uiInputFile:hover{
+  background-color: #39A8B7;
+}
+.update{
+  margin-top: 15px;
+}
+.end{
+  text-align: center;
+  margin: 20px 0 0 0;
+  padding: 0;
+}
+.end button{
+  width: 300px;
+  margin: 0 20px 0 20px;
+}
+mat-card-content{
+  margin-bottom: 10px;
+}
+
+.author{
+  margin-bottom: 8px;
+}
+
+.author p{
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.description-input{
+  width: 100%;
+}
+
+.modify{
+  margin-left: 10px;
+}
+
+.author-name{
+  margin-left: 12px;
+}
+.book-type-box{
+  margin-top: 8px;
+}
+::-webkit-scrollbar {
+  width: 0;
+}
+.deposit{
+  color: #FF6B6B;
+  font-size: 32px;
+}
+.clause{
+  color: #555555;
+}
+mat-expansion-panel {
+  margin-top: 16px;
+}
+.balance{
+  margin-left: 20px;
+  color: #9d9d9d;
+}
+

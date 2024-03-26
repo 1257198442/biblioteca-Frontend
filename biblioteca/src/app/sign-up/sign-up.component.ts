@@ -5,7 +5,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {endPoints} from "../endPoints";
 import {RegistrationClass} from "../model/registration.model";
-
 import {FormControl, Validators} from "@angular/forms";
 import {countriesDialCodes} from "../model/countryDialCode.model";
 import {AlertDialogComponent} from "./alert-dialog.component";

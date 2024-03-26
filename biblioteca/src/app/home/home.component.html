@@ -1,0 +1,16 @@
+<main>
+  <div class="articles-box">
+    <mat-card class="random-box"  *ngIf="randomBook" (click)="openBookPage(randomBook.bookID)">
+      <img class="random-image" [src]="randomBook.imgUrl"  alt="">
+      <mat-card-content class="random-text-box">
+        <p class="tap">Daily Picks</p>
+        <p class="day">{{currentDate.getDate()}}<span class="months">/{{monthAbbreviations[currentDate.getMonth() + 1]}}</span></p>
+        <div class="random-content-box">
+          <p class="random-name">{{randomBook.name}} [Language:{{randomBook.language}}]</p>
+          <p class="random-author"  *ngIf="randomBook.author"><span class="author-name" *ngFor="let author of randomBook.author" [matTooltip]="author.description" >{{author.name}}</span></p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</main>
