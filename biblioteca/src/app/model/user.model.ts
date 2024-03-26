@@ -33,11 +33,11 @@ export class UserClass {
 }
 
 export class setting {
-  emailWhenOrderIsGenerated:boolean;
+  emailWhenSuccessfulTransaction:boolean;
   hideMyProfile:boolean;
-  constructor(emailWhenOrderIsGenerated:boolean,
+  constructor(emailWhenSuccessfulTransaction:boolean,
               hideMyProfile:boolean) {
-    this.emailWhenOrderIsGenerated=emailWhenOrderIsGenerated;
+    this.emailWhenSuccessfulTransaction=emailWhenSuccessfulTransaction;
     this.hideMyProfile = hideMyProfile;
   }
 }

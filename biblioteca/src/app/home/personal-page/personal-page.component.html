@@ -68,7 +68,7 @@
         <section class="setting-box">
           <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.hideMyProfile">I want to hide my Profile</mat-checkbox>
           <br>
-          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrderIsGenerated">I would like to receive email alerts of successful transactions</mat-checkbox>
+          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenSuccessfulTransaction">I would like to receive email alerts of successful transactions</mat-checkbox>
 
         </section>
         <button mat-flat-button (click)="updateSetting();editSettingState=0">OK</button>

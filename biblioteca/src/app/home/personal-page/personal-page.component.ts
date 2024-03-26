@@ -66,7 +66,7 @@ export class PersonalPageComponent {
       }
       this.settingUpdate = {
         hideMyProfile: this.userData.setting.hideMyProfile,
-        emailWhenOrderIsGenerated:this.userData.setting.emailWhenOrderIsGenerated
+        emailWhenSuccessfulTransaction:this.userData.setting.emailWhenSuccessfulTransaction
       };
     },error => this.showError(error.status+error.message))
   }
