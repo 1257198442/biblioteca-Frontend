@@ -35,8 +35,10 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {WithdrawMoneyComponent} from "./home/personal-page/withdraw-money/withdraw-money.component";
 import {BillingRecordsComponent} from "./home/personal-page/billing-records/billing-records.component";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {BookPageComponent} from "./home/book-page/book-page.component";
 import {MatChipsModule} from "@angular/material/chips";
+import {BookPageComponent} from "./home/book-page/book-page.component";
+import {BookSearchPageComponent} from "./home/book-search-page/book-search-page.component";
+import {MatListModule} from "@angular/material/list";
 
 
 @NgModule({
@@ -54,7 +56,8 @@ import {MatChipsModule} from "@angular/material/chips";
     CardNumberDirective,
     WithdrawMoneyComponent,
     BillingRecordsComponent,
-    BookPageComponent
+    BookPageComponent,
+    BookSearchPageComponent
   ],
   imports: [
     BrowserModule,
@@ -83,6 +86,7 @@ import {MatChipsModule} from "@angular/material/chips";
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatChipsModule,
+    MatListModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

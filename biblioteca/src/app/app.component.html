@@ -3,7 +3,7 @@
   <ul class="nav-display">
     <li><p class="logo">LIBRARY</p></li>
     <li><a routerLink="" routerLinkActive="active">Home</a></li>
-    <li ><a>Book</a></li>
+    <li><a routerLink="book" routerLinkActive="active">Book</a></li>
     <li *ngIf="!isLogin"><a (click)="registration()">Sign up</a></li>
     <li *ngIf="isLogin"> <a>Post Article</a></li>
     <li *ngIf="admin()&&isLogin"> <a routerLink="management" routerLinkActive="active">Management</a></li>

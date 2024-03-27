@@ -1,0 +1,135 @@
+.select{
+  width: 90%;
+}
+.bookSearch{
+  margin-top: 10px;
+  width: 90%;
+  text-align: left;
+}
+
+.select-type{
+  width: 200px;
+  margin-right: 20px;
+}
+.only{
+  display: initial;
+  margin:0 20px 0 20px ;
+}
+
+.book{
+   width: 23%;
+   /*height: 380px;*/
+   text-align: center;
+   padding: 0 0 20px 0;
+   margin:8px;
+   border-radius: 20px 4px 20px 4px;
+   position: relative;
+ }
+
+.book-image{
+  margin-top: 28px;
+  width: 80%;
+  height: 160px;
+  object-fit: cover;
+  object-position: center;
+}
+.book-name{
+  width: 180px;
+  height: 56px;
+}
+.book-author{
+  width: 180px;
+  height: 40px;
+}
+.book p{
+  overflow: hidden;
+}
+.borrow-count{
+  font-size: 16px;
+  color: #c9c9c9;
+  text-align: left;
+  margin: 0;
+  padding-left: 12px;
+}
+.book-deposit{
+  color: #FF6B6B;
+  font-size: 28px;
+}
+.book-name,.book-author,.book-deposit{
+  text-align: left ;
+  padding: 8px 12px 0 12px;
+  margin: 0 0 4px 0;
+}
+.enable,.occupied,.disable{
+  width: 100%;
+  height: 20px;
+  border-radius: 20px 4px 0 0;
+  position: absolute;
+  top: 0;
+}
+.occupied{
+  background-color: #FF6B6B;
+}
+.enable{
+  background-color: #3BAFBE;
+}
+.disable{
+  background-color: #FFD166;
+}
+mat-card{
+  display: inline-block;
+  text-align: center;
+  padding: 20px;
+}
+mat-form-field:nth-child(2){
+  width: 17%;
+  margin-right: 10px;
+}
+mat-form-field:nth-child(3){
+  width: 20%;
+  margin-right: 10px;
+}
+mat-form-field:nth-child(4){
+  width: 17%;
+  margin-right: 10px;
+}
+mat-form-field:nth-child(5){
+  width: 16%;
+}
+.mat-mdc-fab{
+  --mdc-fab-container-color:#FF6B6B !important;
+  border-radius:  0 50% 50% 0  !important;
+  transform: translateY(-2px);
+}
+main{
+  margin-inline:auto;
+  width: 1020px;
+  text-align: center;
+}
+.author-name{
+  margin-right: 8px;
+}
+.divider{
+  width: 750px;
+  margin: 24px 60px 8px 60px;
+  padding: 0;
+}
+.divider-text{
+  width: 120px;
+  margin: 0;
+  color: #818181;
+  font-size: 24px;
+  position: relative;
+  top: -20px;
+  left: 120px;
+  text-align: center;
+  background-color: white;
+  transition: 0.5s ease;
+}
+.select:hover .divider-text{
+  transform: translateX(170px);
+  color: #3BAFBE;
+}
+.select:hover .divider{
+  border-top-color: #3BAFBE;
+}

@@ -1,0 +1,64 @@
+<main>
+  <mat-card class="select">
+    <mat-divider class="divider"></mat-divider>
+    <p class="divider-text">Search</p>
+    <mat-form-field>
+    <mat-label>Language</mat-label>
+    <mat-select (change)="onSelectChangeLanguage($event)" [(ngModel)]="language" >
+      <ng-container *ngFor="let Language of allLanguage">
+        <mat-option [value]="Language" (click)="language=Language">{{Language}}</mat-option>
+      </ng-container>
+    </mat-select>
+  </mat-form-field>
+    <mat-form-field class="select-type">
+      <mat-label>Type</mat-label>
+      <mat-select  (change)="onSelectPlaceholder($event)" [(ngModel)]="typeS">
+        <mat-option value="All" (click)="typeS='All'">
+          All
+        </mat-option>
+        <mat-option *ngFor="let type of allType" [value]="type.name" (click)="typeS=type.name">
+          {{type.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <mat-select (change)="onSelectPlaceholder($event)" [(ngModel)]="placeholder" >
+        <ng-container *ngFor="let find of finds">
+          <mat-option [value]="find" (click)="placeholder=find">{{find}}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{placeholder}}</mat-label>
+      <input matInput [(ngModel)]="search">
+    </mat-form-field>
+    <button mat-fab color="primary" (click)="searchBooks()">
+      <mat-icon>search</mat-icon>
+    </button>
+    <section class="only">
+      <mat-checkbox [(ngModel)]="ENABLEOnly" (click)="searchBooks()">Only show ENABLE</mat-checkbox>
+    </section>
+    <section class="only">
+      <mat-checkbox [(ngModel)]="showBorrowCount">Show Borrow Count</mat-checkbox>
+    </section>
+  </mat-card>
+
+  <mat-card class="bookSearch" >
+      <ng-container *ngFor="let b of paginatedBooks">
+        <mat-card class="book" (click)="openBookPage(b.bookID)">
+          <img class="book-image" [src]="b.imgUrl"  alt="" [matTooltip]="b.name+' ['+b.language+']'">
+          <p class="book-name">{{b.name}}&ngsp;[{{b.language}}]</p>
+          <p class="book-author" *ngIf="b.author&&b.author.length!=0"><span class="author-name" *ngFor="let author of b?.author" [matTooltip]="author.description">{{author.name}}</span></p>
+          <p class="book-author" *ngIf="!b.author||b.author.length==0">no author data</p>
+          <p class="borrow-count" *ngIf="showBorrowCount">Borrowed {{b.borrowCount}} times</p>
+          <p class="book-deposit" *ngIf="b.deposit||b.deposit==0" [matTooltip]='"To borrow this book you need to pay a deposit of "+b.deposit+" euros."' >€{{b.deposit}}</p>
+          <div *ngIf="b.status == 'ENABLE'" class="enable" matTooltip="Available for Loan"></div>
+          <div *ngIf="b.status == 'OCCUPIED'" class="occupied" matTooltip="Locked"></div>
+          <div *ngIf="b.status == 'DISABLE'" class="disable" matTooltip="Currently Loaned Out"></div>
+        </mat-card>
+      </ng-container>
+      <mat-paginator [length]="books.length" [pageSize]="pageSize" (page)="onPageChange($event)"></mat-paginator>
+
+  </mat-card>
+</main>
