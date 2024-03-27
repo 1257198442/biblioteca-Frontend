@@ -10,6 +10,8 @@ import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {AlertDialogComponent} from "../sign-up/alert-dialog.component";
 import {PersonalPageComponent} from "../home/personal-page/personal-page.component";
+import {AddBookPageComponent} from "./add-book-page/add-book-page.component";
+import {BookPageComponent} from "../home/book-page/book-page.component";
 
 
 @Component({
@@ -19,8 +21,11 @@ import {PersonalPageComponent} from "../home/personal-page/personal-page.compone
 })
 export class ManagementComponent{
   @ViewChild('userPaginator') userPaginator!: MatPaginator;
+  @ViewChild('bookPaginator') bookPaginator!: MatPaginator;
   @ViewChild('userSort') userSort!: MatSort;
+  @ViewChild('bookSort') bookSort!: MatSort;
   lowForUserList:string[]=["telephone","name","email","admin","modify_permissions","view"];
+  lowForBookList:string[]=["bookID","name","status","view","delete"];
   rolesListROOT:string[]=["ADMINISTRATOR","CLIENT","BAN"];
   rolesListADMINISTRATOR:string[]=["ADMINISTRATOR","CLIENT"];
   selectRolesList:string[]=[];
@@ -48,9 +53,11 @@ export class ManagementComponent{
     if(this.userTelephone != ""){
       this.getAllUserList();
       this.getLibraryData();
+      this.getAllBookList();
     }
   }
   userDataSource:any;
+  bookDataSource:any;
   getAllUserList(){
     if(this.userAdmin==="ROOT"){
       this.selectRolesList=this.rolesListROOT
@@ -63,6 +70,13 @@ export class ManagementComponent{
       },error=> this.showError(error.status+error.message))
     }
 
+  getAllBookList(){
+    this.http.get(endPoints.book).subscribe((data:any)=>{
+      this.bookDataSource = new MatTableDataSource(data);
+      this.bookDataInit()
+    },(error)=>{console.log(error)})
+  }
+
   getLibraryData(){
     this.http.get(endPoints.library).subscribe((data:any)=>{
       this.origenLibraryData = data;
@@ -73,6 +87,11 @@ export class ManagementComponent{
   userDataInit() {
     this.userDataSource.paginator = this.userPaginator;
     this.userDataSource.sort = this.userSort;
+  }
+
+  bookDataInit() {
+    this.bookDataSource.paginator = this.bookPaginator;
+    this.bookDataSource.sort = this.bookSort;
   }
 
   applyUserFilter(event: Event) {
@@ -225,6 +244,15 @@ export class ManagementComponent{
       })
     }
   }
+
+  applyBookFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.bookDataSource.filter = filterValue.trim().toLowerCase();
+    if (this.bookDataSource.paginator) {
+      this.bookDataSource.paginator.firstPage();
+    }
+  }
+
   openPersonalPage(telephone:string){
     this.dialog.open(PersonalPageComponent,{
       width:"800px",
@@ -236,6 +264,31 @@ export class ManagementComponent{
       }
     }).afterClosed().subscribe(()=>{
       this.getAllUserList()
+    })
+  }
+
+  openBookPage(bookId:string){
+    this.dialog.open(BookPageComponent,{
+      width:"800px",
+      minWidth:"800px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        bookId:bookId
+      }
+    }).afterClosed().subscribe(()=>this.getAllBookList());
+  }
+
+  openAddBookPage(){
+    this.dialog.open(AddBookPageComponent,{
+      width:"700px",
+      minWidth:"700px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+      }
+    }).afterClosed().subscribe(()=>{
+      this.getAllBookList()
     })
   }
 

@@ -6,4 +6,5 @@ export class endPoints {
   static transaction : string = "https://localhost/transaction";
   static book : string = "https://localhost/book";
   static type : string = "https://localhost/type";
+  static author : string = "https://localhost/author";
 }

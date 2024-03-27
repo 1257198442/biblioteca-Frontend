@@ -39,6 +39,7 @@ import {MatChipsModule} from "@angular/material/chips";
 import {BookPageComponent} from "./home/book-page/book-page.component";
 import {BookSearchPageComponent} from "./home/book-search-page/book-search-page.component";
 import {MatListModule} from "@angular/material/list";
+import {AddBookPageComponent} from "./management/add-book-page/add-book-page.component";
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import {MatListModule} from "@angular/material/list";
     WithdrawMoneyComponent,
     BillingRecordsComponent,
     BookPageComponent,
-    BookSearchPageComponent
+    BookSearchPageComponent,
+    AddBookPageComponent
   ],
   imports: [
     BrowserModule,
