@@ -1,0 +1,36 @@
+mat-card{
+  padding: 20px;
+}
+
+.type{
+  width: 300px;
+  padding-top:12px ;
+}
+
+mat-card-content{
+  justify-content: space-between;
+  padding: 0;
+}
+
+.author{
+  width: 60%;
+}
+
+.description,.publisher{
+  width: 75%;
+}
+.description{
+  margin-bottom: 20px;
+}
+
+.red-font{
+  color: #FF6B6B;
+}
+.name,.isbn,.deposit{
+  width: 35%;
+}
+.barcode,.issn,.language{
+  margin-left: 5%;
+  width: 35%;
+}
+
