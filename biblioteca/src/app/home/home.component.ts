@@ -32,7 +32,6 @@ export class HomeComponent {
   };
   constructor(private http:HttpClient,
               private dialog:MatDialog,) {
-
     setInterval(() => {
       const currentToken = sessionStorage.getItem('jwtToken');
       if (currentToken !== this.storedToken) {
@@ -42,12 +41,12 @@ export class HomeComponent {
           const decodedPayload = JSON.parse(atob(payload));
           this.userTelephone = decodedPayload.user;
           this.userAdmin = decodedPayload.role;
-
         }
       }
     }, 1000);
     this.getRandomBook();
   }
+
   getRandomBook(){
     this.http.get(endPoints.book+"/random").subscribe((data:any)=>{
       this.randomBook=data;
@@ -68,4 +67,3 @@ export class HomeComponent {
     })
   }
 }
-

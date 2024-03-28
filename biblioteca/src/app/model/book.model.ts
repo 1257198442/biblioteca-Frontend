@@ -23,3 +23,20 @@ export interface AuthorModel{
   nationality: string,
   imgUrl:string
 }
+export interface BookUpLoadModel{
+  name: string,
+  description: string,
+  publisher: string,
+  authorId:string[],
+  bookType:string[],
+  deposit:number,
+  language:string,
+  isbn:string,
+  issn:string,
+  barcode:string;
+}
+export interface AuthorAddData{
+  name:String,
+  description:String,
+  nationality:String
+}

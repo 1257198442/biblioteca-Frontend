@@ -115,31 +115,24 @@ export class PersonalPageComponent {
 
   changePassword(){
     if(this.confirmPassword===this.newPassword){
-      const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
-        width:'500px',
-        data:{
-          title:'Password verification',
-          message:'Old Password',
-          input:true,
-          confirm:true
-        }
-      })
-      dialogRef.afterClosed().subscribe(res=>{
+      const title = 'Password verification';
+      const message ='Old Password';
+      const confirm = true;
+      const input = true;
+      const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
+      dialogPage.afterClosed().subscribe(res=>{
         if(res.confirm==='confirm'){
           const changePassword={
             oldPassword:res.input,
             newPassword:this.newPassword
           }
           this.http.put(endPoints.user+"/"+this.userData.telephone+"/password",changePassword,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-            const dialogRef1 =this.dialog.open(AlertDialogComponent,{
-              width:"500px",
-              data:{
-                title:'Reminders',
-                message:'Password modified successfully',
-                confirm:false
-              }
-            })
-            dialogRef1.afterClosed().subscribe(()=>{
+            const title = 'Reminders';
+            const message ='Password modified successfully';
+            const confirm = false;
+            const input = false;
+            const dialogPage1 =this.openAlertDialogPage(title,message,confirm,input);
+            dialogPage1.afterClosed().subscribe(()=>{
               this.newPassword="";
               this.confirmPassword="";
               this.editPasswordState=0;
@@ -154,28 +147,21 @@ export class PersonalPageComponent {
   }
 
   resetPassword(){
-    const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
-      width:'500px',
-      data:{
-        title:'Reminders',
-        message:'Clicking confirm will reset the password for user ('+this.userData.telephone+').',
-        input:false,
-        confirm:true
-      }
-    })
-    dialogRef.afterClosed().subscribe(res=>{
+    const title = 'Reminders';
+    const message ='Clicking confirm will reset the password for user ('+this.userData.telephone+').';
+    const confirm = true;
+    const input = false;
+    const dialogPage= this.openAlertDialogPage(title,message,confirm,input)
+    dialogPage.afterClosed().subscribe(res=>{
       if(res=="confirm"){
         this.http.put(endPoints.user+"/"+this.userData.telephone+"/resetPassword",{},this.user.optionsAuthorization2())
           .subscribe((data:any)=>{
-              const dialogRef1 =this.dialog.open(AlertDialogComponent,{
-                width:"500px",
-                data:{
-                  title:'Reminders',
-                  message:'Password reset successfully',
-                  confirm:false
-                }
-              })
-              dialogRef1.afterClosed().subscribe(()=>{
+              const title = 'Reminders';
+              const message ='Password reset successfully';
+              const confirm = false;
+              const input = false;
+              const dialogPage2 = this.openAlertDialogPage(title,message,confirm,input)
+              dialogPage2.afterClosed().subscribe(()=>{
                 this.newPassword="";
                 this.confirmPassword="";
                 this.editPasswordState=0;
@@ -245,6 +231,7 @@ export class PersonalPageComponent {
       this.getWallet();
     })
   }
+
   openBillingRecordsPage(){
     this.dialog.open(BillingRecordsComponent,{
       width:"600px",
@@ -253,6 +240,18 @@ export class PersonalPageComponent {
       maxHeight:"600px",
       data:{
         telephone:this.userData.telephone
+      }
+    })
+  }
+
+  openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
+    return this.dialog.open(AlertDialogComponent,{
+      width:'500px',
+      data:{
+        title:title,
+        message:message,
+        confirm:confirm,
+        input:input
       }
     })
   }

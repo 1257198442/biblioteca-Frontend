@@ -22,6 +22,32 @@
     <p *ngIf="book?.borrowCount!=null">  Number of borrowed copies: {{book?.borrowCount}}</p>
     <p *ngIf="book?.description">  Description: {{book?.description}}</p>
   </mat-card>
+  </main>
+
+  <mat-expansion-panel *ngIf="book?.status=='ENABLE'&&userAdmin==='CLIENT'"  hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        I want to borrow this book
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-progress-bar *ngIf="progressBar" mode="query"></mat-progress-bar>
+    <mat-card class="bc">
+      <mat-form-field>
+        <mat-label>Select a book return time</mat-label>
+        <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="picker" #date disabled>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker disabled = "false"></mat-datepicker>
+      </mat-form-field>
+      <br>
+      <span class="deposit">€{{book?.deposit}}</span>
+      <span class="balance" matTooltip="Click to recharge" (click)="openRechargePage()">Account balance of €{{wallet}}</span>
+      <p *ngIf="date.value" class="clause">You need to return the book by {{date.value}}  23:59:59 in order to avoid the deduction of additional fees</p>
+      <mat-checkbox *ngIf="date.value" [(ngModel)]="isOk">I have been advised of the rules regarding return time and deduction of additional charges.</mat-checkbox>
+      <br>
+      <button mat-flat-button (click)="borrow(date.value)" class="btn">BORROW</button>
+    </mat-card>
+
+  </mat-expansion-panel>
 
     <mat-expansion-panel *ngIf="userAdmin!=='CLIENT' &&userAdmin!=''"  [expanded]= "step === 1" (opened)="step=1" (closed)="step=0"   hideToggle>
       <mat-expansion-panel-header>
@@ -111,7 +137,7 @@
       </mat-card>
       <button mat-flat-button (click)="update()" class="update">UPDATE</button>
     </mat-expansion-panel>
-  </main>
+
 
 </mat-card>
 

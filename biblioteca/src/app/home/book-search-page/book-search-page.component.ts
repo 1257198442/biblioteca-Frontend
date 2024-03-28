@@ -31,7 +31,6 @@ export class BookSearchPageComponent {
 
   userAdmin:string="";
   userTelephone:string=""
-  private errorNotification = undefined;
   constructor(private http:HttpClient,
               private user:authService,
               private dialog:MatDialog,
@@ -111,11 +110,6 @@ export class BookSearchPageComponent {
   }
 
   public showError(notification: string): void {
-    if (this.errorNotification) {
-      this.snackBar.open(this.errorNotification, 'Error', {duration: 5000});
-      this.errorNotification = undefined;
-    } else {
-      this.snackBar.open(notification, 'Error', {duration: 5000});
-    }
+    this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 }

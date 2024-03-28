@@ -7,4 +7,5 @@ export class endPoints {
   static book : string = "https://localhost/book";
   static type : string = "https://localhost/type";
   static author : string = "https://localhost/author";
+  static lending : string = "https://localhost/lending_data";
 }
