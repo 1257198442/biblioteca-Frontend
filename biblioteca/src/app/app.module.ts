@@ -40,6 +40,8 @@ import {BookPageComponent} from "./home/book-page/book-page.component";
 import {BookSearchPageComponent} from "./home/book-search-page/book-search-page.component";
 import {MatListModule} from "@angular/material/list";
 import {AddBookPageComponent} from "./management/add-book-page/add-book-page.component";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {BorrowPageComponent} from "./home/borrow-page/borrow-page.component";
 
 
 @NgModule({
@@ -59,7 +61,8 @@ import {AddBookPageComponent} from "./management/add-book-page/add-book-page.com
     BillingRecordsComponent,
     BookPageComponent,
     BookSearchPageComponent,
-    AddBookPageComponent
+    AddBookPageComponent,
+    BorrowPageComponent
   ],
   imports: [
     BrowserModule,
@@ -89,6 +92,7 @@ import {AddBookPageComponent} from "./management/add-book-page/add-book-page.com
     MatTooltipModule,
     MatChipsModule,
     MatListModule,
+    MatProgressBarModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

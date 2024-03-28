@@ -1,12 +1,15 @@
 import {Component, Inject} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {authService} from "../../authService";
 import {endPoints} from "../../endPoints";
-import {AuthorModel, BookTypeModel} from "../../model/book.model";
-import {BookUpLoadModel} from "../../management/add-book-page/add-book-page.component";
+import {AuthorModel, BookTypeModel, BookUpLoadModel} from "../../model/book.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {RechargeComponent} from "../personal-page/recharge/recharge.component";
+import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
+import {DatePipe} from "@angular/common";
+import {BorrowPageComponent} from "../borrow-page/borrow-page.component";
 @Component({
   selector: 'app-book-page',
   templateUrl: './book-page.component.html',
@@ -28,13 +31,23 @@ export class BookPageComponent {
   selectType:BookTypeModel = {name:"",description:""};
   showAuthor:AuthorModel[] = [];
   showType:BookTypeModel[] = [];
-  private errorNotification = undefined;
+  progressBar=false;
   step=0;
+  isOk=false;
+  wallet=0;
+
+  myFilter = (d: Date | null): boolean => {
+    const currentDate = new Date();
+    const threeMonthsLater = new Date();
+    threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+    return !d || (d >= currentDate && d <= threeMonthsLater);
+  };
 
   constructor(private http:HttpClient,
               @Inject(MAT_DIALOG_DATA)data:any,
               private user:authService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar,
+              private dialog:MatDialog) {
     this.bookId=data.bookId;
     const jwtToken=sessionStorage.getItem("jwtToken");
     if(jwtToken){
@@ -43,7 +56,7 @@ export class BookPageComponent {
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
       this.userAdmin = decodedPayload.role;
-
+      this.getWallet();
     }
     this.init();
   }
@@ -102,6 +115,7 @@ export class BookPageComponent {
       this.showType = [this.selectType]
     }
   }
+
   addAuthor(){
     if(this.bookUpdate.authorId!=undefined){
       let index = this.bookUpdate.authorId.findIndex((author:string)=>author===this.selectAuthor?.authorId);
@@ -121,29 +135,23 @@ export class BookPageComponent {
     index = this.showType.indexOf(type)
     this.showType.splice(index,1);
   }
+
   removeAuthor(author:AuthorModel){
     let index = this.bookUpdate.authorId.indexOf(author.authorId)
     this.bookUpdate.authorId.splice(index,1)
     index = this.showAuthor.indexOf(author)
     this.showAuthor.splice(index,1)
-
   }
 
   update(){
-    console.log(this.bookUpdate)
     this.http.put(endPoints.book+"/"+this.bookId,this.bookUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
       if(this.selectedImage!==this.book?.imgUrl&&this.selectedImage!=null){
         const formData = new FormData();
         formData.append('file', this.file as Blob);
         this.http.put(endPoints.book+"/"+this.bookId+"/image",formData,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-          this.init();
-        },(error)=>{
-          this.init();
-          this.showError(error.status+error.message);
-        })
-      }else {
-        this.init()
+        },error=>this.showError(error.status+error.message))
       }
+      this.init()
       this.step=0;
     },(error)=>{
       this.showError(error.status+error.message);
@@ -161,12 +169,95 @@ export class BookPageComponent {
     reader.readAsDataURL(this.file);
   }
 
-  public showError(notification: string): void {
-    if (this.errorNotification) {
-      this.snackBar.open(this.errorNotification, 'Error', {duration: 5000});
-      this.errorNotification = undefined;
-    } else {
-      this.snackBar.open(notification, 'Error', {duration: 5000});
+  borrow(date:string){
+    if(date!==""){
+      if(this.isOk){
+        const title='A deposit of €'+this.book.deposit+' will be deducted from the '+this.userTelephone+' account after confirmation.';
+        const message = 'Account password';
+        const confirm = true;
+        const input = true;
+        const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
+        dialogPage.afterClosed().subscribe(res=>{
+          if(res?.confirm==='confirm') {
+            this.progressBar=true;
+            const datePipe = new DatePipe('en-US');
+            const time = datePipe.transform(date, 'yyyy-MM-dd');
+            const data={
+              bookId: this.book?.bookID,
+              telephone: this.userTelephone,
+              limitTime: time + " 23:59:59",
+              password: res.input
+            }
+            this.postLendingData(data);
+          }
+        })
+      }else {
+        this.snackBar.open("Please tick the box to confirm the terms and conditions", 'Error', {duration: 5000});
+      }
+    }else {
+      this.snackBar.open("Please select a return time!", 'Error', {duration: 5000});
     }
+  }
+  postLendingData(data:any){
+    this.http.post(endPoints.lending,data,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+      this.progressBar=false;
+      this.init();
+      this.openBorrowPage(data.body.reference)
+    },(error:any)=>{
+      if(error.status==403){
+        const event = this.snackBar.open("Your account balance is less than "+this.book?.deposit+" €",'Recharge',{duration: 5000})
+        event.onAction().subscribe(() => {this.openRechargePage()});
+      }else if(error.status==401){
+        this.showError("401 Incorrect account password")
+      }else {
+        this.showError(error.status+error.message)
+      }
+      this.progressBar=false;
+    })
+  }
+
+  getWallet(){
+    this.http.get(endPoints.wallet+"/"+this.userTelephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+      this.wallet = data.body.balance;
+    },error=>this.showError(error.status+error.message))
+  }
+
+  openBorrowPage(reference:string){
+    this.dialog.open(BorrowPageComponent,{
+      width:"700px",
+      height:"auto",
+      data:{
+        reference:reference
+      }
+    })
+  }
+
+  openRechargePage(){
+    this.dialog.open(RechargeComponent,{
+      width:"600px",
+      minWidth:"600px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        telephone:this.userTelephone
+      }
+    })
+  }
+
+  openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
+    return this.dialog.open(AlertDialogComponent,{
+      width:'500px',
+      data:{
+        title:title,
+        message:message,
+        confirm:confirm,
+        input:input
+      }
+    })
+  }
+
+
+  public showError(notification: string): void {
+    this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 }

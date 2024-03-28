@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
 import {authService} from "../../authService";
-import {AuthorModel, BookTypeModel} from "../../model/book.model";
+import {AuthorAddData, AuthorModel, BookTypeModel, BookUpLoadModel} from "../../model/book.model";
 
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {endPoints} from "../../endPoints";
@@ -23,7 +23,6 @@ export class AddBookPageComponent {
   selectAuthor:AuthorModel|undefined;
   step=0;
   author:AuthorAddData={name:"", description:"", nationality:""}
-  private errorNotification = undefined;
 
   userAdmin:string="";
   userTelephone:string=""
@@ -136,6 +135,7 @@ export class AddBookPageComponent {
     index = this.showType.indexOf(type)
     this.showType.splice(index,1);
   }
+
   removeAuthor(author:AuthorModel){
     let index = this.bookUpload.authorId.indexOf(author.authorId);
     this.bookUpload.authorId.splice(index,1);
@@ -144,31 +144,8 @@ export class AddBookPageComponent {
   }
 
   public showError(notification: string): void {
-    if (this.errorNotification) {
-      this.snackBar.open(this.errorNotification, 'Error', {duration: 5000});
-      this.errorNotification = undefined;
-    } else {
-      this.snackBar.open(notification, 'Error', {duration: 5000});
-    }
+    this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 
 
-}
-
-export interface BookUpLoadModel{
-  name: string,
-  description: string,
-  publisher: string,
-  authorId:string[],
-  bookType:string[],
-  deposit:number,
-  language:string,
-  isbn:string,
-  issn:string,
-  barcode:string;
-}
-export interface AuthorAddData{
-   name:String,
-   description:String,
-   nationality:String
 }

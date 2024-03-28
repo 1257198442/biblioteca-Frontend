@@ -35,7 +35,7 @@ export class AppComponent implements OnInit{
       const currentToken = sessionStorage.getItem('jwtToken');
       if (currentToken !== this.storedToken) {
         this.storedToken = currentToken!=null?currentToken:"";
-        this.getClientData();
+        this.getToken();
         if(this.userTelephone!=""){
           this.getUserData();
           this.isLogin=true;
@@ -48,7 +48,7 @@ export class AppComponent implements OnInit{
     this.dialog.open(LoginComponent, {
       width:"470px",
     }).afterClosed().subscribe(()=> {
-      this.getClientData();
+      this.getToken();
       if(this.userTelephone!=""){
         this.getUserData();
         this.isLogin=true;
@@ -56,7 +56,7 @@ export class AppComponent implements OnInit{
     });
   }
 
-  getClientData(){
+  getToken(){
     const jwtToken = sessionStorage.getItem('jwtToken');
     if (jwtToken) {
       const [header, payload, signature] = jwtToken.split('.');
@@ -96,10 +96,6 @@ export class AppComponent implements OnInit{
     return this.userData.role==="ADMINISTRATOR"||this.userData.role==="ROOT"
   }
 
-  public showError(notification: string): void {
-    this.snackBar.open(notification, 'Error', {duration: 5000});
-  }
-
   getLibraryData(){
     this.http.get(endPoints.library)
       .subscribe((data:any)=>{
@@ -113,6 +109,14 @@ export class AppComponent implements OnInit{
         this.getLibraryData()
       }
     });
+  }
+
+  getAvatar():void{
+    this.http.get(endPoints.avatar+"/"+this.userTelephone)
+      .subscribe(
+        (data:any)=>{this.avatarUrl=data.url},
+        error=>this.showError(error.status+error.message)
+      )
   }
 
   openPersonalPage(){
@@ -129,11 +133,7 @@ export class AppComponent implements OnInit{
     })
   }
 
-  getAvatar():void{
-    this.http.get(endPoints.avatar+"/"+this.userTelephone)
-      .subscribe(
-        (data:any)=>{this.avatarUrl=data.url},
-        (error:any)=>{this.showError(error)}
-      )
+  public showError(notification: string): void {
+    this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 }

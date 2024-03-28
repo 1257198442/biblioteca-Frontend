@@ -45,28 +45,21 @@ export class WithdrawMoneyComponent {
         amount:this.sumOfMoney,
         transactionDetails:this.transactionDetails
       }
-      const dialog = this.dialog.open(AlertDialogComponent,{
-        width:'500px',
-        data:{
-          title:'Password verification',
-          message:'Account Password.',
-          input:true,
-          confirm:true
-        }
-      })
+      const title='Password verification';
+      const message='Account Password.';
+      const input=true;
+      const confirm=true;
+      const dialog = this.openAlertDialogPage(title,message,confirm,input)
       dialog.afterClosed().subscribe(res=>{
         if(res.confirm == "confirm"){
           this.transactionRecord.password=res.input;
           this.http.post(endPoints.wallet+"/withdrawal",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=>{
             this.btnStatus(false)
-            this.dialog.open(AlertDialogComponent,{
-              width:'500px',
-              data:{
-                title:'Successes',
-                message:':) Withdraw Money '+this.telephone+' with '+this.sumOfMoney+'€ successfully.',
-                confirm:false
-              }
-            })
+            const title= 'Successes';
+            const message= ':) Withdraw Money '+this.telephone+' with '+this.sumOfMoney+'€ successfully.';
+            const confirm= false;
+            const input = false;
+            this.openAlertDialogPage(title,message,confirm,input)
             this.dialogRef.close();
           },(error)=>{
             this.btnStatus(false)
@@ -101,6 +94,18 @@ export class WithdrawMoneyComponent {
     this.http.get(endPoints.wallet+"/"+this.telephone,this.user.optionsAuthorization2())
       .subscribe((data:any)=>
       this.balance = data.body.balance)
+  }
+
+  openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
+    return this.dialog.open(AlertDialogComponent,{
+      width:'500px',
+      data:{
+        title:title,
+        message:message,
+        confirm:confirm,
+        input:input
+      }
+    })
   }
 
 }

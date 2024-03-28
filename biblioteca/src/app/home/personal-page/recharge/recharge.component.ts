@@ -46,14 +46,11 @@ export class RechargeComponent {
       }
       this.http.post(endPoints.wallet+"/recharge",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=>{
         this.btnStatus(false)
-        this.dialog.open(AlertDialogComponent,{
-          width:'500px',
-          data:{
-            title:'Successes',
-            message:':) Recharge account '+this.telephone+' with '+this.sumOfMoney+'€ successfully.',
-            confirm:false
-          }
-        })
+        const title = 'Successes';
+        const message= ':) Recharge account '+this.telephone+' with '+this.sumOfMoney+'€ successfully.';
+        const confirm= false;
+        const input = false;
+        this.openAlertDialogPage(title,message,confirm,input)
         this.dialogRef.close();
       },(error)=>{
         this.btnStatus(false)
@@ -93,6 +90,18 @@ export class RechargeComponent {
   btnStatus(status:boolean){
     this.rechargeBtn=status;
     this.spinner=status;
+  }
+
+  openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
+    return this.dialog.open(AlertDialogComponent,{
+      width:'500px',
+      data:{
+        title:title,
+        message:message,
+        confirm:confirm,
+        input:input
+      }
+    })
   }
 
 }

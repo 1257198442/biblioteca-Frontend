@@ -14,6 +14,7 @@ import {AlertDialogComponent} from "./alert-dialog.component";
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css']
 })
+
 export class SignUpComponent {
   registrationData:RegistrationClass;
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
@@ -36,15 +37,12 @@ export class SignUpComponent {
       }
       this.http.post(endPoints.user,registrationData1)
         .subscribe((data:any)=>{
-          const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
-            width:'500px',
-            data:{
-              title:'Reminders',
-              message:':) Successful registration.',
-              confirm:false
-            }
-          })
-          dialogRef.afterClosed().subscribe(()=>{
+          const title = 'Reminders';
+          const message = ':) Successful registration.'
+          const confirm = false
+          const input = false
+          const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
+          dialogPage.afterClosed().subscribe(()=>{
             this.dialogRef.close();
           })
         },error=> this.showError(error.status+error.message))
@@ -61,6 +59,7 @@ export class SignUpComponent {
   public showError(notification: string): void {
       this.snackBar.open(notification, 'Error', {duration: 5000});
   }
+
   onSelectCountryDialCode(dialCode:any){
     this.dialCode = dialCode.target.value.dialCode;
   }
@@ -74,5 +73,17 @@ export class SignUpComponent {
   }
 
   protected readonly countriesDialCodes = countriesDialCodes;
+
+  openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
+    return this.dialog.open(AlertDialogComponent,{
+      width:'500px',
+      data:{
+        title:title,
+        message:message,
+        confirm:confirm,
+        input:input
+      }
+    })
+  }
 }
 

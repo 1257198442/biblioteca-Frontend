@@ -19,6 +19,7 @@ export class BillingRecordsComponent {
     this.telephone = data.telephone;
     this.getRecords();
   }
+
   getRecords(){
     this.http.get(endPoints.transaction+"/search?telephone="+encodeURIComponent(this.telephone),this.user.optionsAuthorization2())
       .subscribe((data:any)=>{

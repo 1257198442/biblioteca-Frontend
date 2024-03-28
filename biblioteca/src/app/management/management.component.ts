@@ -59,9 +59,9 @@ export class ManagementComponent{
   userDataSource:any;
   bookDataSource:any;
   getAllUserList(){
-    if(this.userAdmin==="ROOT"){
+    if(this.isRoot()){
       this.selectRolesList=this.rolesListROOT
-    }else if(this.userAdmin==="ADMINISTRATOR"){
+    }else if(this.isAdministrators()){
       this.selectRolesList=this.rolesListADMINISTRATOR
     }
       this.http.get(endPoints.user,this.user.optionsAuthorization2()).subscribe((data:any)=>{
@@ -111,34 +111,28 @@ export class ManagementComponent{
   }
 
   toAdministrators(telephone:string){
-        const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
-          width:'500px',
-          data:{
-            title:'Reminders',
-            message:'Confirm changing the permissions of user '+telephone+' to admin?..',
-            confirm:true
-          }
-        })
-        dialogRef.afterClosed().subscribe(res=>{
-          if(res==='confirm'){
-            this.http.put(endPoints.user+"/"+telephone+"/role","ADMINISTRATOR",this.user.optionsAuthorization2()).subscribe(
-              (data:any)=>{this.getAllUserList()},
-                error=> this.showError(error.status+error.message)
-            )
-          }
-        })
+    const title = 'Reminders';
+    const message ='Confirm changing the permissions of user '+telephone+' to ADMINISTRATOR?..';
+    const confirm = true;
+    const input = false;
+    const dialogPage =this.openAlertDialogPage(title,message,confirm,input);
+    dialogPage.afterClosed().subscribe(res=>{
+      if(res==='confirm'){
+        this.http.put(endPoints.user+"/"+telephone+"/role","ADMINISTRATOR",this.user.optionsAuthorization2()).subscribe(
+          (data:any)=>{this.getAllUserList()},
+          error=> this.showError(error.status+error.message)
+        )
+      }
+    })
   }
 
   toUser(telephone:string){
-    const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
-      width:'500px',
-      data:{
-        title:'Reminders',
-        message:'Are you sure you want to change the permissions on '+telephone+' to client?',
-        confirm:true
-      }
-    })
-    dialogRef.afterClosed().subscribe(res=>{
+    const title = 'Reminders';
+    const message ='Are you sure you want to change the permissions on '+telephone+' to CLIENT?';
+    const confirm = true;
+    const input = false;
+    const dialogPage =this.openAlertDialogPage(title,message,confirm,input);
+    dialogPage.afterClosed().subscribe(res=>{
       if(res==='confirm'){
         this.http.put(endPoints.user+"/"+telephone+"/role","CLIENT",this.user.optionsAuthorization2()).subscribe(
           (data:any)=>{this.getAllUserList()},
@@ -149,15 +143,12 @@ export class ManagementComponent{
   }
 
   toBan(telephone:string){
-    const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
-      width:'500px',
-      data:{
-        title:'Warning',
-        message:'Are you sure you want to disable this account? If you disable it, the account holder will not be able to use the account.',
-        confirm:true
-      }
-    })
-    dialogRef.afterClosed().subscribe(res=>{
+    const title = 'Warning';
+    const message ='Are you sure you want to disable this account? If you disable it, the account holder will not be able to use the account.';
+    const confirm = true;
+    const input = false;
+    const dialogPage =this.openAlertDialogPage(title,message,confirm,input);
+    dialogPage.afterClosed().subscribe(res=>{
       if(res==='confirm'){
         this.http.put(endPoints.user+"/"+telephone+"/role","BAN",this.user.optionsAuthorization2()).subscribe(
           (data:any)=>{
@@ -183,11 +174,7 @@ export class ManagementComponent{
   modifyRoleButtonIsDisplay(role:string,modifyRole:string):boolean{
     if(this.isRoot()&&role!=modifyRole){
       return true;
-    }else if(this.isAdministrators() && role != modifyRole && modifyRole=="ADMINISTRATOR"){
-      return true;
-    }else {
-      return false;
-    }
+    }else return this.isAdministrators() && role != modifyRole && modifyRole == "ADMINISTRATOR";
   }
 
   shouldDisplayElement(element:any): boolean {
@@ -197,35 +184,27 @@ export class ManagementComponent{
     if (element.role === 'ROOT') {
       return false;
     }
-    if (this.userAdmin === 'ADMINISTRATOR' && (element.role === 'ADMINISTRATOR' || element.role === 'BAN')) {
-      return false;
-    }
-    return true;
+    return !(this.userAdmin === 'ADMINISTRATOR' && (element.role === 'ADMINISTRATOR' || element.role === 'BAN'));
+
   }
 
   updateLibrary(){
     if(this.origenLibraryData !== this.updateLibraryData){
-      const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
-        width:'500px',
-        data:{
-          title:'Reminders',
-          message:'Confirmation of changes to library data? This will modify the data displayed in the footer!!',
-          confirm:true
-        }
-      })
-      dialogRef.afterClosed().subscribe(res=>{
+      const title = 'Reminders';
+      const message = 'Confirmation of changes to library data? This will modify the data displayed in the footer!!';
+      const confirm = true;
+      const input = false;
+      const dialogPage =this.openAlertDialogPage(title,message,confirm,input);
+      dialogPage.afterClosed().subscribe(res=>{
         if(res==='confirm'){
           this.http.put(endPoints.library,this.updateLibraryData,this.user.optionsAuthorization2())
             .subscribe((data:any)=>{
-                const dialogRef1 =this.dialog.open(AlertDialogComponent,{
-                  width:"500px",
-                  data:{
-                    title:'Reminders',
-                    message:'Modified successfully',
-                    confirm:false
-                  }
-                })
-              dialogRef1.afterClosed().subscribe(()=>{
+                const title = 'Reminders';
+                const message = 'Modified successfully';
+                const confirm = false;
+                const input = false;
+                const dialogPage1 =this.openAlertDialogPage(title,message,confirm,input)
+              dialogPage1.afterClosed().subscribe(()=>{
                 this.router.navigateByUrl('/home');
               })
               this.getLibraryData();
@@ -245,14 +224,11 @@ export class ManagementComponent{
   }
 
   deleteBook(bookID:string){
-    const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
-      width:'500px',
-      data:{
-        title:'Warning',
-        message:'Are you sure you want to delete the data from this book? If the book is on loan, the deletion will fail.',
-        confirm:true
-      }
-    })
+    const title = 'Warning';
+    const message = 'Are you sure you want to delete the data from this book? If the book is on loan, the deletion will fail.';
+    const confirm = true;
+    const input = false;
+    const dialogRef =this.openAlertDialogPage(title,message,confirm,input);
     dialogRef.afterClosed().subscribe(res=>{
       if(res==='confirm'){
         this.http.delete(endPoints.book+"/"+bookID,this.user.optionsAuthorization2()).subscribe((data:any)=>{
@@ -321,15 +297,20 @@ export class ManagementComponent{
     })
   }
 
-  public showError(notification: string): void {
-    if (this.errorNotification) {
-      this.snackBar.open(this.errorNotification, 'Error', {duration: 5000});
-      this.errorNotification = undefined;
-    } else {
-      this.snackBar.open(notification, 'Error', {duration: 5000});
-    }
+  openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
+    return this.dialog.open(AlertDialogComponent,{
+      width:'500px',
+      data:{
+        title:title,
+        message:message,
+        confirm:confirm,
+        input:input
+      }
+    })
   }
 
+  public showError(notification: string): void {
+    this.snackBar.open(notification, 'Error', {duration: 5000});
+  }
 
 }
-

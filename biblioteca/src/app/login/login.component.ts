@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {authService} from "../authService";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-
 import {endPoints} from "../endPoints";
 import {countriesDialCodes} from "../model/countryDialCode.model";
 import {SignUpComponent} from "../sign-up/sign-up.component";
@@ -50,15 +48,18 @@ export class LoginComponent {
            )
        }
      }
+
   registration():void{
     this.dialog.open(SignUpComponent,
       {
         width:"470px",
       });
   }
+
   public showError(notification: string): void {
       this.snackBar.open(notification, 'Error', {duration: 5000});
   }
+
   onSelectCountryDialCode($event:any){
        this.dialCode = $event.target.value.dialCode;
   }
