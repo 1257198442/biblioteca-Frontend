@@ -6,6 +6,7 @@ import {authService} from "../../authService";
 import {MatDialog} from "@angular/material/dialog";
 import {endPoints} from "../../endPoints";
 import {BookPageComponent} from "../book-page/book-page.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-book-search-page',
@@ -30,9 +31,11 @@ export class BookSearchPageComponent {
 
   userAdmin:string="";
   userTelephone:string=""
+  private errorNotification = undefined;
   constructor(private http:HttpClient,
               private user:authService,
-              private dialog:MatDialog, ) {
+              private dialog:MatDialog,
+              private snackBar: MatSnackBar) {
     const jwtToken=sessionStorage.getItem("jwtToken");
     if(jwtToken){
       const [header, payload, signature] = jwtToken.split('.');
@@ -49,7 +52,6 @@ export class BookSearchPageComponent {
       const lang = this.language == "All" ? "":"language="+this.language
       const type= this.typeS=="All"?"":"&type="+this.typeS;
       const route = searchUrl+lang+type;
-    console.log(endPoints.book+"/search?"+route)
       this.http.get(endPoints.book+"/search?"+route)
         .subscribe((data:any)=> {
           if (!this.ENABLEOnly){
@@ -65,17 +67,17 @@ export class BookSearchPageComponent {
           this.currentPage=0;
           }
 
-        },(error:any)=>{
-          console.log(error)
-        })
+        },error=>
+          this.showError(error.status+error.message)
+        )
   }
 
   getAllBookType(){
     this.http.get(endPoints.type).subscribe((data:any)=>{
       this.allType = data;
-    },(error)=>{
-      console.log(error)
-    })
+    },error=>
+      this.showError(error.status+error.message)
+    )
   }
 
   onSelectPlaceholder(event: any) {
@@ -95,6 +97,7 @@ export class BookSearchPageComponent {
     const endIndex = startIndex + this.pageSize;
     return this.books.slice(startIndex, endIndex);
   }
+
   openBookPage(bookId:string){
     this.dialog.open(BookPageComponent,{
       width:"800px",
@@ -105,5 +108,14 @@ export class BookSearchPageComponent {
         bookId:bookId,
       }
     }).afterClosed().subscribe(()=>this.searchBooks())
+  }
+
+  public showError(notification: string): void {
+    if (this.errorNotification) {
+      this.snackBar.open(this.errorNotification, 'Error', {duration: 5000});
+      this.errorNotification = undefined;
+    } else {
+      this.snackBar.open(notification, 'Error', {duration: 5000});
+    }
   }
 }

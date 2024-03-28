@@ -23,10 +23,15 @@ export class AddBookPageComponent {
   selectAuthor:AuthorModel|undefined;
   step=0;
   author:AuthorAddData={name:"", description:"", nationality:""}
+  private errorNotification = undefined;
 
   userAdmin:string="";
   userTelephone:string=""
-  constructor(private http:HttpClient, @Inject(MAT_DIALOG_DATA)data:any, private user:authService, private dialog:MatDialog, private snackBar: MatSnackBar) {
+  constructor(private http:HttpClient,
+              @Inject(MAT_DIALOG_DATA)data:any,
+              private user:authService,
+              private dialog:MatDialog,
+              private snackBar: MatSnackBar) {
     const jwtToken=sessionStorage.getItem("jwtToken");
     if(jwtToken){
       const [header, payload, signature] = jwtToken.split('.');
@@ -120,7 +125,7 @@ export class AddBookPageComponent {
         this.getAllAuthor();
         this.step=0;
       },(error) => {
-        console.log(error)
+        this.showError(error.status+error.message);
       })
     }
   }
@@ -137,6 +142,16 @@ export class AddBookPageComponent {
     index = this.showAuthor.indexOf(author)
     this.showAuthor.splice(index,1);
   }
+
+  public showError(notification: string): void {
+    if (this.errorNotification) {
+      this.snackBar.open(this.errorNotification, 'Error', {duration: 5000});
+      this.errorNotification = undefined;
+    } else {
+      this.snackBar.open(notification, 'Error', {duration: 5000});
+    }
+  }
+
 
 }
 

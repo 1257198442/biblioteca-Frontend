@@ -180,15 +180,6 @@ export class ManagementComponent{
     }
   }
 
-  public showError(notification: string): void {
-    if (this.errorNotification) {
-      this.snackBar.open(this.errorNotification, 'Error', {duration: 5000});
-      this.errorNotification = undefined;
-    } else {
-      this.snackBar.open(notification, 'Error', {duration: 5000});
-    }
-  }
-
   modifyRoleButtonIsDisplay(role:string,modifyRole:string):boolean{
     if(this.isRoot()&&role!=modifyRole){
       return true;
@@ -253,6 +244,44 @@ export class ManagementComponent{
     }
   }
 
+  deleteBook(bookID:string){
+    const dialogRef:MatDialogRef<any>=this.dialog.open(AlertDialogComponent,{
+      width:'500px',
+      data:{
+        title:'Warning',
+        message:'Are you sure you want to delete the data from this book? If the book is on loan, the deletion will fail.',
+        confirm:true
+      }
+    })
+    dialogRef.afterClosed().subscribe(res=>{
+      if(res==='confirm'){
+        this.http.delete(endPoints.book+"/"+bookID,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+          this.getAllBookList();
+        },(error)=>{
+            this.showError(error.status+error.message);
+        })
+      }
+    })
+  }
+
+  locked(bookID:string){
+    this.http.put(endPoints.book+"/"+bookID+"/status","DISABLE",this.user.optionsAuthorization2())
+      .subscribe((data:any)=>{
+        this.getAllBookList();
+      },(error)=>{
+        this.showError(error.status+error.message);
+      })
+  }
+
+  available(bookID:string){
+    this.http.put(endPoints.book+"/"+bookID+"/status","ENABLE",this.user.optionsAuthorization2())
+      .subscribe((data:any)=>{
+        this.getAllBookList()
+      },(error)=>{
+        this.showError(error.status+error.message);
+      })
+  }
+
   openPersonalPage(telephone:string){
     this.dialog.open(PersonalPageComponent,{
       width:"800px",
@@ -291,6 +320,16 @@ export class ManagementComponent{
       this.getAllBookList()
     })
   }
+
+  public showError(notification: string): void {
+    if (this.errorNotification) {
+      this.snackBar.open(this.errorNotification, 'Error', {duration: 5000});
+      this.errorNotification = undefined;
+    } else {
+      this.snackBar.open(notification, 'Error', {duration: 5000});
+    }
+  }
+
 
 }
 
