@@ -1,0 +1,107 @@
+<main>
+<mat-card *ngIf="userTelephone!=''">
+  <mat-tab-group>
+
+    <mat-tab label="Returned list">
+      <mat-card-title>
+        <h1 class="title">Returned list</h1> <button mat-flat-button (click)="getAllBorrowData()">Refresh</button>
+      </mat-card-title>
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="applyRestitutionFilter($event)" placeholder="bookName,bookID,telephone,reference,time,status">
+      </mat-form-field>
+      <table mat-table #restitutionSort="matSort" [dataSource]="restitutionDataSource" class="mat-elevation-z8" matSort>
+        <ng-container matColumnDef="reference">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Reference </th>
+          <td mat-cell *matCellDef="let element"  [class]="{'red-text':isOverdue(element.limitTime,element.restitutionTime)}" > {{element.reference}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="bookID">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Book </th>
+          <td mat-cell *matCellDef="let element" [class]="{'red-text':isOverdue(element.limitTime,element.restitutionTime)}"> {{element.book.name}} [ID:{{element.book.bookID}}] </td>
+        </ng-container>
+
+        <ng-container matColumnDef="returnStatus">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ReturnStatus </th>
+          <td mat-cell *matCellDef="let element"  [class]="{'red-text':isOverdue(element.limitTime,element.restitutionTime)}"> {{element.returnStatus}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status of return </th>
+          <td mat-cell *matCellDef="let element"  [class]="{'red-text':isOverdue(element.limitTime,element.restitutionTime)}"> {{status2(element.limitTime,element.restitutionTime)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="telephone">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> User </th>
+          <td mat-cell *matCellDef="let element" [class]="{'red-text':isOverdue(element.limitTime,element.restitutionTime)}" > {{element.user.telephone}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="view">
+          <th mat-header-cell *matHeaderCellDef> View </th>
+          <td mat-cell *matCellDef="let element"> <button mat-icon-button (click)="openReturnPage(element.reference)"><mat-icon> visibility</mat-icon> </button></td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef=" returnLow "></tr>
+        <tr mat-row *matRowDef="let row; columns: returnLow;"></tr>
+      </table>
+      <mat-paginator #restitutionPaginator [pageSizeOptions]="[5, 10, 25, 50]" ></mat-paginator>
+    </mat-tab>
+    <mat-tab label="Unreturned list">
+      <mat-card-title>
+        <h1 class="title">Lending list</h1>
+        <button mat-flat-button (click)="getAllBorrowData();all=false">Refresh</button>
+      </mat-card-title>
+        <mat-form-field class="example-full-width">
+          <mat-label>Search</mat-label>
+          <input matInput (keyup)="applyLendingFilter($event)" placeholder="bookName,bookID,telephone,reference,time">
+        </mat-form-field>
+      <br>
+        <button mat-flat-button (click)="applyLendingAllOrNoReturnFilter('false'); all=true" *ngIf="!all">Only Show no Return</button>
+        <button mat-flat-button (click)="getAllBorrowData(); all=false" *ngIf="all">Show All</button>
+        <button *ngIf="userAdmin=='ADMINISTRATOR'||userAdmin=='ROOT'" mat-flat-button (click)="readUserByExtensionBeyond30Days(); all=true" >Show Beyond 30 Days no Return</button>
+        <button *ngIf="userAdmin=='ADMINISTRATOR'||userAdmin=='ROOT'" mat-flat-button (click)="sendReminderEmail(); all=true" >Send reminder email</button>
+
+      <table mat-table #lendingSort="matSort" [dataSource]="lendingDataSource" class="table-unreturned" matSort>
+        <ng-container matColumnDef="reference">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Reference </th>
+          <td mat-cell *matCellDef="let element" [ngClass]="getRowClass(element)" > {{element.reference}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="bookID">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Book </th>
+          <td mat-cell *matCellDef="let element" [ngClass]="getRowClass(element)" > {{element.book.name}} [ID:{{element.book.bookID}}] </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lendingTime" >
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> BorrowTime </th>
+          <td mat-cell *matCellDef="let element" [ngClass]="getRowClass(element)" > {{element.lendingTime}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="limitTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> LimitTime </th>
+          <td mat-cell *matCellDef="let element" [ngClass]="getRowClass(element)" > {{element.limitTime}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="telephone">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> User </th>
+          <td mat-cell *matCellDef="let element" [ngClass]="getRowClass(element)" > {{element.user.telephone}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="return">
+          <th mat-header-cell *matHeaderCellDef> Return </th>
+          <td mat-cell *matCellDef="let element"> <button mat-flat-button *ngIf="!element.status" (click)="return(element)">Return </button></td>
+        </ng-container>
+
+        <ng-container matColumnDef="view">
+          <th mat-header-cell *matHeaderCellDef> View </th>
+          <td mat-cell *matCellDef="let element"> <button mat-icon-button (click)="openBorrowPage(element.reference)"><mat-icon> visibility</mat-icon> </button></td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef=" low "></tr>
+        <tr mat-row *matRowDef="let row; columns: low;"></tr>
+      </table>
+      <mat-paginator #lendingPaginator [pageSizeOptions]="[5, 10, 25, 50]" ></mat-paginator>
+    </mat-tab>
+  </mat-tab-group>
+
+</mat-card>
+</main>

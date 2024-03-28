@@ -42,6 +42,8 @@ import {MatListModule} from "@angular/material/list";
 import {AddBookPageComponent} from "./management/add-book-page/add-book-page.component";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {BorrowPageComponent} from "./home/borrow-page/borrow-page.component";
+import {BorrowComponent} from "./home/borrow/borrow.component";
+import {ReturnPageComponent} from "./home/borrow/return-page/return-page.component";
 
 
 @NgModule({
@@ -62,7 +64,9 @@ import {BorrowPageComponent} from "./home/borrow-page/borrow-page.component";
     BookPageComponent,
     BookSearchPageComponent,
     AddBookPageComponent,
-    BorrowPageComponent
+    BorrowPageComponent,
+    BorrowComponent,
+    ReturnPageComponent
   ],
   imports: [
     BrowserModule,
