@@ -24,7 +24,7 @@ export class BorrowPageComponent {
 getBorrowData(){
   this.http.get(endPoints.lending+"/"+this.reference,this.user.optionsAuthorization2())
     .subscribe((data:any)=>{
-      this.borrowData=data;
+      this.borrowData=data.body;
     },error=>
       this.showError(error.status+error.message))
   }

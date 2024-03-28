@@ -1,0 +1,23 @@
+<mat-card class="order-details">
+  <h2>Return Information</h2>
+  <div class="order-info">
+    <div><strong>Reference:</strong> {{returnData?.reference}}</div>
+    <div><strong>User name:</strong> {{returnData?.user.name}}</div>
+    <div><strong>Telephone:</strong> {{returnData?.user.telephone}}</div>
+    <div><strong>Book ID:</strong> {{returnData?.book.bookID}}</div>
+    <div><strong>Book Name:</strong> {{returnData?.book.name}}</div>
+    <div><strong>Book Deposit:</strong> €{{returnData?.book.deposit}}</div>
+    <div><strong>Borrow Time:</strong> {{returnData?.lendingTime}}</div>
+    <div><strong>Limit Time:</strong> {{returnData?.limitTime}}</div>
+    <div><strong>Return Time:</strong> {{returnData?.restitutionTime}}</div>
+    <div><strong>Return Status:</strong> {{returnData?.returnStatus}}</div>
+  </div>
+  <h2  *ngIf="returnData?.bookDamageDegree">Degree of damage to books returned</h2>
+  <div class="order-info"  *ngIf="returnData?.bookDamageDegree">
+    <div><strong>Book Degree:</strong> {{returnData?.bookDamageDegree.degree}}</div>
+    <div><strong>Return Addendum:</strong> {{returnData?.bookDamageDegree.addendum}}</div>
+    <div><strong>Return Deposit:</strong> €{{returnData?.bookDamageDegree.returnDeposit}}</div>
+    <div><strong>Details Deductions:</strong> {{returnData?.bookDamageDegree.detailsDeductions}}</div>
+    <div><strong>Addendum Time:</strong> {{returnData?.bookDamageDegree.time}}</div>
+  </div>
+</mat-card>

@@ -8,4 +8,5 @@ export class endPoints {
   static type : string = "https://localhost/type";
   static author : string = "https://localhost/author";
   static lending : string = "https://localhost/lending_data";
+  static return : string = "https://localhost/return_data";
 }

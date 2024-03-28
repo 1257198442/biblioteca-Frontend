@@ -1,0 +1,62 @@
+main{
+  text-align: center;
+  margin: auto;
+}
+td{
+  color: #3BAFBE;
+}
+td button{
+  --mdc-filled-button-container-color: #3BAFBE!important;
+  --mdc-filled-button-label-text-color: white !important;
+}
+.yellow-text{
+  color: #FFD166;
+}
+.red-text{
+  color: #FF6B6B;
+}
+.s1{
+  width: 25%;
+}
+.s2{
+  width: 64%;
+}
+.refresh{
+  width: 80%;
+  --mdc-filled-button-container-color: #3BAFBE!important;
+  --mdc-filled-button-label-text-color: white !important;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+.mat-mdc-fab{
+  --mdc-fab-container-color:#FF6B6B !important;
+}
+
+@media screen and (max-width: 767px) {
+  mat-card{
+    padding: 20px;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+  }
+}
+@media screen and (min-width: 768px) {
+  mat-card{
+    padding: 20px;
+    display: inline-block;
+    text-align: center;
+    width: 80%;
+    max-width: 980px;
+  }
+}
+.table-unreturned{
+  margin-top: 20px;
+}
+.title{
+  margin:16px 16px 16px 0;
+  display: inline-block;
+
+}
+.example-full-width{
+  width: 80%;
+}

@@ -10,7 +10,7 @@
     <li *ngIf="isLogin">
       <a mat-button [matMenuTriggerFor]="menu">Records</a>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item>Borrow Records</button>
+        <button mat-menu-item routerLink="borrow" routerLinkActive="active">Borrow Records</button>
         <button mat-menu-item>Article Records</button>
       </mat-menu>
     </li>
