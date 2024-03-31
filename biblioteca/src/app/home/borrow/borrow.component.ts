@@ -28,7 +28,8 @@ export class BorrowComponent implements OnChanges{
   @ViewChild('lendingSort') lendingSort!: MatSort;
   @ViewChild('restitutionPaginator') restitutionPaginator!: MatPaginator;
   @ViewChild('restitutionSort') restitutionSort!: MatSort;
-
+  @ViewChild('returnBoxPaginator') returnBoxPaginator!: MatPaginator;
+  @ViewChild('returnBoxSort') returnBoxSort!: MatSort;
 
   title="All Unreturned list";
   userAdmin:string="";
@@ -37,6 +38,7 @@ export class BorrowComponent implements OnChanges{
 
   low=['reference','bookID','lendingTime','limitTime','telephone','return','view'];
   returnLow=['reference','bookID','returnStatus','status','telephone','view'];
+  returnBoxLow=['reference','bookID','returnStatus','telephone','isReturn','view'];
   constructor(private http:HttpClient,
               private user:authService,
               private snackBar:MatSnackBar,
@@ -63,8 +65,9 @@ export class BorrowComponent implements OnChanges{
   }
   lendingDataSource:any;
   restitutionDataSource:any;
+  returnBoxDataSource:any;
   clientGetBorrowData(){
-    this.http.get(endPoints.lending+"/client_return_and_lending/search?telephone="+this.userTelephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+    this.http.get(endPoints.lending+"/client_return_and_lending/search?telephone="+encodeURIComponent(this.userTelephone),this.user.optionsAuthorization2()).subscribe((data:any)=>{
       this.lendingDataSource=new MatTableDataSource(data.body.lendingDataList);
         this.restitutionDataSource=new MatTableDataSource(data.body.returnDataList);
         this.lendingDataInit()
@@ -75,8 +78,10 @@ export class BorrowComponent implements OnChanges{
     this.http.get(endPoints.lending+"/admin_return_and_lending",this.user.optionsAuthorization2()).subscribe((data:any)=>{
       this.lendingDataSource=new MatTableDataSource(data.body.lendingDataList);
       this.restitutionDataSource=new MatTableDataSource(data.body.returnDataList);
+      this.returnBoxDataSource = new MatTableDataSource(data.body.returnBox);
       this.lendingDataInit()
       this.restitutionDataInit();
+      this.returnBoxDataInit();
     })
   }
   lendingDataInit() {
@@ -91,6 +96,46 @@ export class BorrowComponent implements OnChanges{
       }
     };
   }
+
+  returnBoxDataInit() {
+    this.returnBoxDataSource.paginator = this.returnBoxPaginator;
+    this.returnBoxDataSource.sort = this.returnBoxSort;
+    // @ts-ignore
+    this.returnBoxDataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'bookID': return item.book.bookID;
+        case  'telephone':return item.user.telephone
+        default: return item[property];
+      }
+    };
+  }
+
+  applyReturnBoxFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.returnBoxDataSource.filter = filterValue.trim().toLowerCase();
+    // @ts-ignore
+    this.returnBoxDataSource.filterPredicate = (data, filter: string) => {
+      const bookID = data.book.bookID.toString().toLowerCase();
+      const bookName = data.book.name.toLowerCase();
+      const userTelephone = data.user.telephone.toLowerCase();
+
+      return bookID.includes(filter) || bookName.includes(filter) || userTelephone.includes(filter);
+    };
+
+    if (this.returnBoxDataSource.paginator) {
+      this.returnBoxDataSource.paginator.firstPage();
+    }
+  }
+
+  bookNoReturn(reference:string){
+    this.http.put(endPoints.return+"/"+reference+"/noReturn",{},this.user.optionsAuthorization2())
+      .subscribe((data:any)=>{
+        this.getAllBorrowData()
+      },(error)=>{
+        this.showError(error)
+      })
+  }
+
   applyLendingFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.lendingDataSource.filter = filterValue.trim().toLowerCase();
