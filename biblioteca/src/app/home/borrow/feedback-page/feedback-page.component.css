@@ -1,0 +1,22 @@
+mat-card{
+  text-align: left;
+}
+mat-card-title{
+  text-align: center;
+}
+mat-card-title p{
+  font-size: 32px;
+  font-weight: 200;
+  color: black;
+}
+section,mat-form-field{
+  margin: 20px;
+}
+mat-dialog-actions{
+  justify-content:center !important;
+}
+button{
+  width: 400px;
+  height: 32px;
+  font-size: 20px;
+}

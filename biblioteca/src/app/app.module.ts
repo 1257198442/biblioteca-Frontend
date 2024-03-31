@@ -44,6 +44,8 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {BorrowPageComponent} from "./home/borrow-page/borrow-page.component";
 import {BorrowComponent} from "./home/borrow/borrow.component";
 import {ReturnPageComponent} from "./home/borrow/return-page/return-page.component";
+import {FeedbackPageComponent} from "./home/borrow/feedback-page/feedback-page.component";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 
 @NgModule({
@@ -66,7 +68,8 @@ import {ReturnPageComponent} from "./home/borrow/return-page/return-page.compone
     AddBookPageComponent,
     BorrowPageComponent,
     BorrowComponent,
-    ReturnPageComponent
+    ReturnPageComponent,
+    FeedbackPageComponent
   ],
   imports: [
     BrowserModule,
@@ -97,6 +100,7 @@ import {ReturnPageComponent} from "./home/borrow/return-page/return-page.compone
     MatChipsModule,
     MatListModule,
     MatProgressBarModule,
+    MatButtonToggleModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],
