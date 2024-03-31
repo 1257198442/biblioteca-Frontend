@@ -1,0 +1,28 @@
+<mat-dialog-content>
+  <mat-card>
+    <mat-card-title>
+      <p>feedback page</p>
+
+    </mat-card-title>
+    <mat-progress-bar *ngIf="progressBar" mode="query"></mat-progress-bar>
+      <section>
+        <h4>Degree of book damage</h4>
+        <mat-button-toggle-group [(ngModel)]="bookDamageDegree.degree" >
+          <mat-button-toggle value="PERFECT">PERFECT</mat-button-toggle>
+          <mat-button-toggle value="SLIGHTLY_DAMAGED">SLIGHTLY_DAMAGED</mat-button-toggle>
+          <mat-button-toggle value="MISSING_PAGES">MISSING_PAGES</mat-button-toggle>
+          <mat-button-toggle value="BADLY_DAMAGED">BADLY_DAMAGED</mat-button-toggle>
+          <mat-button-toggle value="IRREPARABLE">IRREPARABLE</mat-button-toggle>
+        </mat-button-toggle-group>
+      </section>
+      <mat-form-field class="example-full-width">
+        <mat-label>Addendum</mat-label>
+        <textarea matInput  [(ngModel)]="bookDamageDegree.addendum" maxlength="400"></textarea>
+        <mat-hint>Maximum 400 characters</mat-hint>
+      </mat-form-field>
+  </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-flat-button [disabled]="progressBar" (click)="submit()">submit</button>
+</mat-dialog-actions>

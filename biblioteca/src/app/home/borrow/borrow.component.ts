@@ -13,6 +13,7 @@ import {endPoints} from "../../endPoints";
 import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
 import {BorrowPageComponent} from "../borrow-page/borrow-page.component";
 import {ReturnPageComponent} from "./return-page/return-page.component";
+import {FeedbackPageComponent} from "./feedback-page/feedback-page.component";
 
 
 
@@ -306,6 +307,18 @@ export class BorrowComponent implements OnChanges{
       data:{
         reference:reference
       }
+    })
+  }
+
+  openFeedbackPage(reference:string){
+    this.dialog.open(FeedbackPageComponent,{
+      width:"800px",
+      maxHeight:"600px",
+      data:{
+        reference:reference
+      }
+    }).afterClosed().subscribe(()=>{
+      this.getAllBorrowData();
     })
   }
 
