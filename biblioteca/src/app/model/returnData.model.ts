@@ -1,4 +1,4 @@
-export class RegistrationClass {
+export class ReturnDataClass {
   name:string;
   password:string;
   telephone:string;

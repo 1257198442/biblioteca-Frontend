@@ -9,4 +9,5 @@ export class endPoints {
   static author : string = "https://localhost/author";
   static lending : string = "https://localhost/lending_data";
   static return : string = "https://localhost/return_data";
+  static weather:string="https://api.openweathermap.org/data/2.5/weather?q=madrid&appid=c26ce7afc4fa0d66934d22419cbcfa88&units=metric";
 }
