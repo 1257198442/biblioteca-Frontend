@@ -46,6 +46,8 @@ import {BorrowComponent} from "./home/borrow/borrow.component";
 import {ReturnPageComponent} from "./home/borrow/return-page/return-page.component";
 import {FeedbackPageComponent} from "./home/borrow/feedback-page/feedback-page.component";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {LineChartComponent} from "./home/line-chart.component";
+import {NgChartsModule} from "ng2-charts";
 
 
 @NgModule({
@@ -69,7 +71,8 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
     BorrowPageComponent,
     BorrowComponent,
     ReturnPageComponent,
-    FeedbackPageComponent
+    FeedbackPageComponent,
+    LineChartComponent
   ],
   imports: [
     BrowserModule,
@@ -101,6 +104,7 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
     MatListModule,
     MatProgressBarModule,
     MatButtonToggleModule,
+    NgChartsModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

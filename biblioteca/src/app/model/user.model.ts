@@ -32,6 +32,16 @@ export class UserClass {
   }
 }
 
+export interface User {
+  name: string;
+  password: string;
+  createTime: Date;
+  telephone: string;
+  email: string;
+  description: string;
+  admin: string;
+}
+
 export class setting {
   emailWhenSuccessfulTransaction:boolean;
   hideMyProfile:boolean;

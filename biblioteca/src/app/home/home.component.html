@@ -12,5 +12,74 @@
       </mat-card-content>
     </mat-card>
 
+    <mat-card class="action-box" >
+      <button mat-mini-fab class="btn1" color="primary" (click)="prevPage()"> <mat-icon>chevron_left</mat-icon> </button>
+      <button mat-mini-fab class="btn2" color="primary" (click)="nextPage()"> <mat-icon>chevron_right</mat-icon> </button>
+      <div class="show" [style.transform]="'translateX(' + (-this.componentPage * 465) + 'px)'">
+
+        <div class="page">
+          <p class="conditions" *ngIf="weather!=undefined">{{weather.weather[0].main}}</p>
+          <p class="weather" *ngIf="weather">{{weather.main.temp.toString().split(".")[0]}}° </p>
+          <p class="weather-time">{{currentTime}}  Madrid</p>
+          <div class="max-min-box">
+            <p class="min" *ngIf="weather">MIN:{{weather.main.temp_min.toString().split(".")[0]}}° </p>
+            <p class="max" *ngIf="weather">MAX:{{weather.main.temp_max.toString().split(".")[0]}}° </p>
+          </div>
+          <div class="img-box">
+            <img *ngIf="weatherImg" class="weather-img" [src]="weatherImg" alt="">
+          </div>
+        </div>
+
+        <div class="page" *ngIf="!isAdmin()">
+          <p class="lending-data-title">Lending Data</p>
+          <div class="table-box">
+            <table mat-table [dataSource]="lendingList" (click)="toBorrowPage()">
+              <ng-container matColumnDef="reference">
+                <th mat-header-cell *matHeaderCellDef > Reference </th>
+                <td mat-cell *matCellDef="let element" > {{element.reference}} </td>
+              </ng-container>
+              <ng-container matColumnDef="bookID">
+                <th mat-header-cell *matHeaderCellDef > Book </th>
+                <td mat-cell *matCellDef="let element" > {{element.book.name}} [ID:{{element.book.bookID}}] </td>
+              </ng-container>
+              <ng-container matColumnDef="limitTime">
+                <th mat-header-cell *matHeaderCellDef > LimitTime </th>
+                <td mat-cell *matCellDef="let element"> {{element.limitTime}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef=" low "></tr>
+              <tr mat-row *matRowDef="let row; columns: low;"></tr>
+            </table>
+            <p class="reminder" *ngIf="lendingList.length==0">There are no loan orders that need to be returned</p>
+          </div>
+        </div>
+
+        <div class="page" *ngIf="isAdmin()">
+          <div class="page1" >
+            <p class="title-overall">Library loan statistics</p>
+            <div class="statistics-box" (click)="openTableOfYear()" matTooltip="The total number of books lent out since the establishment of the website is {{lendingStatistics.all}}">
+              <mat-progress-spinner class="spinner" [value]="100"></mat-progress-spinner>
+              <p class="sum">{{formatNumber(lendingStatistics.all)}}</p>
+              <p class="title">All</p>
+            </div>
+            <div class="statistics-box" (click)="openTableOfMonth()"  matTooltip="{{lendingStatistics.thisYear}} books were lent out this year, {{100*(lendingStatistics.thisYear/lendingStatistics.all)}}% of the total number of all">
+              <mat-progress-spinner class="spinner" [value]="100*(lendingStatistics.thisYear/lendingStatistics.all)" ></mat-progress-spinner>
+              <p class="sum">{{formatNumber(lendingStatistics.thisYear)}}</p>
+              <p class="title">Year</p>
+            </div>
+            <div class="statistics-box" matTooltip="{{lendingStatistics.thisMonth}} books were lent out this month, {{100*(lendingStatistics.thisMonth/lendingStatistics.thisYear)}}% of the total number of books lent during the year">
+              <mat-progress-spinner class="spinner" [value]="100*(lendingStatistics.thisMonth/lendingStatistics.thisYear)"></mat-progress-spinner>
+              <p class="sum">{{formatNumber(lendingStatistics.thisMonth)}}</p>
+              <p class="title">Month</p>
+            </div>
+            <div class="statistics-box" (click)="openTableOfWeek()"  matTooltip="{{lendingStatistics.thisWeek}} books were lent out this week, {{lendingStatistics.thisMonth==0?0:100*(lendingStatistics.thisWeek/lendingStatistics.thisMonth)}}% of the total number of books lent during the month">
+              <mat-progress-spinner class="spinner" [value]="100*(lendingStatistics.thisWeek/lendingStatistics.thisMonth)"></mat-progress-spinner>
+              <p class="sum">{{formatNumber(lendingStatistics.thisWeek)}}</p>
+              <p class="title">Week</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
   </div>
 </main>

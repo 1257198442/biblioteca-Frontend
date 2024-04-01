@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {endPoints} from "../endPoints";
-import {RegistrationClass} from "../model/registration.model";
+import {ReturnDataClass} from "../model/returnData.model";
 import {FormControl, Validators} from "@angular/forms";
 import {countriesDialCodes} from "../model/countryDialCode.model";
 import {AlertDialogComponent} from "./alert-dialog.component";
@@ -16,14 +16,14 @@ import {AlertDialogComponent} from "./alert-dialog.component";
 })
 
 export class SignUpComponent {
-  registrationData:RegistrationClass;
+  registrationData:ReturnDataClass;
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   dialCode:string="+34";
   constructor(private http:HttpClient,
               private snackBar:MatSnackBar,
               private dialog:MatDialog,
               public dialogRef: MatDialogRef<SignUpComponent>) {
-    this.registrationData = new RegistrationClass("","","","");
+    this.registrationData = new ReturnDataClass("","","","");
   }
   Registration(){
     this.registrationData.email=this.emailFormControl.value==null?"":this.emailFormControl.value;
