@@ -108,7 +108,9 @@
         <button mat-flat-button (click)="applyLendingAllOrNoReturnFilter('false'); all=true" *ngIf="!all">Only Show no Return</button>
         <button mat-flat-button (click)="getAllBorrowData(); all=false" *ngIf="all">Show All</button>
         <button *ngIf="userAdmin=='ADMINISTRATOR'||userAdmin=='ROOT'" mat-flat-button (click)="readUserByExtensionBeyond30Days(); all=true" >Show Beyond 30 Days no Return</button>
-        <button *ngIf="userAdmin=='ADMINISTRATOR'||userAdmin=='ROOT'" mat-flat-button (click)="sendReminderEmail(); all=true" >Send reminder email</button>
+        <button *ngIf="userAdmin=='ADMINISTRATOR'||userAdmin=='ROOT'" mat-flat-button (click)="sendReminderEmail('send_email_to_user_by_approaching_date'); all=true" >Send reminder email</button>
+        <button *ngIf="userAdmin=='ADMINISTRATOR'||userAdmin=='ROOT'" mat-flat-button (click)="sendReminderEmail('send_email_to_user_by_order_overdue'); all=true" >Send order overdue email</button>
+        <button *ngIf="userAdmin=='ADMINISTRATOR'||userAdmin=='ROOT'" mat-flat-button (click)="sendReminderEmail('send_email_to_user_by_overdue_max_30day'); all=true" >Send order beyond 30 Days no Return email</button>
 
       <table mat-table #lendingSort="matSort" [dataSource]="lendingDataSource" class="table-unreturned" matSort>
         <ng-container matColumnDef="reference">

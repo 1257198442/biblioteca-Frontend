@@ -228,7 +228,7 @@ export class ManagementComponent{
     const message = 'Are you sure you want to delete the data from this book? If the book is on loan, the deletion will fail.';
     const confirm = true;
     const input = false;
-    const dialogRef =this.openAlertDialogPage(title,message,confirm,input);
+    const dialogRef = this.openAlertDialogPage(title,message,confirm,input);
     dialogRef.afterClosed().subscribe(res=>{
       if(res==='confirm'){
         this.http.delete(endPoints.book+"/"+bookID,this.user.optionsAuthorization2()).subscribe((data:any)=>{

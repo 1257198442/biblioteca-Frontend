@@ -27,7 +27,6 @@ export class SignUpComponent {
   }
   Registration(){
     this.registrationData.email=this.emailFormControl.value==null?"":this.emailFormControl.value;
-
     if(this.notNull()){
       const registrationData1 = {
         name:this.registrationData.name,
@@ -47,15 +46,17 @@ export class SignUpComponent {
           })
         },error=> this.showError(error.status+error.message))
     }else {
-      alert("Empty with data")
+      this.showError("Error: Empty with data");
     }
   }
+
   notNull(){
     return this.registrationData.telephone==''?false:
       this.emailCorrectFormat(1)?false:
         this.registrationData.name==''?false:
           this.registrationData.password != '';
   }
+
   public showError(notification: string): void {
       this.snackBar.open(notification, 'Error', {duration: 5000});
   }

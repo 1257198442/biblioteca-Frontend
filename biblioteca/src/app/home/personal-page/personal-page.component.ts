@@ -114,9 +114,9 @@ export class PersonalPageComponent {
   }
 
   changePassword(){
-    if(this.confirmPassword===this.newPassword){
+    if(this.confirmPassword === this.newPassword){
       const title = 'Password verification';
-      const message ='Old Password';
+      const message = 'Old Password';
       const confirm = true;
       const input = true;
       const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
@@ -160,8 +160,8 @@ export class PersonalPageComponent {
               const message ='Password reset successfully';
               const confirm = false;
               const input = false;
-              const dialogPage2 = this.openAlertDialogPage(title,message,confirm,input)
-              dialogPage2.afterClosed().subscribe(()=>{
+              const dialogPage1 = this.openAlertDialogPage(title,message,confirm,input)
+              dialogPage1.afterClosed().subscribe(()=>{
                 this.newPassword="";
                 this.confirmPassword="";
                 this.editPasswordState=0;
@@ -176,8 +176,7 @@ export class PersonalPageComponent {
     this.http.get(endPoints.avatar+"/"+this.userData.telephone).subscribe((data:any)=>{
       this.avatarUrl = data.url;
       this.avatarSelectUrl = this.avatarUrl;
-    },error=> this.showError(error.status+error.message)
-    )
+    },error=> this.showError(error.status+error.message))
   }
 
   onFileSelected(event: any): void {

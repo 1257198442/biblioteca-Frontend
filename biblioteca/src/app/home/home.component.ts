@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {endPoints} from "../endPoints";
 import {MatDialog} from "@angular/material/dialog";
 import {BookPageComponent} from "./book-page/book-page.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -31,7 +32,8 @@ export class HomeComponent {
     12: "Dec"
   };
   constructor(private http:HttpClient,
-              private dialog:MatDialog,) {
+              private dialog:MatDialog,
+              private snackBar: MatSnackBar,) {
     setInterval(() => {
       const currentToken = sessionStorage.getItem('jwtToken');
       if (currentToken !== this.storedToken) {
@@ -49,9 +51,9 @@ export class HomeComponent {
 
   getRandomBook(){
     this.http.get(endPoints.book+"/random").subscribe((data:any)=>{
-      this.randomBook=data;
+      this.randomBook = data;
     },(error)=>{
-      console.log(error)
+      this.showError(error.status+error.message)
     })
   }
 
@@ -66,4 +68,9 @@ export class HomeComponent {
       }
     })
   }
+
+  public showError(notification: string): void {
+    this.snackBar.open(notification, 'Error', {duration: 5000});
+  }
+
 }

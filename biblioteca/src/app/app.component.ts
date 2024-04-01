@@ -73,40 +73,29 @@ export class AppComponent implements OnInit{
     this.isLogin=false;
   }
 
-  registration():void{
-    this.dialog.open(SignUpComponent,
-      {
-        width:"470px",
-      }).afterClosed()
-      .subscribe(()=>this.login());
-  }
-
   getUserData(){
     this.http.get(endPoints.user+"/"+this.userTelephone,this.transmit.optionsAuthorization2()).subscribe(
       (data:any)=>{
         this.userData=data.body;
         this.getAvatar();
-      },(error)=>{
-        this.showError(error.message)
-      }
-    )
+      },error=> this.showError(error.message))
   }
 
   admin():boolean{
-    return this.userData.role==="ADMINISTRATOR"||this.userData.role==="ROOT"
+    return this.userData.role==="ADMINISTRATOR"||this.userData.role==="ROOT";
   }
 
   getLibraryData(){
     this.http.get(endPoints.library)
       .subscribe((data:any)=>{
         this.library = data;
-      },(error)=>{this.showError(error.message)})
+      }, error => this.showError(error.message))
   }
 
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.getLibraryData()
+        this.getLibraryData();
       }
     });
   }
@@ -114,9 +103,8 @@ export class AppComponent implements OnInit{
   getAvatar():void{
     this.http.get(endPoints.avatar+"/"+this.userTelephone)
       .subscribe(
-        (data:any)=>{this.avatarUrl=data.url},
-        error=>this.showError(error.status+error.message)
-      )
+        (data:any)=>{this.avatarUrl=data.url
+        }, error=>this.showError(error.status+error.message))
   }
 
   openPersonalPage(){
@@ -128,9 +116,14 @@ export class AppComponent implements OnInit{
       data:{
         telephone:this.userData.telephone,
       }
-    }).afterClosed().subscribe(()=>{
-      this.getUserData()
-    })
+    }).afterClosed().subscribe(()=> this.getUserData())
+  }
+
+  openSignUpPage():void{
+    this.dialog.open(SignUpComponent,
+      {
+        width:"470px",
+      }).afterClosed().subscribe(()=>this.login());
   }
 
   public showError(notification: string): void {

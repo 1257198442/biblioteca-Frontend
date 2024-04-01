@@ -83,8 +83,8 @@ export class RechargeComponent {
 
   getBalance(){
     this.http.get(endPoints.wallet+"/"+this.telephone,this.user.optionsAuthorization2())
-      .subscribe((data:any)=>
-      this.balance = data.body.balance)
+      .subscribe((data:any)=> this.balance = data.body.balance,
+        error => this.showError(error.status+error.message))
   }
 
   btnStatus(status:boolean){

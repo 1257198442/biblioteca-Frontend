@@ -256,7 +256,6 @@ export class BookPageComponent {
     })
   }
 
-
   public showError(notification: string): void {
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
