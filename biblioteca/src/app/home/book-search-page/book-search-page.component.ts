@@ -53,29 +53,20 @@ export class BookSearchPageComponent {
       const route = searchUrl+lang+type;
       this.http.get(endPoints.book+"/search?"+route)
         .subscribe((data:any)=> {
-          if (!this.ENABLEOnly){
-            this.books = data;
-          }else {
-            this.books=data.filter((s:any)=>{
-              return s.status=="ENABLE";
-            });
-          }
+          this.books = !this.ENABLEOnly?data:data.filter((s:any)=>{return s.status=="ENABLE";});
           this.paginator.length = this.books.length;
-          if (this.books.length<=this.pageSize) {
+          if (this.books.length <= this.pageSize) {
           this.paginator.pageIndex = 0;
           this.currentPage=0;
           }
-
-        },error=>
-          this.showError(error.status+error.message)
+        },error => this.showError(error.status+error.message)
         )
   }
 
   getAllBookType(){
     this.http.get(endPoints.type).subscribe((data:any)=>{
       this.allType = data;
-    },error=>
-      this.showError(error.status+error.message)
+    },error=> this.showError(error.status+error.message)
     )
   }
 

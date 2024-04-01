@@ -33,18 +33,13 @@ export class WithdrawMoneyComponent {
     this.telephone = data.telephone;
     this.getBalance();
   }
+
   withdrawMoney(){
     this.btnStatus(true)
     if(this.rechargeDataIsError()) {
       this.btnStatus(false)
     }else {
-      this.transactionRecord={
-        password:"",
-        purpose:"Transfer to "+this.card+" card [Card Number:*"+this.cardNumber.replace(/\s+/g, '').slice(-6)+"]",
-        telephone:this.telephone,
-        amount:this.sumOfMoney,
-        transactionDetails:this.transactionDetails
-      }
+      this.transactionRecord = this.generateTransactionRecord()
       const title='Password verification';
       const message='Account Password.';
       const input=true;
@@ -70,6 +65,16 @@ export class WithdrawMoneyComponent {
     }
   }
 
+  generateTransactionRecord(){
+    return {
+      password:"",
+      purpose:"Transfer to "+this.card+" card [Card Number:*"+this.cardNumber.replace(/\s+/g, '').slice(-6)+"]",
+      telephone:this.telephone,
+      amount:this.sumOfMoney,
+      transactionDetails:this.transactionDetails
+    }
+  }
+
   btnStatus(status:boolean){
     this.WithdrawMoneyBtn=status;
     this.spinner=status;
@@ -92,8 +97,8 @@ export class WithdrawMoneyComponent {
 
   getBalance(){
     this.http.get(endPoints.wallet+"/"+this.telephone,this.user.optionsAuthorization2())
-      .subscribe((data:any)=>
-      this.balance = data.body.balance)
+      .subscribe((data:any)=> this.balance = data.body.balance,
+        error => this.showError(error.status+error.message))
   }
 
   openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){

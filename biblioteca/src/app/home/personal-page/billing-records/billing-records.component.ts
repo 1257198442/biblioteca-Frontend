@@ -24,11 +24,12 @@ export class BillingRecordsComponent {
     this.http.get(endPoints.transaction+"/search?telephone="+encodeURIComponent(this.telephone),this.user.optionsAuthorization2())
       .subscribe((data:any)=>{
         this.recordsList = data.body;
-        console.log(endPoints.transaction+"/search?telephone="+this.telephone)
-        console.log(data)
-      },error => console.log(error))
+      },error => this.showError(error.status+error.message))
   }
 
+  public showError(notification: string): void {
+    this.snackBar.open(notification, 'Error', {duration: 5000});
+  }
     protected readonly Math = Math;
 }
 

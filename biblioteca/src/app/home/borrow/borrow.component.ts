@@ -98,6 +98,19 @@ export class BorrowComponent implements OnChanges{
     };
   }
 
+  restitutionDataInit() {
+    this.restitutionDataSource.paginator = this.restitutionPaginator;
+    this.restitutionDataSource.sort = this.restitutionSort;
+    // @ts-ignore
+    this.restitutionDataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'bookID': return item.book.bookID;
+        case  'telephone':return item.user.telephone
+        default: return item[property];
+      }
+    };
+  }
+
   returnBoxDataInit() {
     this.returnBoxDataSource.paginator = this.returnBoxPaginator;
     this.returnBoxDataSource.sort = this.returnBoxSort;
@@ -111,32 +124,6 @@ export class BorrowComponent implements OnChanges{
     };
   }
 
-  applyReturnBoxFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.returnBoxDataSource.filter = filterValue.trim().toLowerCase();
-    // @ts-ignore
-    this.returnBoxDataSource.filterPredicate = (data, filter: string) => {
-      const bookID = data.book.bookID.toString().toLowerCase();
-      const bookName = data.book.name.toLowerCase();
-      const userTelephone = data.user.telephone.toLowerCase();
-
-      return bookID.includes(filter) || bookName.includes(filter) || userTelephone.includes(filter);
-    };
-
-    if (this.returnBoxDataSource.paginator) {
-      this.returnBoxDataSource.paginator.firstPage();
-    }
-  }
-
-  bookNoReturn(reference:string){
-    this.http.put(endPoints.return+"/"+reference+"/noReturn",{},this.user.optionsAuthorization2())
-      .subscribe((data:any)=>{
-        this.getAllBorrowData()
-      },(error)=>{
-        this.showError(error)
-      })
-  }
-
   applyLendingFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.lendingDataSource.filter = filterValue.trim().toLowerCase();
@@ -145,7 +132,6 @@ export class BorrowComponent implements OnChanges{
       const bookID = data.book.bookID.toString().toLowerCase();
       const bookName = data.book.name.toLowerCase();
       const userTelephone = data.user.telephone.toLowerCase();
-
       return bookID.includes(filter) || bookName.includes(filter) || userTelephone.includes(filter);
     };
     if (this.lendingDataSource.paginator) {
@@ -159,50 +145,6 @@ export class BorrowComponent implements OnChanges{
     }
   }
 
-  readUserByExtensionBeyond30Days(){
-    this.http.get(endPoints.lending+"/read_lending_data_by_overdue_max_30day",this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      this.lendingDataSource=new MatTableDataSource(data.body)
-      this.lendingDataInit();
-    },(error)=>{
-      console.log(error)
-    })
-  }
-  sendReminderEmail(){
-    this.http.post(endPoints.lending+"/send_email_to_user_by_approaching_date",'',this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      if(data.body.length!=0){
-        const title = 'Reminders';
-        const message= ':) Send email successes('+data.body.length+'  successes).';
-        const confirm= false;
-        const input = false;
-        const dialogRef = this.openAlertDialogPage(title,message,confirm,input)
-        dialogRef.afterClosed().subscribe(()=>{
-          this.getAllBorrowData();
-        })
-      }else {
-        const title = 'Reminders';
-        const message= ':) There are no reminder emails that need to be sent.';
-        const confirm= false;
-        const input = false;
-        this.openAlertDialogPage(title,message,confirm,input);
-      }
-
-    },(error)=>{
-      this.showError(error.status+error.message)
-    })
-  }
-
-  restitutionDataInit() {
-    this.restitutionDataSource.paginator = this.restitutionPaginator;
-    this.restitutionDataSource.sort = this.restitutionSort;
-    // @ts-ignore
-    this.restitutionDataSource.sortingDataAccessor = (item, property) => {
-      switch (property) {
-        case 'bookID': return item.book.bookID;
-        case  'telephone':return item.user.telephone
-        default: return item[property];
-      }
-    };
-  }
   applyRestitutionFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.restitutionDataSource.filter = filterValue.trim().toLowerCase();
@@ -222,6 +164,60 @@ export class BorrowComponent implements OnChanges{
     if (this.restitutionDataSource.paginator) {
       this.restitutionDataSource.paginator.firstPage();
     }
+  }
+
+  applyReturnBoxFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.returnBoxDataSource.filter = filterValue.trim().toLowerCase();
+    // @ts-ignore
+    this.returnBoxDataSource.filterPredicate = (data, filter: string) => {
+      const bookID = data.book.bookID.toString().toLowerCase();
+      const bookName = data.book.name.toLowerCase();
+      const userTelephone = data.user.telephone.toLowerCase();
+      return bookID.includes(filter) || bookName.includes(filter) || userTelephone.includes(filter);
+    };
+    if (this.returnBoxDataSource.paginator) {
+      this.returnBoxDataSource.paginator.firstPage();
+    }
+  }
+
+  bookNoReturn(reference:string){
+    this.http.put(endPoints.return+"/"+reference+"/noReturn",{},this.user.optionsAuthorization2())
+      .subscribe((data:any)=>{
+        this.getAllBorrowData()
+      },error => this.showError(error))
+  }
+
+  readUserByExtensionBeyond30Days(){
+    this.http.get(endPoints.lending+"/read_lending_data_by_overdue_max_30day",this.user.optionsAuthorization2()).subscribe((data:any)=>{
+      this.lendingDataSource=new MatTableDataSource(data.body)
+      this.lendingDataInit();
+    },(error)=>{
+      console.log(error)
+    })
+  }
+
+  sendReminderEmail(url:string){
+    this.http.post(endPoints.lending+"/"+url,'',this.user.optionsAuthorization2()).subscribe((data:any)=>{
+      if(data.body.length!=0){
+        const title = 'Reminders';
+        const message= ':) Send email successes('+data.body.length+'  successes).';
+        const confirm= false;
+        const input = false;
+        const dialogRef = this.openAlertDialogPage(title,message,confirm,input)
+        dialogRef.afterClosed().subscribe(()=>{
+          this.getAllBorrowData();
+        })
+      }else {
+        const title = 'Reminders';
+        const message= ':) There are no reminder emails that need to be sent.';
+        const confirm= false;
+        const input = false;
+        this.openAlertDialogPage(title,message,confirm,input);
+      }
+    },(error)=>{
+      this.showError(error.status+error.message)
+    })
   }
 
   status(status: boolean): string {

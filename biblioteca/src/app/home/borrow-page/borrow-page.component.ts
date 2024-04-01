@@ -25,9 +25,9 @@ getBorrowData(){
   this.http.get(endPoints.lending+"/"+this.reference,this.user.optionsAuthorization2())
     .subscribe((data:any)=>{
       this.borrowData=data.body;
-    },error=>
-      this.showError(error.status+error.message))
+    },error=> this.showError(error.status+error.message))
   }
+
   public showError(notification: string): void {
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }

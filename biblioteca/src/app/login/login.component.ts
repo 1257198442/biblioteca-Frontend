@@ -49,7 +49,7 @@ export class LoginComponent {
        }
      }
 
-  registration():void{
+  openSignUpPage():void{
     this.dialog.open(SignUpComponent,
       {
         width:"470px",

@@ -50,23 +50,19 @@ export class AddBookPageComponent {
   getAllAuthor(){
     this.http.get(endPoints.author).subscribe((data:any)=>{
       this.allAuthor = data;
-    },(error)=>{
-      console.log(error)
-    })
+    },error => this.showError(error.status+error.message))
   }
 
   getAllBookType(){
     this.http.get(endPoints.type).subscribe((data:any)=>{
       this.allType = data;
-    },(error)=>{
-      console.log(error)
-    })
+    },error => this.showError(error.status+error.message))
   }
 
   getAllBookLanguage(){
     this.http.get(endPoints.book+"/all_language").subscribe((data:any)=>{
       this.allLanguage = data;
-    })
+    },error => this.showError(error.status+error.message))
   }
 
 
@@ -83,7 +79,7 @@ export class AddBookPageComponent {
         this.showType=[this.selectType]
       }
     }else {
-      alert("error");
+      this.showError("error");
     }
   }
 
@@ -100,7 +96,7 @@ export class AddBookPageComponent {
         this.showAuthor=[this.selectAuthor]
       }
     }else {
-      alert("error");
+      this.showError("error");
     }
   }
 
@@ -109,10 +105,7 @@ export class AddBookPageComponent {
     if(this.bookUpload.name){
         this.http.post(endPoints.book,this.bookUpload,this.user.optionsAuthorization2()).subscribe((data:any)=>{
           this.dialog.closeAll();
-          console.log(data);
-        },(error)=>{
-          console.log(error)
-        })
+        },error => this.showError(error.status+error.message))
     }else {
       this.snackBar.open("Please fill in the name of the book", 'Error', {duration: 5000});
     }
@@ -123,9 +116,7 @@ export class AddBookPageComponent {
       this.http.post(endPoints.author,this.author,this.user.optionsAuthorization2()).subscribe((data:any)=>{
         this.getAllAuthor();
         this.step=0;
-      },(error) => {
-        this.showError(error.status+error.message);
-      })
+      },error => this.showError(error.status+error.message))
     }
   }
 
@@ -146,6 +137,5 @@ export class AddBookPageComponent {
   public showError(notification: string): void {
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
-
 
 }
