@@ -13,8 +13,8 @@
     </mat-card>
 
     <mat-card class="action-box" >
-      <button mat-mini-fab class="btn1" color="primary" (click)="prevPage()"> <mat-icon>chevron_left</mat-icon> </button>
-      <button mat-mini-fab class="btn2" color="primary" (click)="nextPage()"> <mat-icon>chevron_right</mat-icon> </button>
+      <button mat-mini-fab class="btn1" color="primary" *ngIf="isLogin()" (click)="prevPage()"> <mat-icon>chevron_left</mat-icon> </button>
+      <button mat-mini-fab class="btn2" color="primary" *ngIf="isLogin()" (click)="nextPage()"> <mat-icon>chevron_right</mat-icon> </button>
       <div class="show" [style.transform]="'translateX(' + (-this.componentPage * 465) + 'px)'">
 
         <div class="page">
@@ -30,7 +30,7 @@
           </div>
         </div>
 
-        <div class="page" *ngIf="!isAdmin()">
+        <div class="page" *ngIf="!isAdmin()&&isLogin()">
           <p class="lending-data-title">Lending Data</p>
           <div class="table-box">
             <table mat-table [dataSource]="lendingList" (click)="toBorrowPage()">
@@ -53,27 +53,27 @@
           </div>
         </div>
 
-        <div class="page" *ngIf="isAdmin()">
+        <div class="page" *ngIf="isAdmin()&&isLogin()">
           <div class="page1" >
             <p class="title-overall">Library loan statistics</p>
-            <div class="statistics-box" (click)="openTableOfYear()" matTooltip="The total number of books lent out since the establishment of the website is {{lendingStatistics.all}}">
+            <div class="statistics-box" (click)="openTableOfYear()" matTooltip="The total number of books lent out since the establishment of the website is {{lendingStatistics?.all}}">
               <mat-progress-spinner class="spinner" [value]="100"></mat-progress-spinner>
-              <p class="sum">{{formatNumber(lendingStatistics.all)}}</p>
+              <p class="sum">{{formatNumber(lendingStatistics?.all)}}</p>
               <p class="title">All</p>
             </div>
-            <div class="statistics-box" (click)="openTableOfMonth()"  matTooltip="{{lendingStatistics.thisYear}} books were lent out this year, {{100*(lendingStatistics.thisYear/lendingStatistics.all)}}% of the total number of all">
-              <mat-progress-spinner class="spinner" [value]="100*(lendingStatistics.thisYear/lendingStatistics.all)" ></mat-progress-spinner>
-              <p class="sum">{{formatNumber(lendingStatistics.thisYear)}}</p>
+            <div class="statistics-box" (click)="openTableOfMonth()"  matTooltip="{{lendingStatistics?.thisYear}} books were lent out this year, {{100*(lendingStatistics?.thisYear/lendingStatistics?.all)}}% of the total number of all">
+              <mat-progress-spinner class="spinner" [value]="100*(lendingStatistics?.thisYear/lendingStatistics?.all)" ></mat-progress-spinner>
+              <p class="sum">{{formatNumber(lendingStatistics?.thisYear)}}</p>
               <p class="title">Year</p>
             </div>
-            <div class="statistics-box" matTooltip="{{lendingStatistics.thisMonth}} books were lent out this month, {{100*(lendingStatistics.thisMonth/lendingStatistics.thisYear)}}% of the total number of books lent during the year">
-              <mat-progress-spinner class="spinner" [value]="100*(lendingStatistics.thisMonth/lendingStatistics.thisYear)"></mat-progress-spinner>
-              <p class="sum">{{formatNumber(lendingStatistics.thisMonth)}}</p>
+            <div class="statistics-box" matTooltip="{{lendingStatistics?.thisMonth}} books were lent out this month, {{100*(lendingStatistics?.thisMonth/lendingStatistics?.thisYear)}}% of the total number of books lent during the year">
+              <mat-progress-spinner class="spinner" [value]="100*(lendingStatistics?.thisMonth/lendingStatistics?.thisYear)"></mat-progress-spinner>
+              <p class="sum">{{formatNumber(lendingStatistics?.thisMonth)}}</p>
               <p class="title">Month</p>
             </div>
-            <div class="statistics-box" (click)="openTableOfWeek()"  matTooltip="{{lendingStatistics.thisWeek}} books were lent out this week, {{lendingStatistics.thisMonth==0?0:100*(lendingStatistics.thisWeek/lendingStatistics.thisMonth)}}% of the total number of books lent during the month">
-              <mat-progress-spinner class="spinner" [value]="100*(lendingStatistics.thisWeek/lendingStatistics.thisMonth)"></mat-progress-spinner>
-              <p class="sum">{{formatNumber(lendingStatistics.thisWeek)}}</p>
+            <div class="statistics-box" (click)="openTableOfWeek()"  matTooltip="{{lendingStatistics?.thisWeek}} books were lent out this week, {{lendingStatistics?.thisMonth==0?0:100*(lendingStatistics?.thisWeek/lendingStatistics?.thisMonth)}}% of the total number of books lent during the month">
+              <mat-progress-spinner class="spinner" [value]="100*(lendingStatistics?.thisWeek/lendingStatistics?.thisMonth)"></mat-progress-spinner>
+              <p class="sum">{{formatNumber(lendingStatistics?.thisWeek)}}</p>
               <p class="title">Week</p>
             </div>
           </div>

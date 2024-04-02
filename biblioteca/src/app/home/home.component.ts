@@ -59,32 +59,39 @@ export class HomeComponent {
       this.updateTime();
     }, 1000);
 
-    // setInterval(() => {
-    //   this.nextPage();
-    // }, 10000);
+    setInterval(() => {
+      this.nextPage();
+    }, 10000);
 
     setInterval(() => {
       const currentToken = sessionStorage.getItem('jwtToken');
       if (currentToken !== this.storedToken) {
         this.storedToken = currentToken!=null?currentToken:"";
-        if(currentToken){
-          const [header, payload, signature] = this.storedToken.split('.');
-          const decodedPayload = JSON.parse(atob(payload));
-          this.userTelephone = decodedPayload.user;
-          this.userAdmin = decodedPayload.role;
-          if(this.userAdmin=="CLIENT"){
-            this.totalPages=2;
-            this.getLendingData();
-          }
-          if (this.isAdmin()){
-            this.totalPages=2;
-            this.getLendingStatistics();
-          }
-        }
+        this.initPage()
       }
     }, 1000);
     this.getRandomBook();
     this.getWeather()
+  }
+
+  initPage(){
+    if(this.storedToken){
+      const [header, payload, signature] = this.storedToken.split('.');
+      const decodedPayload = JSON.parse(atob(payload));
+      this.userTelephone = decodedPayload.user;
+      this.userAdmin = decodedPayload.role;
+      this.totalPages=2;
+      if(this.isClient()){
+        this.getLendingData();
+      }
+      if (this.isAdmin()){
+        this.getLendingStatistics();
+      }
+    }else {
+      this.userTelephone = "";
+      this.userAdmin = "";
+      this.totalPages= 1;
+    }
   }
 
   getRandomBook(){
@@ -98,7 +105,7 @@ export class HomeComponent {
       const formattedValue = (value / 1000).toFixed(1);
       return `${formattedValue}k`;
     }
-    return value.toString();
+    return value+"";
   }
 
   prevPage() {
@@ -117,6 +124,7 @@ export class HomeComponent {
       this.openLineChartPage(title,list,label)
     }
   }
+
   openTableOfWeek(){
     if(this.isAdmin()){
       const  title = "Table analyzing this Week‘s data";
@@ -125,17 +133,26 @@ export class HomeComponent {
       this.openLineChartPage(title,list,label)
     }
   }
+
   openTableOfYear(){
     if(this.isAdmin()){
       const  title = "Table analyzing this Week‘s data";
       const list = this.lendingYearlyCounts;
-      const label=this.generateYearArray(this.lendingYearlyCounts.length);
+      const label= this.generateYearArray(this.lendingYearlyCounts.length);
       this.openLineChartPage(title,list,label)
     }
   }
 
   isAdmin(){
-    return this.userAdmin=="ROOT"||this.userAdmin=="ADMINISTRATOR"
+    return this.userAdmin == "ROOT" || this.userAdmin == "ADMINISTRATOR"
+  }
+
+  isClient(){
+    return this.userAdmin == "CLIENT"
+  }
+
+  isLogin(){
+    return this.userTelephone != "";
   }
 
   getWeather(){
@@ -203,6 +220,7 @@ export class HomeComponent {
       }
     })
   }
+
   openLineChartPage(title:string,list:never[],label:string[]){
     this.dialog.open(LineChartComponent,{
       width:'500px',
@@ -213,7 +231,6 @@ export class HomeComponent {
       }
     })
   }
-
 
   toBorrowPage(){
     this.router.navigateByUrl('/borrow', { skipLocationChange: true }).then(() => this.router.navigate(['/borrow']));
