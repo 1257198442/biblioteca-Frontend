@@ -45,9 +45,18 @@ export interface User {
 export class setting {
   emailWhenSuccessfulTransaction:boolean;
   hideMyProfile:boolean;
+  emailWhenOrderIsPaid:boolean;
+  emailWhenOrdersAboutToExpire:boolean;
+  hideMyCollectionList:boolean;
   constructor(emailWhenSuccessfulTransaction:boolean,
-              hideMyProfile:boolean) {
+              hideMyProfile:boolean,
+              emailWhenOrderIsPaid:boolean,
+              emailWhenOrdersAboutToExpire:boolean,
+              hideMyCollectionList:boolean) {
     this.emailWhenSuccessfulTransaction=emailWhenSuccessfulTransaction;
     this.hideMyProfile = hideMyProfile;
+    this.emailWhenOrderIsPaid = emailWhenOrderIsPaid;
+    this.emailWhenOrdersAboutToExpire = emailWhenOrdersAboutToExpire;
+    this.hideMyCollectionList = hideMyCollectionList;
   }
 }

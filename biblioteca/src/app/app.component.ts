@@ -18,7 +18,7 @@ import {PersonalPageComponent} from "./home/personal-page/personal-page.componen
 })
 export class AppComponent implements OnInit{
   isLogin:boolean = false;
-  userData:UserClass=new UserClass("","",new Date(),"","","",true,"",new setting(true,true));
+  userData:UserClass=new UserClass("","",new Date(),"","","",true,"",new setting(true,true,true,true,true));
   library:any;
   userAdmin:string="";
   userTelephone:string=""

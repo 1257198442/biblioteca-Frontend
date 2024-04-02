@@ -17,7 +17,7 @@ import {BillingRecordsComponent} from "./billing-records/billing-records.compone
   styleUrls: ['./personal-page.component.css']
 })
 export class PersonalPageComponent {
-  userData:UserClass=new UserClass("","",new Date(),"","","",false,"",new setting(false,false));
+  userData:UserClass=new UserClass("","",new Date(),"","","",false,"",new setting(false,false,false,false,false));
   userAdmin:string="";
   userTelephone:string=""
   wallet:number=0;
@@ -66,7 +66,10 @@ export class PersonalPageComponent {
       }
       this.settingUpdate = {
         hideMyProfile: this.userData.setting.hideMyProfile,
-        emailWhenSuccessfulTransaction:this.userData.setting.emailWhenSuccessfulTransaction
+        emailWhenSuccessfulTransaction:this.userData.setting.emailWhenSuccessfulTransaction,
+        emailWhenOrderIsPaid:this.userData.setting.emailWhenOrderIsPaid,
+        emailWhenOrdersAboutToExpire:this.userData.setting.emailWhenOrdersAboutToExpire,
+        hideMyCollectionList:this.userData.setting.hideMyCollectionList
       };
     },error => this.showError(error.status+error.message))
   }
@@ -104,7 +107,6 @@ export class PersonalPageComponent {
 
   updateSetting(){
     const settingOrigen = this.userData.setting;
-    console.log(settingOrigen,this.settingUpdate)
     if(this.settingUpdate!==settingOrigen){
       this.http.put(endPoints.user+"/"+this.userData.telephone+"/setting",this.settingUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
           this.getUserData(this.userData.telephone);
