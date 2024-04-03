@@ -45,10 +45,10 @@ export class WithdrawMoneyComponent {
       const input=true;
       const confirm=true;
       const dialog = this.openAlertDialogPage(title,message,confirm,input)
-      dialog.afterClosed().subscribe(res=>{
+      dialog.afterClosed().subscribe(res => {
         if(res.confirm == "confirm"){
           this.transactionRecord.password=res.input;
-          this.http.post(endPoints.wallet+"/withdrawal",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=>{
+          this.http.post(endPoints.wallet+"/withdrawal",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=> {
             this.btnStatus(false)
             const title= 'Successes';
             const message= ':) Withdraw Money '+this.telephone+' with '+this.sumOfMoney+'€ successfully.';
@@ -56,11 +56,11 @@ export class WithdrawMoneyComponent {
             const input = false;
             this.openAlertDialogPage(title,message,confirm,input)
             this.dialogRef.close();
-          },(error)=>{
+          },error=>{
             this.btnStatus(false)
             this.showError(error.status+error.message)
           })
-        }
+        };
       })
     }
   }
@@ -96,8 +96,8 @@ export class WithdrawMoneyComponent {
   }
 
   getBalance(){
-    this.http.get(endPoints.wallet+"/"+this.telephone,this.user.optionsAuthorization2())
-      .subscribe((data:any)=> this.balance = data.body.balance,
+    this.http.get(endPoints.wallet+"/"+this.telephone,this.user.optionsAuthorization2()).subscribe(
+        (data:any)=> this.balance = data.body.balance,
         error => this.showError(error.status+error.message))
   }
 

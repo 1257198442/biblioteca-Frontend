@@ -69,44 +69,42 @@ export class BookPageComponent {
   }
 
   getBookData(){
-    this.http.get(endPoints.book+"/"+this.bookId).subscribe((data:any)=>{
+    this.http.get(endPoints.book + "/" + this.bookId).subscribe((data:any)=> {
       this.book = data;
       this.bookUpdate = JSON.parse(JSON.stringify(data));
-      this.bookUpdate.authorId = data.author == undefined?[]:data.author.map((item:any)=>item.authorId);
-      this.bookUpdate.bookType = data.type == undefined?[]:data.type.map((item:any)=>item.name);
+      this.bookUpdate.authorId = data.author == undefined?[] : data.author.map((item:any) => item.authorId);
+      this.bookUpdate.bookType = data.type == undefined?[] : data.type.map((item:any) => item.name);
       this.showAuthor = data.author;
       this.showType = data.type;
-      if(this.book?.imgUrl!=undefined){
-        this.selectedImage=this.book.imgUrl
+      if(this.book?.imgUrl != undefined){
+        this.selectedImage = this.book.imgUrl
       }
-    },error=>this.showError(error.status+error.message));
+    },error => this.showError(error.status+error.message));
   }
 
   getAllAuthor(){
-    this.http.get(endPoints.author).subscribe((data:any)=>{
-      this.allAuthor = data;
-    },error=>
-      this.showError(error.status+error.message)
+    this.http.get(endPoints.author).subscribe(
+      (data:any) => this.allAuthor = data
+      ,error => this.showError(error.status+error.message)
     )
   }
 
   getAllBookType(){
-    this.http.get(endPoints.type).subscribe((data:any)=>{
-      this.allType = data;
-    },error=>
-      this.showError(error.status+error.message))
+    this.http.get(endPoints.type).subscribe(
+      (data:any) => this.allType = data
+    ,error => this.showError(error.status+error.message))
   }
 
   getAllBookLanguage(){
-    this.http.get(endPoints.book+"/all_language").subscribe((data:any)=>{
-      this.allLanguage = data;
-    })
+    this.http.get(endPoints.book + "/all_language").subscribe(
+      (data:any) => this.allLanguage = data
+      ,error => this.showError(error.status+error.message))
   }
 
   addType(){
-    if(this.bookUpdate.bookType!=undefined){
-      let index = this.bookUpdate.bookType.findIndex((type:string)=>type===this.selectType?.name);
-      if(index==-1&&this.selectType!==undefined){
+    if(this.bookUpdate.bookType != undefined && this.bookUpdate.bookType && this.showType != undefined){
+      let index = this.bookUpdate.bookType.findIndex((type:string)=> type === this.selectType?.name);
+      if(index == -1 && this.selectType != undefined){
         this.bookUpdate.bookType.push(this.selectType.name);
         this.showType.push(this.selectType)
       }
@@ -117,9 +115,9 @@ export class BookPageComponent {
   }
 
   addAuthor(){
-    if(this.bookUpdate.authorId!=undefined){
-      let index = this.bookUpdate.authorId.findIndex((author:string)=>author===this.selectAuthor?.authorId);
-      if(index==-1&&this.selectAuthor!==undefined){
+    if(this.bookUpdate.authorId != undefined && this.bookUpdate.authorId && this.showAuthor != undefined){
+      let index = this.bookUpdate.authorId.findIndex((author:string)=> author === this.selectAuthor?.authorId);
+      if(index == -1 && this.selectAuthor != undefined){
         this.bookUpdate.authorId.push(this.selectAuthor.authorId);
         this.showAuthor.push(this.selectAuthor);
       }
@@ -144,16 +142,18 @@ export class BookPageComponent {
   }
 
   update(){
-    this.http.put(endPoints.book+"/"+this.bookId,this.bookUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      if(this.selectedImage!==this.book?.imgUrl&&this.selectedImage!=null){
+    this.http.put(endPoints.book + "/" + this.bookId,this.bookUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+      if(this.selectedImage !== this.book?.imgUrl && this.selectedImage != null){
         const formData = new FormData();
         formData.append('file', this.file as Blob);
-        this.http.put(endPoints.book+"/"+this.bookId+"/image",formData,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-        },error=>this.showError(error.status+error.message))
+        this.http.put(endPoints.book + "/" + this.bookId + "/image",formData,this.user.optionsAuthorization2()).subscribe(
+          ()=> {
+            this.init()
+            this.step=0
+          },
+            error=>this.showError(error.status+error.message))
       }
-      this.init()
-      this.step=0;
-    },(error)=>{
+    },(error)=> {
       this.showError(error.status+error.message);
       this.step=0;
     })
@@ -170,19 +170,19 @@ export class BookPageComponent {
   }
 
   borrow(date:string){
-    if(date!==""){
+    if(date !== ""){
       if(this.isOk){
-        const title='A deposit of €'+this.book.deposit+' will be deducted from the '+this.userTelephone+' account after confirmation.';
+        const title='A deposit of €' + this.book.deposit + ' will be deducted from the ' + this.userTelephone + ' account after confirmation.';
         const message = 'Account password';
         const confirm = true;
         const input = true;
         const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
-        dialogPage.afterClosed().subscribe(res=>{
-          if(res?.confirm==='confirm') {
-            this.progressBar=true;
+        dialogPage.afterClosed().subscribe(res => {
+          if(res?.confirm === 'confirm') {
+            this.progressBar = true;
             const datePipe = new DatePipe('en-US');
             const time = datePipe.transform(date, 'yyyy-MM-dd');
-            const data={
+            const data= {
               bookId: this.book?.bookID,
               telephone: this.userTelephone,
               limitTime: time + " 23:59:59",
@@ -199,27 +199,27 @@ export class BookPageComponent {
     }
   }
   postLendingData(data:any){
-    this.http.post(endPoints.lending,data,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      this.progressBar=false;
+    this.http.post(endPoints.lending,data,this.user.optionsAuthorization2()).subscribe((data:any)=> {
+      this.progressBar = false;
       this.init();
       this.openBorrowPage(data.body.reference)
-    },(error:any)=>{
-      if(error.status==403){
+    },error => {
+      if(error.status === 403){
         const event = this.snackBar.open("Your account balance is less than "+this.book?.deposit+" €",'Recharge',{duration: 5000})
         event.onAction().subscribe(() => {this.openRechargePage()});
-      }else if(error.status==401){
+      }else if(error.status === 401){
         this.showError("401 Incorrect account password")
       }else {
         this.showError(error.status+error.message)
       }
-      this.progressBar=false;
+      this.progressBar = false;
     })
   }
 
   getWallet(){
-    this.http.get(endPoints.wallet+"/"+this.userTelephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      this.wallet = data.body.balance;
-    },error=>this.showError(error.status+error.message))
+    this.http.get(endPoints.wallet + "/" + this.userTelephone,this.user.optionsAuthorization2()).subscribe(
+      (data:any) => this.wallet = data.body.balance
+    ,error => this.showError(error.status + error.message))
   }
 
   openBorrowPage(reference:string){

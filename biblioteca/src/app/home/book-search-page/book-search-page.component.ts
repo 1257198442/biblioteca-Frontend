@@ -47,27 +47,25 @@ export class BookSearchPageComponent {
 
   }
   searchBooks(){
-      const searchUrl = this.search != "" ? this.placeholder + "=" + this.search : "" ;
-      const lang = this.language == "All" ? "":"language="+this.language
-      const type= this.typeS=="All"?"":"&type="+this.typeS;
-      const route = searchUrl+lang+type;
-      this.http.get(endPoints.book+"/search?"+route)
-        .subscribe((data:any)=> {
-          this.books = !this.ENABLEOnly?data:data.filter((s:any)=>{return s.status=="ENABLE";});
-          this.paginator.length = this.books.length;
-          if (this.books.length <= this.pageSize) {
+    const searchUrl = this.search != "" ? this.placeholder + "=" + this.search : "" ;
+    const lang = this.language == "All" ? "" : "language=" + this.language
+    const type= this.typeS == "All"?"":"&type="+this.typeS;
+    const route = searchUrl + lang + type;
+    this.http.get(endPoints.book + "/search?" + route).subscribe(
+      (data:any)=> {
+        this.books = !this.ENABLEOnly?data:data.filter((s:any)=> {return s.status=="ENABLE";});
+        this.paginator.length = this.books.length;
+        if (this.books.length <= this.pageSize) {
           this.paginator.pageIndex = 0;
-          this.currentPage=0;
-          }
-        },error => this.showError(error.status+error.message)
-        )
+          this.currentPage = 0;
+        }
+      },error => this.showError(error.status + error.message));
   }
 
   getAllBookType(){
-    this.http.get(endPoints.type).subscribe((data:any)=>{
-      this.allType = data;
-    },error=> this.showError(error.status+error.message)
-    )
+    this.http.get(endPoints.type).subscribe(
+      (data:any)=> this.allType = data
+        ,error=> this.showError(error.status + error.message))
   }
 
   onSelectPlaceholder(event: any) {

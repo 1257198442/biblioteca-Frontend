@@ -53,7 +53,8 @@ export class PersonalPageComponent {
   }
 
   getUserData(telephone:string){
-    this.http.get(endPoints.user+"/"+telephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+    this.http.get(endPoints.user+"/"+telephone,this.user.optionsAuthorization2()).subscribe(
+      (data:any)=>{
       this.userData = data.body;
       this.getAvatar();
       this.getWallet();
@@ -75,10 +76,10 @@ export class PersonalPageComponent {
   }
 
   getWallet(){
-    if(this.isLoginUser()||this.userAdmin=='ROOT'){
-      this.http.get(endPoints.wallet+"/"+this.userData.telephone,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-        this.wallet = data.body.balance;
-      },error=> this.showError(error.status+error.message))
+    if(this.isLoginUser() || this.userAdmin == 'ROOT'){
+      this.http.get(endPoints.wallet + "/" + this.userData.telephone,this.user.optionsAuthorization2()).subscribe(
+        (data:any)=> this.wallet = data.body.balance
+      ,error => this.showError(error.status+error.message));
     }
   }
 
@@ -95,22 +96,22 @@ export class PersonalPageComponent {
       description:this.userData.description,
       email:this.userData.email,
       birthdays:this.userData.birthdays}
-    if(this.userUpdate!==userOrigen){
+    if(this.userUpdate !== userOrigen){
       const datePipe = new DatePipe('en-US');
       this.userUpdate.birthdays=datePipe.transform(this.userUpdate.birthdays, 'yyyy-MM-dd');
-      this.http.put(endPoints.user+"/"+this.userData.telephone,this.userUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-        this.getUserData(this.userData.telephone);
-      },error=>this.showError(error.status+error.message)
+      this.http.put(endPoints.user + "/" + this.userData.telephone,this.userUpdate,this.user.optionsAuthorization2()).subscribe(
+        () => this.getUserData(this.userData.telephone)
+      ,error => this.showError(error.status+error.message)
       )
     }
   }
 
   updateSetting(){
     const settingOrigen = this.userData.setting;
-    if(this.settingUpdate!==settingOrigen){
-      this.http.put(endPoints.user+"/"+this.userData.telephone+"/setting",this.settingUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-          this.getUserData(this.userData.telephone);
-        },error=>this.showError(error.status+error.message)
+    if(this.settingUpdate !== settingOrigen){
+      this.http.put(endPoints.user + "/" + this.userData.telephone + "/setting",this.settingUpdate,this.user.optionsAuthorization2()).subscribe(
+        () => this.getUserData(this.userData.telephone)
+        ,error=>this.showError(error.status+error.message)
       )
     }
   }
@@ -122,9 +123,9 @@ export class PersonalPageComponent {
       const confirm = true;
       const input = true;
       const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
-      dialogPage.afterClosed().subscribe(res=>{
-        if(res.confirm==='confirm'){
-          const changePassword={
+      dialogPage.afterClosed().subscribe(res => {
+        if(res.confirm === 'confirm'){
+          const changePassword= {
             oldPassword:res.input,
             newPassword:this.newPassword
           }
@@ -134,15 +135,15 @@ export class PersonalPageComponent {
             const confirm = false;
             const input = false;
             const dialogPage1 =this.openAlertDialogPage(title,message,confirm,input);
-            dialogPage1.afterClosed().subscribe(()=>{
-              this.newPassword="";
-              this.confirmPassword="";
-              this.editPasswordState=0;
-            })
-            },error=>this.showError(error.status+error.message)
+            dialogPage1.afterClosed().subscribe(()=> {
+              this.newPassword = "";
+              this.confirmPassword = "";
+              this.editPasswordState = 0;
+            });
+            },error => this.showError(error.status+error.message)
           )
         }
-      })
+      });
     }else {
       this.showError("Confirm Password is not the same as the new password")
     }
@@ -150,38 +151,37 @@ export class PersonalPageComponent {
 
   resetPassword(){
     const title = 'Reminders';
-    const message ='Clicking confirm will reset the password for user ('+this.userData.telephone+').';
+    const message = 'Clicking confirm will reset the password for user ('+this.userData.telephone+').';
     const confirm = true;
     const input = false;
     const dialogPage= this.openAlertDialogPage(title,message,confirm,input)
-    dialogPage.afterClosed().subscribe(res=>{
-      if(res=="confirm"){
-        this.http.put(endPoints.user+"/"+this.userData.telephone+"/resetPassword",{},this.user.optionsAuthorization2())
-          .subscribe((data:any)=>{
-              const title = 'Reminders';
-              const message ='Password reset successfully';
-              const confirm = false;
-              const input = false;
-              const dialogPage1 = this.openAlertDialogPage(title,message,confirm,input)
-              dialogPage1.afterClosed().subscribe(()=>{
-                this.newPassword="";
-                this.confirmPassword="";
-                this.editPasswordState=0;
-              })
-            },error=>this.showError(error.status+error.message)
-          )
+    dialogPage.afterClosed().subscribe(res => {
+      if(res == "confirm"){
+        this.http.put(endPoints.user + "/" + this.userData.telephone + "/resetPassword",{},this.user.optionsAuthorization2()).subscribe(()=> {
+          const title = 'Reminders';
+          const message = 'Password reset successfully';
+          const confirm = false;
+          const input = false;
+          const dialogPage1 = this.openAlertDialogPage(title,message,confirm,input)
+          dialogPage1.afterClosed().subscribe(()=> {
+            this.newPassword = "";
+            this.confirmPassword = "";
+            this.editPasswordState = 0;
+          })
+        },error => this.showError(error.status+error.message));
       }
-    })
+    });
   }
 
   getAvatar(){
-    this.http.get(endPoints.avatar+"/"+this.userData.telephone).subscribe((data:any)=>{
+    this.http.get(endPoints.avatar + "/" + this.userData.telephone).subscribe(
+      (data:any)=>{
       this.avatarUrl = data.url;
       this.avatarSelectUrl = this.avatarUrl;
     },error=> this.showError(error.status+error.message))
   }
 
-  onFileSelected(event: any): void {
+  onFileSelected(event: any){
     this.file = event.target.files[0];
     const reader: FileReader = new FileReader();
     reader.onload = (e: any) => {
@@ -199,9 +199,9 @@ export class PersonalPageComponent {
     if(this.avatarSelectUrl!=""){
       const formData = new FormData();
       formData.append('file', this.file as Blob);
-      this.http.put(endPoints.avatar+"/"+this.userData.telephone,formData,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-        this.getUserData(this.userData.telephone);
-      },error => this.showError(error.status+error.message))
+      this.http.put(endPoints.avatar + "/" + this.userData.telephone,formData,this.user.optionsAuthorization2()).subscribe(
+        () => this.getUserData(this.userData.telephone)
+      ,error => this.showError(error.status+error.message))
     }
   }
 
@@ -214,9 +214,8 @@ export class PersonalPageComponent {
       data:{
         telephone:this.userData.telephone
       }
-    }).afterClosed().subscribe(()=>{
-      this.getWallet();
-    })
+    }).afterClosed().subscribe(
+      ()=> this.getWallet());
   }
 
   openWithdrawMoneyPage(){
@@ -228,9 +227,8 @@ export class PersonalPageComponent {
       data:{
         telephone:this.userData.telephone
       }
-    }).afterClosed().subscribe(()=>{
-      this.getWallet();
-    })
+    }).afterClosed().subscribe(
+      () => this.getWallet());
   }
 
   openBillingRecordsPage(){

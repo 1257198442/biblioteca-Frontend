@@ -22,12 +22,11 @@ reference:string="";
   }
 
   getReturnData(){
-    this.http.get(endPoints.return+"/"+this.reference,this.user.optionsAuthorization2())
-      .subscribe((data:any)=>{
-        this.returnData=data.body;
-      },error=> this.showError(error))
+    this.http.get(endPoints.return+"/"+this.reference,this.user.optionsAuthorization2()).subscribe(
+        (data:any) => this.returnData=data.body
+      ,error => this.showError(error))
   }
-  public showError(notification: string): void {
+  public showError(notification: string){
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 }

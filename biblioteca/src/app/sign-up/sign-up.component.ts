@@ -34,30 +34,28 @@ export class SignUpComponent {
         email:this.registrationData.email,
         password:this.registrationData.password
       }
-      this.http.post(endPoints.user,registrationData1)
-        .subscribe((data:any)=>{
+      this.http.post(endPoints.user,registrationData1).subscribe(()=>{
           const title = 'Reminders';
           const message = ':) Successful registration.'
           const confirm = false
           const input = false
           const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
-          dialogPage.afterClosed().subscribe(()=>{
-            this.dialogRef.close();
-          })
-        },error=> this.showError(error.status+error.message))
+          dialogPage.afterClosed().subscribe(
+            ()=> this.dialogRef.close());
+        },error=> this.showError(error.status+error.message));
     }else {
       this.showError("Error: Empty with data");
     }
   }
 
   notNull(){
-    return this.registrationData.telephone==''?false:
-      this.emailCorrectFormat(1)?false:
-        this.registrationData.name==''?false:
+    return this.registrationData.telephone == '' ? false :
+      this.emailCorrectFormat(1) ? false :
+        this.registrationData.name == '' ? false :
           this.registrationData.password != '';
   }
 
-  public showError(notification: string): void {
+  public showError(notification: string) {
       this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 

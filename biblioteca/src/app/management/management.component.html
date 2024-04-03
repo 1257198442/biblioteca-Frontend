@@ -90,6 +90,63 @@
         <mat-paginator #bookPaginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
       </mat-tab>
 
+      <mat-tab label="AUTHOR">
+        <mat-card-title>
+          <h1>AUTHOR Management</h1>
+        </mat-card-title>
+        <mat-form-field class="example-full-width">
+          <mat-label>Search</mat-label>
+          <input matInput (keyup)="applyAuthorFilter($event)" placeholder="Ex. Mia">
+        </mat-form-field>
+        <mat-card-content>
+          <table mat-table #authorSort='matSort' [dataSource]="authorDataSource" class="mat-elevation-z8" matSort>
+            <ng-container matColumnDef="authorId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> AuthorID </th>
+              <td mat-cell *matCellDef="let element"  > {{element.authorId}} </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+              <td mat-cell *matCellDef="let element"  > {{element.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="nationality" >
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Nationality </th>
+              <td mat-cell *matCellDef="let element"  > {{element.nationality}} </td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Management </th>
+              <td mat-cell *matCellDef="let element" >
+                <button mat-icon-button (click)="deleteAuthor(element.authorId)"><mat-icon>delete</mat-icon></button>
+                <button mat-icon-button ><mat-icon>visibility</mat-icon></button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef=" lowForAuthor "></tr>
+            <tr mat-row *matRowDef="let row; columns: lowForAuthor;"></tr>
+          </table>
+          <mat-paginator #authorPaginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </mat-card-content>
+        <mat-expansion-panel [expanded]= "step === 1" (opened)="step=1" (closed)="step=0;clear()" class="add_author">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Add Author
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-form-field class="example-full-width">
+            <mat-label>Author Name</mat-label>
+            <input matInput [(ngModel)]="author.name" >
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Nationality</mat-label>
+            <input matInput [(ngModel)]="author.nationality" >
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Description</mat-label>
+            <input matInput [(ngModel)]="author.description" >
+          </mat-form-field>
+          <br>
+          <button mat-flat-button  (click)="addAuthor();step=0" *ngIf="author.name!=''">OK</button>
+        </mat-expansion-panel>
+      </mat-tab>
+
       <mat-tab label="Book Type">
         <mat-card class="type-card">
           <mat-card-title class="type-page-title">

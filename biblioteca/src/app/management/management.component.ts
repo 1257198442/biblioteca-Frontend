@@ -12,7 +12,7 @@ import {AlertDialogComponent} from "../sign-up/alert-dialog.component";
 import {PersonalPageComponent} from "../home/personal-page/personal-page.component";
 import {AddBookPageComponent} from "./add-book-page/add-book-page.component";
 import {BookPageComponent} from "../home/book-page/book-page.component";
-import {BookTypeModel} from "../model/book.model";
+import {AuthorAddData, BookTypeModel} from "../model/book.model";
 
 
 @Component({
@@ -23,20 +23,24 @@ import {BookTypeModel} from "../model/book.model";
 export class ManagementComponent{
   @ViewChild('userPaginator') userPaginator!: MatPaginator;
   @ViewChild('bookPaginator') bookPaginator!: MatPaginator;
+  @ViewChild('authorPaginator') authorPaginator!: MatPaginator;
   @ViewChild('userSort') userSort!: MatSort;
   @ViewChild('bookSort') bookSort!: MatSort;
-  lowForUserList:string[]=["telephone","name","email","admin","modify_permissions","view"];
-  lowForBookList:string[]=["bookID","name","status","view","delete"];
-  rolesListROOT:string[]=["ADMINISTRATOR","CLIENT","BAN"];
-  rolesListADMINISTRATOR:string[]=["ADMINISTRATOR","CLIENT"];
+  @ViewChild('authorSort') authorSort!: MatSort;
+  lowForUserList:string[] = ["telephone","name","email","admin","modify_permissions","view"];
+  lowForBookList:string[] = ["bookID","name","status","view","delete"];
+  lowForAuthor:string[] = ["authorId","name","nationality","delete"];
+  rolesListROOT:string[] = ["ADMINISTRATOR","CLIENT","BAN"];
+  rolesListADMINISTRATOR:string[] = ["ADMINISTRATOR","CLIENT"];
   selectRolesList:string[]=[];
-  private errorNotification = undefined;
-  userAdmin:string="";
-  userTelephone:string=""
+  userAdmin:string = "";
+  userTelephone:string = ""
   origenLibraryData:any;
   updateLibraryData:any;
-  type:BookTypeModel={name:"",description:""}
-  stepType=0;
+  type:BookTypeModel = {name:"",description:""}
+  author:AuthorAddData = {name:"", description:"", nationality:""}
+  stepType= 0;
+  step= 0;
   constructor(private http:HttpClient,
               private user:authService,
               private dialog:MatDialog,
@@ -58,11 +62,14 @@ export class ManagementComponent{
       this.getLibraryData();
       this.getAllBookList();
       this.getAllBookType();
+      this.getAuthorList();
     }
   }
   userDataSource:any;
   bookDataSource:any;
-  allType:BookTypeModel[]=[];
+  allType:BookTypeModel[] = [];
+  authorDataSource:any;
+
   getAllUserList(){
     if(this.isRoot()){
       this.selectRolesList=this.rolesListROOT
@@ -73,21 +80,21 @@ export class ManagementComponent{
       this.http.get(endPoints.user,this.user.optionsAuthorization2()).subscribe((data:any)=>{
         this.userDataSource = new MatTableDataSource(data.body);
         this.userDataInit();
-      },error=> this.showError(error.status+error.message))
+      },error=> this.showError(error.status + error.message))
     }
 
   getAllBookList(){
     this.http.get(endPoints.book).subscribe((data:any)=>{
       this.bookDataSource = new MatTableDataSource(data);
       this.bookDataInit()
-    },error=> this.showError(error.status+error.message))
+    },error => this.showError(error.status + error.message))
   }
 
   getLibraryData(){
     this.http.get(endPoints.library).subscribe((data:any)=>{
       this.origenLibraryData = data;
       this.updateLibraryData = Object.assign({}, this.origenLibraryData);
-    },error=> this.showError(error.status+error.message))
+    },error => this.showError(error.status + error.message))
   }
 
   userDataInit() {
@@ -108,42 +115,42 @@ export class ManagementComponent{
     }
   }
 
-  isRoot():boolean{
-    return this.userAdmin=="ROOT";
+  isRoot(){
+    return this.userAdmin == "ROOT";
   }
 
-  isAdministrators():boolean{
-    return this.userAdmin=="ADMINISTRATOR";
+  isAdministrators(){
+    return this.userAdmin == "ADMINISTRATOR";
   }
 
   toAdministrators(telephone:string){
     const title = 'Reminders';
-    const message ='Confirm changing the permissions of user '+telephone+' to ADMINISTRATOR?..';
+    const message = 'Confirm changing the permissions of user '+telephone+' to ADMINISTRATOR?..';
     const confirm = true;
     const input = false;
-    const dialogPage =this.openAlertDialogPage(title,message,confirm,input);
-    dialogPage.afterClosed().subscribe(res=>{
-      if(res==='confirm'){
-        this.http.put(endPoints.user+"/"+telephone+"/role","ADMINISTRATOR",this.user.optionsAuthorization2()).subscribe(
-          ()=>this.getAllUserList()
-          , error=> this.showError(error.status+error.message))
+    const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
+    dialogPage.afterClosed().subscribe(res => {
+      if(res === 'confirm'){
+        this.http.put(endPoints.user + "/" + telephone + "/role","ADMINISTRATOR",this.user.optionsAuthorization2()).subscribe(
+          () => this.getAllUserList()
+          , error => this.showError(error.status+error.message))
       }
-    })
+    });
   }
 
   toUser(telephone:string){
     const title = 'Reminders';
-    const message ='Are you sure you want to change the permissions on '+telephone+' to CLIENT?';
+    const message ='Are you sure you want to change the permissions on ' + telephone + ' to CLIENT?';
     const confirm = true;
     const input = false;
     const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
     dialogPage.afterClosed().subscribe(res=>{
       if(res==='confirm'){
-        this.http.put(endPoints.user+"/"+telephone+"/role","CLIENT",this.user.optionsAuthorization2()).subscribe(
-          ()=>this.getAllUserList()
-          , error=> this.showError(error.status+error.message))
+        this.http.put(endPoints.user + "/" + telephone + "/role","CLIENT",this.user.optionsAuthorization2()).subscribe(
+          () => this.getAllUserList()
+          , error => this.showError(error.status+error.message))
       }
-    })
+    });
   }
 
   toBan(telephone:string){
@@ -154,33 +161,33 @@ export class ManagementComponent{
     const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
     dialogPage.afterClosed().subscribe(res=>{
       if(res==='confirm'){
-        this.http.put(endPoints.user+"/"+telephone+"/role","BAN",this.user.optionsAuthorization2()).subscribe(
-          ()=>this.getAllUserList()
-          , error=> this.showError(error.status+error.message))
+        this.http.put(endPoints.user + "/" + telephone + "/role","BAN",this.user.optionsAuthorization2()).subscribe(
+          () => this.getAllUserList()
+          , error => this.showError(error.status+error.message))
       }
-    })
+    });
   }
 
   toModifyAdmin(telephone:string,admin:string){
-    if(admin=="ADMINISTRATOR"){
+    if(admin == "ADMINISTRATOR"){
       this.toAdministrators(telephone);
-    }else if(admin=="CLIENT"){
+    }else if(admin =="CLIENT"){
       this.toUser(telephone);
-    }else if(admin=="BAN"){
+    }else if(admin =="BAN"){
         this.toBan(telephone)
     } else {
       this.showError("operating error.")
     }
   }
 
-  modifyRoleButtonIsDisplay(role:string,modifyRole:string):boolean{
-    if(this.isRoot()&&role!=modifyRole){
+  modifyRoleButtonIsDisplay(role:string,modifyRole:string){
+    if(this.isRoot() && role != modifyRole){
       return true;
     }
     return this.isAdministrators() && role != modifyRole && modifyRole == "ADMINISTRATOR";
   }
 
-  shouldDisplayElement(element:any): boolean {
+  shouldDisplayElement(element:any){
     if (this.userTelephone === element.telephone) {
       return false;
     }
@@ -196,22 +203,26 @@ export class ManagementComponent{
       const message = 'Confirmation of changes to library data? This will modify the data displayed in the footer!!';
       const confirm = true;
       const input = false;
-      const dialogPage =this.openAlertDialogPage(title,message,confirm,input);
+      const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
       dialogPage.afterClosed().subscribe(res=>{
         if(res==='confirm'){
-          this.http.put(endPoints.library,this.updateLibraryData,this.user.optionsAuthorization2()).subscribe(()=>{
-            const title = 'Reminders';
-            const message = 'Modified successfully';
-            const confirm = false;
-            const input = false;
-            const dialogPage1 =this.openAlertDialogPage(title,message,confirm,input)
-            dialogPage1.afterClosed().subscribe(
-              () => this.router.navigateByUrl('/home'))
-            this.getLibraryData();
-            },(error)=>{this.showError(error.message)})
+          this.putLibrary()
         }
-      })
+      });
     }
+  }
+
+  putLibrary(){
+    this.http.put(endPoints.library,this.updateLibraryData,this.user.optionsAuthorization2()).subscribe(()=>{
+      const title = 'Reminders';
+      const message = 'Modified successfully';
+      const confirm = false;
+      const input = false;
+      const dialogPage =this.openAlertDialogPage(title,message,confirm,input)
+      dialogPage.afterClosed().subscribe(
+        () => this.router.navigateByUrl('/home'))
+        this.getLibraryData();
+    },(error)=>{this.showError(error.message)});
   }
 
   applyBookFilter(event: Event) {
@@ -234,27 +245,27 @@ export class ManagementComponent{
           ()=> this.getAllBookList()
         ,error=> this.showError(error.status+error.message))
       }
-    })
+    });
   }
 
   locked(bookID:string){
     this.http.put(endPoints.book+"/"+bookID+"/status","DISABLE",this.user.optionsAuthorization2())
       .subscribe(
         ()=> this.getAllBookList()
-      ,error => this.showError(error.status+error.message))
+      ,error => this.showError(error.status+error.message));
   }
 
   available(bookID:string){
     this.http.put(endPoints.book+"/"+bookID+"/status","ENABLE",this.user.optionsAuthorization2())
       .subscribe(
         ()=> this.getAllBookList()
-      ,error => this.showError(error.status+error.message))
+      ,error => this.showError(error.status+error.message));
   }
 
   getAllBookType(){
     this.http.get(endPoints.type).subscribe((data:any)=> {
       this.allType=data;
-    },error => this.showError(error.status+error.message))
+    },error => this.showError(error.status+error.message));
   }
 
   addBookType(){
@@ -266,22 +277,81 @@ export class ManagementComponent{
       const confirm = false;
       const input = false;
       this.openAlertDialogPage(title,message,confirm,input)
-    })
+    });
   }
 
   deleteType(name:string){
     const title = 'Warning';
-    const message = 'Are you sure you want to delete the type ['+name+']? This may result in the loss of the category for books that were already in that genre!';
+    const message = 'Are you sure you want to delete the type [' + name + ']? This may result in the loss of the category for books that were already in that genre!';
     const confirm = true;
     const input = false;
-    const dialogPage:MatDialogRef<any> = this.openAlertDialogPage(title,message,confirm,input);
-    dialogPage.afterClosed().subscribe(res=>{
+    const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
+    dialogPage.afterClosed().subscribe(res => {
       if(res==='confirm'){
-        this.http.delete(endPoints.type+"/"+name,this.user.optionsAuthorization2()).subscribe(
+        this.http.delete(endPoints.type + "/" + name,this.user.optionsAuthorization2()).subscribe(
           ()=> this.getAllBookType()
         ,error => this.showError(error.status+error.message))
       }
-    })
+    });
+  }
+
+  getAuthorList(){
+    this.http.get(endPoints.author).subscribe((data:any)=> {
+      this.authorDataSource = new MatTableDataSource(data);
+      this.authorDataInit();
+    },error => this.showError(error.status+error.message));
+  }
+
+  authorDataInit() {
+    this.authorDataSource.paginator = this.authorPaginator;
+    this.authorDataSource.sort = this.authorSort;
+  }
+
+  applyAuthorFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.authorDataSource.filter = filterValue.trim().toLowerCase();
+    if (this.authorDataSource.paginator) {
+      this.authorDataSource.paginator.firstPage();
+    }
+  }
+
+  deleteAuthor(authorId:string){
+    const title = 'Warning';
+    const message = 'Are you sure you want to remove this author? This may make the author information of some books display abnormally!!!';
+    const confirm = true;
+    const input = false;
+    const dialogRef = this.openAlertDialogPage(title,message,confirm,input)
+    dialogRef.afterClosed().subscribe(res => {
+      if(res === 'confirm'){
+        this.http.delete(endPoints.author + "/" + authorId,this.user.optionsAuthorization2()).subscribe(
+          () => this.getAuthorList()
+        ,error => this.showError(error.status+error.message))
+      }
+    });
+  }
+
+  addAuthor(){
+    if (this.author.name != ""){
+      this.http.post(endPoints.author,this.author,this.user.optionsAuthorization2()).subscribe((authorData:any)=> {
+        const title = 'Reminders';
+        const message = ':) Author ' + authorData.body.name + ' added successfully.';
+        const confirm = false;
+        const input = false;
+        const dialogRef = this.openAlertDialogPage(title,message,confirm,input)
+        dialogRef.afterClosed().subscribe(()=> {
+          this.getAuthorList();
+          this.step=0;
+        });
+      },error => this.showError(error.status + error.message));
+    }
+  }
+
+  clear(){
+    this.author = {
+      name:"",
+      description:"",
+      nationality:""
+    };
   }
 
   openPersonalPage(telephone:string){
@@ -295,7 +365,7 @@ export class ManagementComponent{
       }
     }).afterClosed().subscribe(()=>{
       this.getAllUserList()
-    })
+    });
   }
 
   openBookPage(bookId:string){
@@ -307,7 +377,7 @@ export class ManagementComponent{
       data:{
         bookId:bookId
       }
-    }).afterClosed().subscribe(()=>this.getAllBookList());
+    }).afterClosed().subscribe(() => this.getAllBookList());
   }
 
   openAddBookPage(){
@@ -318,9 +388,9 @@ export class ManagementComponent{
       maxHeight:"600px",
       data:{
       }
-    }).afterClosed().subscribe(()=>{
+    }).afterClosed().subscribe(()=> {
       this.getAllBookList()
-    })
+    });
   }
 
   openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){

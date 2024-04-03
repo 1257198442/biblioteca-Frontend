@@ -29,22 +29,22 @@ export class RechargeComponent {
               private http:HttpClient,
               private dialog:MatDialog,
               public dialogRef: MatDialogRef<RechargeComponent>) {
-
     this.telephone = data.telephone;
     this.getBalance();
   }
+
   recharge(){
     this.btnStatus(true)
     if(this.rechargeDataIsError()) {
       this.btnStatus(false)
     }else {
       this.transactionRecord={
-        purpose:"Recharge with "+this.card+" card [Card Number:*"+this.cardNumber.replace(/\s+/g, '').slice(-6)+"]",
+        purpose:"Recharge with " + this.card + " card [Card Number:*" + this.cardNumber.replace(/\s+/g, '').slice(-6) + "]",
         telephone:this.telephone,
         amount:this.sumOfMoney,
         transactionDetails:this.transactionDetails
       }
-      this.http.post(endPoints.wallet+"/recharge",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=>{
+      this.http.post(endPoints.wallet+"/recharge",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=> {
         this.btnStatus(false)
         const title = 'Successes';
         const message= ':) Recharge account '+this.telephone+' with '+this.sumOfMoney+'€ successfully.';
@@ -52,10 +52,10 @@ export class RechargeComponent {
         const input = false;
         this.openAlertDialogPage(title,message,confirm,input)
         this.dialogRef.close();
-      },(error)=>{
+      },error => {
         this.btnStatus(false)
-          this.showError(error.status+error.message)
-      })
+        this.showError(error.status+error.message)
+      });
     }
   }
 
@@ -82,8 +82,8 @@ export class RechargeComponent {
   }
 
   getBalance(){
-    this.http.get(endPoints.wallet+"/"+this.telephone,this.user.optionsAuthorization2())
-      .subscribe((data:any)=> this.balance = data.body.balance,
+    this.http.get(endPoints.wallet+"/"+this.telephone,this.user.optionsAuthorization2()).subscribe(
+        (data:any)=> this.balance = data.body.balance,
         error => this.showError(error.status+error.message))
   }
 

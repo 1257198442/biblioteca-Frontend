@@ -24,10 +24,9 @@ export class LoginComponent {
        this.loginData=new Login("","");
      }
 
-     login():void {
+     login(){
        if (this.loginData.telephone != "" && this.loginData.password != "") {
-         this.http.post(endPoints.user + "/login", {},this.loginService.optionsAuthorization1(this.loginData,this.dialCode))
-           .subscribe(
+         this.http.post(endPoints.user + "/login", {},this.loginService.optionsAuthorization1(this.loginData,this.dialCode)).subscribe(
              (response:any) => {
                 const token = response.body.token;
                 if(token!=""||token){
@@ -49,19 +48,20 @@ export class LoginComponent {
        }
      }
 
-  openSignUpPage():void{
+  openSignUpPage(){
     this.dialog.open(SignUpComponent,
       {
         width:"470px",
       });
   }
 
-  public showError(notification: string): void {
+  public showError(notification: string){
       this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 
   onSelectCountryDialCode($event:any){
        this.dialCode = $event.target.value.dialCode;
   }
+
   protected readonly countriesDialCodes = countriesDialCodes;
 }
