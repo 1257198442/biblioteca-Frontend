@@ -6,12 +6,8 @@ import { ChartDataset, ChartOptions } from 'chart.js';
   selector: 'app-your-component',
   template: `
     <style>
-      .box{
-        padding: 20px;
-      }
-      p{
-        font-size: 20px;
-      }
+      .box{padding: 20px;}
+      p{font-size: 20px;}
     </style>
     <div *ngIf="data && data.list" class="box">
       <p>{{data.title}}</p>
@@ -37,7 +33,7 @@ export class LineChartComponent  {
   public lineChartData: ChartDataset[] = [
     { data: [], label: 'Monthly Lending Counts', borderColor: '#3BAFBE', backgroundColor: '#FFD166',pointBackgroundColor:"#FFD166"}
   ];
-  public lineChartLabels:string[]= [];
+  public lineChartLabels:string[] = [];
   public lineChartOptions: ChartOptions = {
     responsive: true,
     scales: {

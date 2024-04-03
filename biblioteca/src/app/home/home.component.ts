@@ -54,22 +54,22 @@ export class HomeComponent {
               private snackBar: MatSnackBar,
               private datePipe: DatePipe,
               private user:authService,
-              private router:Router,) {
+              private router:Router) {
+    this.init();
+  }
+
+  init(){
     setInterval(() => {
       this.updateTime();
-    }, 1000);
-
-    setInterval(() => {
-      this.nextPage();
-    }, 10000);
-
-    setInterval(() => {
       const currentToken = sessionStorage.getItem('jwtToken');
       if (currentToken !== this.storedToken) {
         this.storedToken = currentToken!=null?currentToken:"";
         this.initPage()
       }
     }, 1000);
+    setInterval(() => {
+      this.nextPage();
+    }, 10000);
     this.getRandomBook();
     this.getWeather()
   }
@@ -95,9 +95,9 @@ export class HomeComponent {
   }
 
   getRandomBook(){
-    this.http.get(endPoints.book+"/random").subscribe((data:any)=>{
-      this.randomBook = data;
-    },error => this.showError(error.status+error.message))
+    this.http.get(endPoints.book+"/random").subscribe(
+      (data:any)=> this.randomBook = data
+    ,error => this.showError(error.status+error.message))
   }
 
   formatNumber(value: number): string {
@@ -144,11 +144,11 @@ export class HomeComponent {
   }
 
   isAdmin(){
-    return this.userAdmin == "ROOT" || this.userAdmin == "ADMINISTRATOR"
+    return this.userAdmin == "ROOT" || this.userAdmin == "ADMINISTRATOR";
   }
 
   isClient(){
-    return this.userAdmin == "CLIENT"
+    return this.userAdmin == "CLIENT";
   }
 
   isLogin(){
@@ -156,10 +156,9 @@ export class HomeComponent {
   }
 
   getWeather(){
-    this.http.get(endPoints.weather).subscribe((data:any)=>{
-      this.weather=data;
-      console.log(data)
-    },error => this.showError(error.status+error.message))
+    this.http.get(endPoints.weather).subscribe(
+      (data:any)=> this.weather=data
+    ,error => this.showError(error.status+error.message));
   }
 
   updateTime(): void {
@@ -188,25 +187,25 @@ export class HomeComponent {
   }
 
   getLendingStatistics(){
-    this.http.get(endPoints.lending + "/lending_statistics",this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      this.lendingStatistics = data.body;
-    })
-    this.http.get(endPoints.lending + "/monthly_counts",this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      this.lendingMonthlyCounts = data.body;
-    })
-    this.http.get(endPoints.lending + "/weekly_counts",this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      this.lendingWeeklyCounts = data.body;
-    })
-    this.http.get(endPoints.lending + "/yearly_counts",this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      this.lendingYearlyCounts = data.body;
-    })
+    this.http.get(endPoints.lending + "/lending_statistics",this.user.optionsAuthorization2()).subscribe(
+      (data:any) => this.lendingStatistics = data.body
+      ,error => this.showError(error.status+error.message));
+    this.http.get(endPoints.lending + "/monthly_counts",this.user.optionsAuthorization2()).subscribe(
+      (data:any) => this.lendingMonthlyCounts = data.body
+      ,error => this.showError(error.status+error.message));
+    this.http.get(endPoints.lending + "/weekly_counts",this.user.optionsAuthorization2()).subscribe(
+      (data:any) => this.lendingWeeklyCounts = data.body
+      ,error => this.showError(error.status+error.message));
+    this.http.get(endPoints.lending + "/yearly_counts",this.user.optionsAuthorization2()).subscribe(
+      (data:any) => this.lendingYearlyCounts = data.body
+      ,error => this.showError(error.status+error.message));
   }
 
   getLendingData(){
     this.http.get(endPoints.lending+"/no_return/search?telephone="+encodeURIComponent(this.userTelephone),this.user.optionsAuthorization2())
-      .subscribe((data:any)=>{
-        this.lendingList=data.body;
-      },error => this.showError(error.status+error.message))
+      .subscribe(
+        (data:any)=> this.lendingList=data.body
+      ,error => this.showError(error.status+error.message));
   }
 
   openBookPage(bookId:string){

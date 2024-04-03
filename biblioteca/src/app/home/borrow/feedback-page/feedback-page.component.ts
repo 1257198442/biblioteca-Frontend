@@ -35,20 +35,18 @@ export class FeedbackPageComponent {
   }
   submit(){
     this.progressBar=true;
-    this.http.put(endPoints.return+"/"+this.reference+"/isReturn",this.bookDamageDegree,this.user.optionsAuthorization2())
-      .subscribe((data)=>{
+    this.http.put(endPoints.return + "/" + this.reference+"/isReturn",this.bookDamageDegree,this.user.optionsAuthorization2())
+      .subscribe(()=> {
         const title ='Reminders';
         const message = ':) Feedback successful.';
         const confirm = false;
         const input = false;
-        const dialogRef:MatDialogRef<any> = this.openAlertDialogPage(title,message,confirm,input)
-        dialogRef.afterClosed().subscribe(()=>{
-          this.progressBar=false;
+        const dialogRef = this.openAlertDialogPage(title,message,confirm,input)
+        dialogRef.afterClosed().subscribe(()=> {
+          this.progressBar = false;
           this.dialogRef.close();
         })
-      },(error)=>{
-        this.showError(error)
-      })
+      },error => this.showError(error));
   }
 
   openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
@@ -63,7 +61,7 @@ export class FeedbackPageComponent {
     })
   }
 
-  public showError(notification: string): void {
+  public showError(notification: string){
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 }

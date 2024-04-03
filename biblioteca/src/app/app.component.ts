@@ -25,16 +25,16 @@ export class AppComponent implements OnInit{
   storedToken:any;
   avatarUrl:string = "";
 
-  constructor(private http:HttpClient,
-              private dialog:MatDialog,
-              private transmit:authService,
+  constructor(private http: HttpClient,
+              private dialog: MatDialog,
+              private transmit: authService,
               private snackBar: MatSnackBar,
               private router: Router) {
     this.getLibraryData();
     setInterval(() => {
       const currentToken = sessionStorage.getItem('jwtToken');
       if (currentToken !== this.storedToken) {
-        this.storedToken = currentToken!=null?currentToken:"";
+        this.storedToken = currentToken != null ? currentToken : "";
         this.getToken();
         if(this.userTelephone!=""){
           this.getUserData();
@@ -44,7 +44,7 @@ export class AppComponent implements OnInit{
     }, 1000);
   }
 
-  login():void{
+  login(){
     this.dialog.open(LoginComponent, {
       width:"470px",
     }).afterClosed().subscribe(()=> {
@@ -66,11 +66,11 @@ export class AppComponent implements OnInit{
     }
   }
 
-  logout():void{
-    this.userTelephone="";
-    this.userAdmin="";
+  logout(){
+    this.userTelephone = "";
+    this.userAdmin = "";
     sessionStorage.removeItem('jwtToken');
-    this.isLogin=false;
+    this.isLogin = false;
   }
 
   getUserData(){
@@ -81,15 +81,14 @@ export class AppComponent implements OnInit{
       },error=> this.showError(error.message))
   }
 
-  admin():boolean{
+  admin(){
     return this.userData.role==="ADMINISTRATOR"||this.userData.role==="ROOT";
   }
 
   getLibraryData(){
-    this.http.get(endPoints.library)
-      .subscribe((data:any)=>{
-        this.library = data;
-      }, error => this.showError(error.message))
+    this.http.get(endPoints.library).subscribe(
+      (data:any)=>this.library = data
+      , error => this.showError(error.message))
   }
 
   ngOnInit() {
@@ -100,11 +99,10 @@ export class AppComponent implements OnInit{
     });
   }
 
-  getAvatar():void{
-    this.http.get(endPoints.avatar+"/"+this.userTelephone)
-      .subscribe(
-        (data:any)=>{this.avatarUrl=data.url
-        }, error=>this.showError(error.status+error.message))
+  getAvatar(){
+    this.http.get(endPoints.avatar+"/"+this.userTelephone).subscribe(
+        (data:any)=>this.avatarUrl=data.url
+        , error=>this.showError(error.status+error.message))
   }
 
   openPersonalPage(){
@@ -119,14 +117,14 @@ export class AppComponent implements OnInit{
     }).afterClosed().subscribe(()=> this.getUserData())
   }
 
-  openSignUpPage():void{
+  openSignUpPage(){
     this.dialog.open(SignUpComponent,
       {
         width:"470px",
       }).afterClosed().subscribe(()=>this.login());
   }
 
-  public showError(notification: string): void {
+  public showError(notification: string) {
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 }

@@ -22,13 +22,12 @@ export class BorrowPageComponent {
     this.getBorrowData();
 }
 getBorrowData(){
-  this.http.get(endPoints.lending+"/"+this.reference,this.user.optionsAuthorization2())
-    .subscribe((data:any)=>{
-      this.borrowData=data.body;
-    },error=> this.showError(error.status+error.message))
+  this.http.get(endPoints.lending+"/"+this.reference,this.user.optionsAuthorization2()).subscribe(
+    (data:any)=> this.borrowData=data.body
+    ,error=> this.showError(error.status+error.message))
   }
 
-  public showError(notification: string): void {
+  public showError(notification: string){
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 }

@@ -40,6 +40,10 @@ export class BorrowComponent implements OnChanges{
   low=['reference','bookID','lendingTime','limitTime','telephone','return','view'];
   returnLow=['reference','bookID','returnStatus','status','telephone','view'];
   returnBoxLow=['reference','bookID','returnStatus','telephone','isReturn','view'];
+  lendingDataSource:any;
+  restitutionDataSource:any;
+  returnBoxDataSource:any;
+
   constructor(private http:HttpClient,
               private user:authService,
               private snackBar:MatSnackBar,
@@ -54,7 +58,6 @@ export class BorrowComponent implements OnChanges{
       this.userAdmin = decodedPayload.role;
       this.checkUserData();
     }
-
   }
 
   getAllBorrowData(){
@@ -64,26 +67,25 @@ export class BorrowComponent implements OnChanges{
       this.adminGetBorrowData();
     }
   }
-  lendingDataSource:any;
-  restitutionDataSource:any;
-  returnBoxDataSource:any;
+
   clientGetBorrowData(){
     this.http.get(endPoints.lending+"/client_return_and_lending/search?telephone="+encodeURIComponent(this.userTelephone),this.user.optionsAuthorization2()).subscribe((data:any)=>{
       this.lendingDataSource=new MatTableDataSource(data.body.lendingDataList);
         this.restitutionDataSource=new MatTableDataSource(data.body.returnDataList);
         this.lendingDataInit()
       this.restitutionDataInit();
-    })
+    },error => this.showError(error));
   }
   adminGetBorrowData(){
-    this.http.get(endPoints.lending+"/admin_return_and_lending",this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      this.lendingDataSource=new MatTableDataSource(data.body.lendingDataList);
-      this.restitutionDataSource=new MatTableDataSource(data.body.returnDataList);
+    this.http.get(endPoints.lending+"/admin_return_and_lending",this.user.optionsAuthorization2()).subscribe(
+      (data:any)=> {
+      this.lendingDataSource = new MatTableDataSource(data.body.lendingDataList);
+      this.restitutionDataSource = new MatTableDataSource(data.body.returnDataList);
       this.returnBoxDataSource = new MatTableDataSource(data.body.returnBox);
       this.lendingDataInit()
       this.restitutionDataInit();
       this.returnBoxDataInit();
-    })
+    },error => this.showError(error));
   }
   lendingDataInit() {
     this.lendingDataSource.paginator = this.lendingPaginator;
@@ -182,32 +184,30 @@ export class BorrowComponent implements OnChanges{
   }
 
   bookNoReturn(reference:string){
-    this.http.put(endPoints.return+"/"+reference+"/noReturn",{},this.user.optionsAuthorization2())
-      .subscribe((data:any)=>{
-        this.getAllBorrowData()
-      },error => this.showError(error))
+    this.http.put(endPoints.return + "/" + reference + "/noReturn",{},this.user.optionsAuthorization2()).subscribe(
+        () => this.getAllBorrowData()
+      ,error => this.showError(error))
   }
 
   readUserByExtensionBeyond30Days(){
-    this.http.get(endPoints.lending+"/read_lending_data_by_overdue_max_30day",this.user.optionsAuthorization2()).subscribe((data:any)=>{
+    this.http.get(endPoints.lending + "/read_lending_data_by_overdue_max_30day",this.user.optionsAuthorization2()).subscribe(
+      (data:any)=> {
       this.lendingDataSource=new MatTableDataSource(data.body)
       this.lendingDataInit();
-    },(error)=>{
-      console.log(error)
-    })
+    },error => this.showError(error))
   }
 
   sendReminderEmail(url:string){
-    this.http.post(endPoints.lending+"/"+url,'',this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      if(data.body.length!=0){
+    this.http.post(endPoints.lending + "/" + url,'',this.user.optionsAuthorization2()).subscribe((data:any)=>{
+      if(data.body.length != 0){
         const title = 'Reminders';
-        const message= ':) Send email successes('+data.body.length+'  successes).';
+        const message= ':) Send email successes(' + data.body.length + '  successes).';
         const confirm= false;
         const input = false;
         const dialogRef = this.openAlertDialogPage(title,message,confirm,input)
-        dialogRef.afterClosed().subscribe(()=>{
-          this.getAllBorrowData();
-        })
+        dialogRef.afterClosed().subscribe(
+          () => this.getAllBorrowData()
+        )
       }else {
         const title = 'Reminders';
         const message= ':) There are no reminder emails that need to be sent.';
@@ -215,29 +215,24 @@ export class BorrowComponent implements OnChanges{
         const input = false;
         this.openAlertDialogPage(title,message,confirm,input);
       }
-    },(error)=>{
-      this.showError(error.status+error.message)
-    })
+    }, error => this.showError(error.status + error.message));
   }
 
-  status(status: boolean): string {
+  status(status: boolean){
     return status ? "Returned" : "Unreturned";
   }
 
-  status2(data: string, data2: string): string {
+  status2(data: string, data2: string){
     return this.isOverdue(data, data2) ? "Overdue" : "Normal";
   }
 
   return(element:any){
-    this.http.post(endPoints.return,element.reference,this.user.optionsAuthorization2())
-      .subscribe((data:any)=>{
-        this.getAllBorrowData();
-      },(error)=>{
-        this.showError(error)
-      })
+    this.http.post(endPoints.return,element.reference,this.user.optionsAuthorization2()).subscribe(
+      () => this.getAllBorrowData()
+      ,error => this.showError(error))
   }
 
-  isWithinThreeDays(dateString: string): boolean {
+  isWithinThreeDays(dateString: string){
     const date = new Date(dateString);
     const today = new Date();
     const threeDaysLater = new Date();
@@ -245,13 +240,13 @@ export class BorrowComponent implements OnChanges{
     return date >= today && date <= threeDaysLater;
   }
 
-  isOverdue(dateString: string,time:string): boolean {
+  isOverdue(dateString: string,time:string){
     const date = new Date(dateString);
     const date2=new Date(time)
     return date <= date2 ;
   }
 
-  getRowClass(element:any): string {
+  getRowClass(element:any){
     let classes = '';
     if (this.isWithinThreeDays(element.limitTime) && !element.status) {
       classes += ' yellow-text';
@@ -313,12 +308,10 @@ export class BorrowComponent implements OnChanges{
       data:{
         reference:reference
       }
-    }).afterClosed().subscribe(()=>{
-      this.getAllBorrowData();
-    })
+    }).afterClosed().subscribe(()=> this.getAllBorrowData());
   }
 
-  public showError(notification: string): void {
+  public showError(notification: string){
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 }

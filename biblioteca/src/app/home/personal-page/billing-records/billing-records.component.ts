@@ -21,16 +21,16 @@ export class BillingRecordsComponent {
   }
 
   getRecords(){
-    this.http.get(endPoints.transaction+"/search?telephone="+encodeURIComponent(this.telephone),this.user.optionsAuthorization2())
-      .subscribe((data:any)=>{
-        this.recordsList = data.body;
-      },error => this.showError(error.status+error.message))
+    this.http.get(endPoints.transaction + "/search?telephone=" + encodeURIComponent(this.telephone),this.user.optionsAuthorization2()).subscribe(
+      (data:any) => this.recordsList = data.body
+      ,error => this.showError(error.status+error.message));
   }
 
   public showError(notification: string): void {
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
-    protected readonly Math = Math;
+
+  protected readonly Math = Math;
 }
 
 
