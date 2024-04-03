@@ -12,6 +12,7 @@ import {AlertDialogComponent} from "../sign-up/alert-dialog.component";
 import {PersonalPageComponent} from "../home/personal-page/personal-page.component";
 import {AddBookPageComponent} from "./add-book-page/add-book-page.component";
 import {BookPageComponent} from "../home/book-page/book-page.component";
+import {BookTypeModel} from "../model/book.model";
 
 
 @Component({
@@ -34,6 +35,8 @@ export class ManagementComponent{
   userTelephone:string=""
   origenLibraryData:any;
   updateLibraryData:any;
+  type:BookTypeModel={name:"",description:""}
+  stepType=0;
   constructor(private http:HttpClient,
               private user:authService,
               private dialog:MatDialog,
@@ -54,14 +57,17 @@ export class ManagementComponent{
       this.getAllUserList();
       this.getLibraryData();
       this.getAllBookList();
+      this.getAllBookType();
     }
   }
   userDataSource:any;
   bookDataSource:any;
+  allType:BookTypeModel[]=[];
   getAllUserList(){
     if(this.isRoot()){
       this.selectRolesList=this.rolesListROOT
-    }else if(this.isAdministrators()){
+    }
+    if(this.isAdministrators()){
       this.selectRolesList=this.rolesListADMINISTRATOR
     }
       this.http.get(endPoints.user,this.user.optionsAuthorization2()).subscribe((data:any)=>{
@@ -74,7 +80,7 @@ export class ManagementComponent{
     this.http.get(endPoints.book).subscribe((data:any)=>{
       this.bookDataSource = new MatTableDataSource(data);
       this.bookDataInit()
-    },(error)=>{console.log(error)})
+    },error=> this.showError(error.status+error.message))
   }
 
   getLibraryData(){
@@ -119,9 +125,8 @@ export class ManagementComponent{
     dialogPage.afterClosed().subscribe(res=>{
       if(res==='confirm'){
         this.http.put(endPoints.user+"/"+telephone+"/role","ADMINISTRATOR",this.user.optionsAuthorization2()).subscribe(
-          (data:any)=>{this.getAllUserList()},
-          error=> this.showError(error.status+error.message)
-        )
+          ()=>this.getAllUserList()
+          , error=> this.showError(error.status+error.message))
       }
     })
   }
@@ -131,13 +136,12 @@ export class ManagementComponent{
     const message ='Are you sure you want to change the permissions on '+telephone+' to CLIENT?';
     const confirm = true;
     const input = false;
-    const dialogPage =this.openAlertDialogPage(title,message,confirm,input);
+    const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
     dialogPage.afterClosed().subscribe(res=>{
       if(res==='confirm'){
         this.http.put(endPoints.user+"/"+telephone+"/role","CLIENT",this.user.optionsAuthorization2()).subscribe(
-          (data:any)=>{this.getAllUserList()},
-            error=> this.showError(error.status+error.message)
-        )
+          ()=>this.getAllUserList()
+          , error=> this.showError(error.status+error.message))
       }
     })
   }
@@ -147,14 +151,12 @@ export class ManagementComponent{
     const message ='Are you sure you want to disable this account? If you disable it, the account holder will not be able to use the account.';
     const confirm = true;
     const input = false;
-    const dialogPage =this.openAlertDialogPage(title,message,confirm,input);
+    const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
     dialogPage.afterClosed().subscribe(res=>{
       if(res==='confirm'){
         this.http.put(endPoints.user+"/"+telephone+"/role","BAN",this.user.optionsAuthorization2()).subscribe(
-          (data:any)=>{
-            this.getAllUserList()},
-          error=> this.showError(error.status+error.message)
-        )
+          ()=>this.getAllUserList()
+          , error=> this.showError(error.status+error.message))
       }
     })
   }
@@ -174,7 +176,8 @@ export class ManagementComponent{
   modifyRoleButtonIsDisplay(role:string,modifyRole:string):boolean{
     if(this.isRoot()&&role!=modifyRole){
       return true;
-    }else return this.isAdministrators() && role != modifyRole && modifyRole == "ADMINISTRATOR";
+    }
+    return this.isAdministrators() && role != modifyRole && modifyRole == "ADMINISTRATOR";
   }
 
   shouldDisplayElement(element:any): boolean {
@@ -185,7 +188,6 @@ export class ManagementComponent{
       return false;
     }
     return !(this.userAdmin === 'ADMINISTRATOR' && (element.role === 'ADMINISTRATOR' || element.role === 'BAN'));
-
   }
 
   updateLibrary(){
@@ -197,19 +199,16 @@ export class ManagementComponent{
       const dialogPage =this.openAlertDialogPage(title,message,confirm,input);
       dialogPage.afterClosed().subscribe(res=>{
         if(res==='confirm'){
-          this.http.put(endPoints.library,this.updateLibraryData,this.user.optionsAuthorization2())
-            .subscribe((data:any)=>{
-                const title = 'Reminders';
-                const message = 'Modified successfully';
-                const confirm = false;
-                const input = false;
-                const dialogPage1 =this.openAlertDialogPage(title,message,confirm,input)
-              dialogPage1.afterClosed().subscribe(()=>{
-                this.router.navigateByUrl('/home');
-              })
-              this.getLibraryData();
-                }
-              ,(error)=>{this.showError(error.message)})
+          this.http.put(endPoints.library,this.updateLibraryData,this.user.optionsAuthorization2()).subscribe(()=>{
+            const title = 'Reminders';
+            const message = 'Modified successfully';
+            const confirm = false;
+            const input = false;
+            const dialogPage1 =this.openAlertDialogPage(title,message,confirm,input)
+            dialogPage1.afterClosed().subscribe(
+              () => this.router.navigateByUrl('/home'))
+            this.getLibraryData();
+            },(error)=>{this.showError(error.message)})
         }
       })
     }
@@ -231,31 +230,58 @@ export class ManagementComponent{
     const dialogRef = this.openAlertDialogPage(title,message,confirm,input);
     dialogRef.afterClosed().subscribe(res=>{
       if(res==='confirm'){
-        this.http.delete(endPoints.book+"/"+bookID,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-          this.getAllBookList();
-        },(error)=>{
-            this.showError(error.status+error.message);
-        })
+        this.http.delete(endPoints.book+"/"+bookID,this.user.optionsAuthorization2()).subscribe(
+          ()=> this.getAllBookList()
+        ,error=> this.showError(error.status+error.message))
       }
     })
   }
 
   locked(bookID:string){
     this.http.put(endPoints.book+"/"+bookID+"/status","DISABLE",this.user.optionsAuthorization2())
-      .subscribe((data:any)=>{
-        this.getAllBookList();
-      },(error)=>{
-        this.showError(error.status+error.message);
-      })
+      .subscribe(
+        ()=> this.getAllBookList()
+      ,error => this.showError(error.status+error.message))
   }
 
   available(bookID:string){
     this.http.put(endPoints.book+"/"+bookID+"/status","ENABLE",this.user.optionsAuthorization2())
-      .subscribe((data:any)=>{
-        this.getAllBookList()
-      },(error)=>{
-        this.showError(error.status+error.message);
-      })
+      .subscribe(
+        ()=> this.getAllBookList()
+      ,error => this.showError(error.status+error.message))
+  }
+
+  getAllBookType(){
+    this.http.get(endPoints.type).subscribe((data:any)=> {
+      this.allType=data;
+    },error => this.showError(error.status+error.message))
+  }
+
+  addBookType(){
+    this.http.post(endPoints.type,this.type,this.user.optionsAuthorization2()).subscribe(()=>{
+      this.stepType=0;
+      this.getAllBookType();
+      const title = 'Successfully';
+      const message = 'Book type ['+this.type.name+'] added successfully';
+      const confirm = false;
+      const input = false;
+      this.openAlertDialogPage(title,message,confirm,input)
+    })
+  }
+
+  deleteType(name:string){
+    const title = 'Warning';
+    const message = 'Are you sure you want to delete the type ['+name+']? This may result in the loss of the category for books that were already in that genre!';
+    const confirm = true;
+    const input = false;
+    const dialogPage:MatDialogRef<any> = this.openAlertDialogPage(title,message,confirm,input);
+    dialogPage.afterClosed().subscribe(res=>{
+      if(res==='confirm'){
+        this.http.delete(endPoints.type+"/"+name,this.user.optionsAuthorization2()).subscribe(
+          ()=> this.getAllBookType()
+        ,error => this.showError(error.status+error.message))
+      }
+    })
   }
 
   openPersonalPage(telephone:string){

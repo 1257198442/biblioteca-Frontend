@@ -90,6 +90,39 @@
         <mat-paginator #bookPaginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
       </mat-tab>
 
+      <mat-tab label="Book Type">
+        <mat-card class="type-card">
+          <mat-card-title class="type-page-title">
+            All Type
+          </mat-card-title>
+          <mat-chip *ngFor="let type of allType" class="type-chip">
+            <mat-label [matTooltip]="type.description">{{type.name}}</mat-label>
+            <button matChipRemove (click)="deleteType(type.name)" class="add"><mat-icon>cancel</mat-icon></button>
+          </mat-chip>
+
+          <mat-expansion-panel [expanded]= "stepType === 1" (opened)="stepType=1" (closed)="stepType=0" >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Add Book Type
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card>
+              <mat-form-field class="example-full-width">
+                <mat-label>Type Name</mat-label>
+                <input matInput [(ngModel)]="type.name" >
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Description</mat-label>
+                <input matInput [(ngModel)]="type.description" [maxlength]="200">
+              </mat-form-field>
+
+              <button mat-flat-button class="example-full-width" (click)="addBookType();stepType=0" *ngIf="type.name!=''&&type.description!=''">OK</button>
+            </mat-card>
+          </mat-expansion-panel>
+        </mat-card>
+      </mat-tab>
+
       <mat-tab label="LIBRARY">
         <mat-card-title>
           <h1>Library Setting</h1>
