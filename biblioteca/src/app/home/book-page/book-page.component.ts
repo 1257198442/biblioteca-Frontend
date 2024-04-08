@@ -35,6 +35,7 @@ export class BookPageComponent {
   step=0;
   isOk=false;
   wallet=0;
+  isWishBook:boolean=false;
 
   myFilter = (d: Date | null): boolean => {
     const currentDate = new Date();
@@ -66,6 +67,7 @@ export class BookPageComponent {
     this.getAllAuthor();
     this.getAllBookType();
     this.getAllBookLanguage();
+    this.getCollectionListData();
   }
 
   getBookData(){
@@ -199,7 +201,8 @@ export class BookPageComponent {
     }
   }
   postLendingData(data:any){
-    this.http.post(endPoints.lending,data,this.user.optionsAuthorization2()).subscribe((data:any)=> {
+    this.http.post(endPoints.lending,data,this.user.optionsAuthorization2()).subscribe(
+      (data:any)=> {
       this.progressBar = false;
       this.init();
       this.openBorrowPage(data.body.reference)
@@ -219,6 +222,29 @@ export class BookPageComponent {
   getWallet(){
     this.http.get(endPoints.wallet + "/" + this.userTelephone,this.user.optionsAuthorization2()).subscribe(
       (data:any) => this.wallet = data.body.balance
+    ,error => this.showError(error.status + error.message))
+  }
+
+  getCollectionListData(){
+    if(this.isLogin&&this.userAdmin==='CLIENT'){
+      this.http.get(endPoints.collection + "/" + this.userTelephone,this.user.optionsAuthorization2()).subscribe(
+        (data:any)=>{
+        const list = data.body.bookId;
+        const index = list.indexOf(this.bookId);
+        this.isWishBook = index != -1;
+      },error => this.showError(error.status + error.message))
+    }
+  }
+
+  addWishList(){
+    this.http.put(endPoints.collection + "/" + this.userTelephone + "/add_book",this.bookId,this.user.optionsAuthorization2()).subscribe(
+      () => this.getCollectionListData()
+    ,error => this.showError(error.status + error.message))
+  }
+
+  removeWishList(){
+    this.http.put(endPoints.collection + "/" + this.userTelephone + "/remove_book",this.bookId,this.user.optionsAuthorization2()).subscribe(
+      () => this.getCollectionListData()
     ,error => this.showError(error.status + error.message))
   }
 
