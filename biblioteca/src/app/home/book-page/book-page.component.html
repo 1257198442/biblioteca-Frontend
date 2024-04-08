@@ -137,7 +137,11 @@
       </mat-card>
       <button mat-flat-button (click)="update()" class="update">UPDATE</button>
     </mat-expansion-panel>
-
+    <mat-card-content class="end">
+      <button mat-flat-button *ngIf="!isWishBook&&userAdmin==='CLIENT'" (click)="addWishList()" > ❤ </button>
+      <button mat-flat-button *ngIf="isWishBook&&userAdmin==='CLIENT'" (click)="removeWishList()"> Remove</button>
+      <button mat-dialog-close mat-raised-button >Close</button>
+    </mat-card-content>
 
 </mat-card>
 
