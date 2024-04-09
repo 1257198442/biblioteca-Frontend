@@ -20,7 +20,7 @@ import {authService} from "../authService";
 export class HomeComponent {
   storedToken:any;
   userTelephone="";
-  userAdmin="";
+  userRole="";
   currentDate: Date = new Date()
   randomBook:any;
   monthAbbreviations: { [key: number]: string } = {
@@ -79,7 +79,7 @@ export class HomeComponent {
       const [header, payload, signature] = this.storedToken.split('.');
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
-      this.userAdmin = decodedPayload.role;
+      this.userRole = decodedPayload.role;
       this.totalPages=2;
       if(this.isClient()){
         this.getLendingData();
@@ -89,7 +89,7 @@ export class HomeComponent {
       }
     }else {
       this.userTelephone = "";
-      this.userAdmin = "";
+      this.userRole = "";
       this.totalPages= 1;
     }
   }
@@ -144,11 +144,11 @@ export class HomeComponent {
   }
 
   isAdmin(){
-    return this.userAdmin == "ROOT" || this.userAdmin == "ADMINISTRATOR";
+    return this.userRole == "ROOT" || this.userRole == "ADMINISTRATOR";
   }
 
   isClient(){
-    return this.userAdmin == "CLIENT";
+    return this.userRole == "CLIENT";
   }
 
   isLogin(){

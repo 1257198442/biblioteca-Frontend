@@ -21,7 +21,7 @@ export class BookPageComponent {
   bookId:string;
   selectedImage: string | ArrayBuffer | null = null;
   file: File | undefined;
-  userAdmin:string="";
+  userRole:string="";
   userTelephone:string=""
   bookUpdate:BookUpLoadModel={name:"",description:"",publisher:"",authorId:[],bookType:[],deposit:0,language:"",isbn:"",issn:"",barcode:""};
   allLanguage=[];
@@ -56,7 +56,7 @@ export class BookPageComponent {
       const [header, payload, signature] = jwtToken.split('.');
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
-      this.userAdmin = decodedPayload.role;
+      this.userRole = decodedPayload.role;
       this.getWallet();
     }
     this.init();
@@ -151,10 +151,8 @@ export class BookPageComponent {
         this.http.put(endPoints.book + "/" + this.bookId + "/image",formData,this.user.optionsAuthorization2()).subscribe(
           ()=> {
             this.init()
-            this.step=0
-          },
-            error=>this.showError(error.status+error.message))
-      }
+            this.step=0},
+            error=>this.showError(error.status+error.message))}
     },(error)=> {
       this.showError(error.status+error.message);
       this.step=0;
@@ -182,15 +180,7 @@ export class BookPageComponent {
         dialogPage.afterClosed().subscribe(res => {
           if(res?.confirm === 'confirm') {
             this.progressBar = true;
-            const datePipe = new DatePipe('en-US');
-            const time = datePipe.transform(date, 'yyyy-MM-dd');
-            const data= {
-              bookId: this.book?.bookID,
-              telephone: this.userTelephone,
-              limitTime: time + " 23:59:59",
-              password: res.input
-            }
-            this.postLendingData(data);
+            this.postLendingData(this.lendingData(date,res.input));
           }
         })
       }else {
@@ -200,6 +190,18 @@ export class BookPageComponent {
       this.snackBar.open("Please select a return time!", 'Error', {duration: 5000});
     }
   }
+
+  lendingData(date:string,password:string){
+    const datePipe = new DatePipe('en-US');
+    const time = datePipe.transform(date, 'yyyy-MM-dd');
+    return {
+      bookId: this.book?.bookID,
+      telephone: this.userTelephone,
+      limitTime: time + " 23:59:59",
+      password: password
+    }
+  }
+
   postLendingData(data:any){
     this.http.post(endPoints.lending,data,this.user.optionsAuthorization2()).subscribe(
       (data:any)=> {
@@ -226,11 +228,10 @@ export class BookPageComponent {
   }
 
   getCollectionListData(){
-    if(this.isLogin&&this.userAdmin==='CLIENT'){
+    if(this.isLogin&&this.userRole==='CLIENT'){
       this.http.get(endPoints.collection + "/" + this.userTelephone,this.user.optionsAuthorization2()).subscribe(
         (data:any)=>{
-        const list = data.body.bookId;
-        const index = list.indexOf(this.bookId);
+        const index = data.body.bookId.indexOf(this.bookId);
         this.isWishBook = index != -1;
       },error => this.showError(error.status + error.message))
     }

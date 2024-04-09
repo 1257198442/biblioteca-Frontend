@@ -24,7 +24,7 @@ export class AddBookPageComponent {
   step=0;
   author:AuthorAddData={name:"", description:"", nationality:""}
 
-  userAdmin:string="";
+  userRole:string="";
   userTelephone:string=""
   constructor(private http:HttpClient,
               @Inject(MAT_DIALOG_DATA)data:any,
@@ -36,7 +36,7 @@ export class AddBookPageComponent {
       const [header, payload, signature] = jwtToken.split('.');
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
-      this.userAdmin = decodedPayload.role;
+      this.userRole = decodedPayload.role;
     }
     this.init();
   }
