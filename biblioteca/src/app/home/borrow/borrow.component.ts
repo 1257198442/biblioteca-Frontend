@@ -33,7 +33,7 @@ export class BorrowComponent implements OnChanges{
   @ViewChild('returnBoxSort') returnBoxSort!: MatSort;
 
   title="All Unreturned list";
-  userAdmin:string="";
+  userRole:string="";
   userTelephone:string=""
   all=false;
 
@@ -55,15 +55,15 @@ export class BorrowComponent implements OnChanges{
       const [header, payload, signature] = jwtToken.split('.');
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
-      this.userAdmin = decodedPayload.role;
+      this.userRole = decodedPayload.role;
       this.checkUserData();
     }
   }
 
   getAllBorrowData(){
-    if(this.userAdmin=="CLIENT"){
+    if(this.userRole=="CLIENT"){
       this.clientGetBorrowData();
-    }else if(this.userAdmin=="ADMINISTRATOR"||this.userAdmin=="ROOT"){
+    }else if(this.userRole=="ADMINISTRATOR"||this.userRole=="ROOT"){
       this.adminGetBorrowData();
     }
   }

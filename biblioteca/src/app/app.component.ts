@@ -18,9 +18,9 @@ import {PersonalPageComponent} from "./home/personal-page/personal-page.componen
 })
 export class AppComponent implements OnInit{
   isLogin:boolean = false;
-  userData:UserClass=new UserClass("","",new Date(),"","","",true,"",new setting(true,true,true,true,true));
+  userData:UserClass = new UserClass("","",new Date(),"","","",true,"",new setting(true,true,true,true,true));
   library:any;
-  userAdmin:string="";
+  userRole:string="";
   userTelephone:string=""
   storedToken:any;
   avatarUrl:string = "";
@@ -34,9 +34,9 @@ export class AppComponent implements OnInit{
     setInterval(() => {
       const currentToken = sessionStorage.getItem('jwtToken');
       if (currentToken !== this.storedToken) {
-        this.storedToken = currentToken != null ? currentToken : "";
+        this.storedToken = currentToken !== null ? currentToken : "";
         this.getToken();
-        if(this.userTelephone!=""){
+        if(this.userTelephone !== ""){
           this.getUserData();
           this.isLogin=true;
         }
@@ -49,7 +49,7 @@ export class AppComponent implements OnInit{
       width:"470px",
     }).afterClosed().subscribe(()=> {
       this.getToken();
-      if(this.userTelephone!=""){
+      if(this.userTelephone !== ""){
         this.getUserData();
         this.isLogin=true;
       }
@@ -62,32 +62,32 @@ export class AppComponent implements OnInit{
       const [header, payload, signature] = jwtToken.split('.');
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
-      this.userAdmin = decodedPayload.role;
+      this.userRole = decodedPayload.role;
     }
   }
 
   logout(){
     this.userTelephone = "";
-    this.userAdmin = "";
+    this.userRole = "";
     sessionStorage.removeItem('jwtToken');
     this.isLogin = false;
   }
 
   getUserData(){
-    this.http.get(endPoints.user+"/"+this.userTelephone,this.transmit.optionsAuthorization2()).subscribe(
-      (data:any)=>{
-        this.userData=data.body;
+    this.http.get(endPoints.user + "/" + this.userTelephone,this.transmit.optionsAuthorization2()).subscribe(
+      (data:any)=> {
+        this.userData = data.body;
         this.getAvatar();
-      },error=> this.showError(error.message))
+      },error => this.showError(error.message))
   }
 
   admin(){
-    return this.userData.role==="ADMINISTRATOR"||this.userData.role==="ROOT";
+    return this.userData.role === "ADMINISTRATOR" || this.userData.role === "ROOT";
   }
 
   getLibraryData(){
     this.http.get(endPoints.library).subscribe(
-      (data:any)=>this.library = data
+      (data:any) => this.library = data
       , error => this.showError(error.message))
   }
 
@@ -100,9 +100,9 @@ export class AppComponent implements OnInit{
   }
 
   getAvatar(){
-    this.http.get(endPoints.avatar+"/"+this.userTelephone).subscribe(
-        (data:any)=>this.avatarUrl=data.url
-        , error=>this.showError(error.status+error.message))
+    this.http.get(endPoints.avatar + "/" + this.userTelephone).subscribe(
+        (data:any) => this.avatarUrl = data.url
+        , error => this.showError(error.status+error.message))
   }
 
   openPersonalPage(){
@@ -114,14 +114,14 @@ export class AppComponent implements OnInit{
       data:{
         telephone:this.userData.telephone,
       }
-    }).afterClosed().subscribe(()=> this.getUserData())
+    }).afterClosed().subscribe(() => this.getUserData())
   }
 
   openSignUpPage(){
     this.dialog.open(SignUpComponent,
       {
         width:"470px",
-      }).afterClosed().subscribe(()=>this.login());
+      }).afterClosed().subscribe(() => this.login());
   }
 
   public showError(notification: string) {

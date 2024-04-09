@@ -15,7 +15,7 @@ import {BookDamageDegreeData} from "../../../model/book-damage-degree.model";
 export class FeedbackPageComponent {
   bookDamageDegree:BookDamageDegreeData={ degree:"PERFECT", addendum:"The books are very well protected"};
   progressBar=false;
-  userAdmin:string="";
+  userRole:string="";
   userTelephone:string="";
   reference:string="";
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
@@ -30,7 +30,7 @@ export class FeedbackPageComponent {
       const [header, payload, signature] = jwtToken.split('.');
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
-      this.userAdmin = decodedPayload.role;
+      this.userRole = decodedPayload.role;
     }
   }
   submit(){

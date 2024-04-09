@@ -33,7 +33,7 @@ export class ManagementComponent{
   rolesListROOT:string[] = ["ADMINISTRATOR","CLIENT","BAN"];
   rolesListADMINISTRATOR:string[] = ["ADMINISTRATOR","CLIENT"];
   selectRolesList:string[]=[];
-  userAdmin:string = "";
+  userRole:string = "";
   userTelephone:string = ""
   origenLibraryData:any;
   updateLibraryData:any;
@@ -41,6 +41,10 @@ export class ManagementComponent{
   author:AuthorAddData = {name:"", description:"", nationality:""}
   stepType= 0;
   step= 0;
+  userDataSource:any;
+  bookDataSource:any;
+  allType:BookTypeModel[] = [];
+  authorDataSource:any;
   constructor(private http:HttpClient,
               private user:authService,
               private dialog:MatDialog,
@@ -52,10 +56,11 @@ export class ManagementComponent{
       const [header, payload, signature] = jwtToken.split('.');
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
-      this.userAdmin = decodedPayload.role;
+      this.userRole = decodedPayload.role;
     }
     this.init();
   }
+
   init(){
     if(this.userTelephone != ""){
       this.getAllUserList();
@@ -65,10 +70,6 @@ export class ManagementComponent{
       this.getAuthorList();
     }
   }
-  userDataSource:any;
-  bookDataSource:any;
-  allType:BookTypeModel[] = [];
-  authorDataSource:any;
 
   getAllUserList(){
     if(this.isRoot()){
@@ -116,11 +117,11 @@ export class ManagementComponent{
   }
 
   isRoot(){
-    return this.userAdmin == "ROOT";
+    return this.userRole == "ROOT";
   }
 
   isAdministrators(){
-    return this.userAdmin == "ADMINISTRATOR";
+    return this.userRole == "ADMINISTRATOR";
   }
 
   toAdministrators(telephone:string){
@@ -168,12 +169,12 @@ export class ManagementComponent{
     });
   }
 
-  toModifyAdmin(telephone:string,admin:string){
-    if(admin == "ADMINISTRATOR"){
+  toModifyRole(telephone:string, role:string){
+    if(role == "ADMINISTRATOR"){
       this.toAdministrators(telephone);
-    }else if(admin =="CLIENT"){
+    }else if(role =="CLIENT"){
       this.toUser(telephone);
-    }else if(admin =="BAN"){
+    }else if(role =="BAN"){
         this.toBan(telephone)
     } else {
       this.showError("operating error.")
@@ -194,7 +195,7 @@ export class ManagementComponent{
     if (element.role === 'ROOT') {
       return false;
     }
-    return !(this.userAdmin === 'ADMINISTRATOR' && (element.role === 'ADMINISTRATOR' || element.role === 'BAN'));
+    return !(this.userRole === 'ADMINISTRATOR' && (element.role === 'ADMINISTRATOR' || element.role === 'BAN'));
   }
 
   updateLibrary(){
@@ -204,7 +205,7 @@ export class ManagementComponent{
       const confirm = true;
       const input = false;
       const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
-      dialogPage.afterClosed().subscribe(res=>{
+      dialogPage.afterClosed().subscribe(res => {
         if(res==='confirm'){
           this.putLibrary()
         }
@@ -222,7 +223,7 @@ export class ManagementComponent{
       dialogPage.afterClosed().subscribe(
         () => this.router.navigateByUrl('/home'))
         this.getLibraryData();
-    },(error)=>{this.showError(error.message)});
+    },error=>this.showError(error.message));
   }
 
   applyBookFilter(event: Event) {

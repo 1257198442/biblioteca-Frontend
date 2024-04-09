@@ -26,15 +26,9 @@ export class SignUpComponent {
     this.registrationData = new ReturnDataClass("","","","");
   }
   Registration(){
-    this.registrationData.email=this.emailFormControl.value==null?"":this.emailFormControl.value;
+    this.registrationData.email = this.emailFormControl.value == null ? "" : this.emailFormControl.value;
     if(this.notNull()){
-      const registrationData1 = {
-        name:this.registrationData.name,
-        telephone:this.dialCode+this.registrationData.telephone,
-        email:this.registrationData.email,
-        password:this.registrationData.password
-      }
-      this.http.post(endPoints.user,registrationData1).subscribe(()=>{
+      this.http.post(endPoints.user,this.computingPhone()).subscribe(()=> {
           const title = 'Reminders';
           const message = ':) Successful registration.'
           const confirm = false
@@ -45,6 +39,15 @@ export class SignUpComponent {
         },error=> this.showError(error.status+error.message));
     }else {
       this.showError("Error: Empty with data");
+    }
+  }
+
+  computingPhone(){
+    return {
+      name:this.registrationData.name,
+      telephone:this.dialCode+this.registrationData.telephone,
+      email:this.registrationData.email,
+      password:this.registrationData.password
     }
   }
 

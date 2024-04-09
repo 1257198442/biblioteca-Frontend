@@ -36,7 +36,7 @@
                       {{role}}
                     </option>
                   </select>
-                  <button (click)="toModifyAdmin(element.telephone,select.value)" *ngIf="modifyRoleButtonIsDisplay(element.role,select.value)" class="check"><mat-icon>check</mat-icon></button>
+                  <button (click)="toModifyRole(element.telephone,select.value)" *ngIf="modifyRoleButtonIsDisplay(element.role,select.value)" class="check"><mat-icon>check</mat-icon></button>
               </div>
             </td>
           </ng-container>
@@ -79,8 +79,8 @@
           <ng-container matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef> Management </th>
             <td mat-cell *matCellDef="let element" >
-              <button mat-icon-button (click)="locked(element.bookID)" *ngIf="isRoot()||element.status=='ENABLE'" matTooltip="disable"><mat-icon>block_flipped</mat-icon></button>
-              <button mat-icon-button (click)="available(element.bookID)" *ngIf="isRoot()||element.status!='DISABLE'" matTooltip="enable"><mat-icon>check</mat-icon></button>
+              <button mat-icon-button (click)="locked(element.bookID)" *ngIf="isRoot() || element.status == 'ENABLE'" matTooltip="disable"><mat-icon>block_flipped</mat-icon></button>
+              <button mat-icon-button (click)="available(element.bookID)" *ngIf="isRoot() || element.status == 'DISABLE'" matTooltip="enable"><mat-icon>check</mat-icon></button>
               <button mat-icon-button (click)="deleteBook(element.bookID) " matTooltip="removing"><mat-icon>delete</mat-icon></button>
             </td>
           </ng-container>

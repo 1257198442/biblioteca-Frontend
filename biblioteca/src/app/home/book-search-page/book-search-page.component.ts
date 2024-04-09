@@ -29,7 +29,7 @@ export class BookSearchPageComponent {
   ENABLEOnly=false;
   showBorrowCount=false;
 
-  userAdmin:string="";
+  userRole:string="";
   userTelephone:string=""
   constructor(private http:HttpClient,
               private user:authService,
@@ -40,7 +40,7 @@ export class BookSearchPageComponent {
       const [header, payload, signature] = jwtToken.split('.');
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
-      this.userAdmin = decodedPayload.role;
+      this.userRole = decodedPayload.role;
     }
     this.searchBooks();
     this.getAllBookType();
@@ -53,7 +53,7 @@ export class BookSearchPageComponent {
     const route = searchUrl + lang + type;
     this.http.get(endPoints.book + "/search?" + route).subscribe(
       (data:any)=> {
-        this.books = !this.ENABLEOnly?data:data.filter((s:any)=> {return s.status=="ENABLE";});
+        this.books = !this.ENABLEOnly ? data : data.filter((s:any)=> {return s.status=="ENABLE";});
         this.paginator.length = this.books.length;
         if (this.books.length <= this.pageSize) {
           this.paginator.pageIndex = 0;
@@ -64,7 +64,7 @@ export class BookSearchPageComponent {
 
   getAllBookType(){
     this.http.get(endPoints.type).subscribe(
-      (data:any)=> this.allType = data
+      (data:any) => this.allType = data
         ,error=> this.showError(error.status + error.message))
   }
 

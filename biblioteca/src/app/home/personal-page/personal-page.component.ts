@@ -10,6 +10,8 @@ import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
 import {RechargeComponent} from "./recharge/recharge.component";
 import {WithdrawMoneyComponent} from "./withdraw-money/withdraw-money.component";
 import {BillingRecordsComponent} from "./billing-records/billing-records.component";
+import {BookModel} from "../../model/book.model";
+import {BookPageComponent} from "../book-page/book-page.component";
 
 @Component({
   selector: 'app-personal-page',
@@ -17,21 +19,23 @@ import {BillingRecordsComponent} from "./billing-records/billing-records.compone
   styleUrls: ['./personal-page.component.css']
 })
 export class PersonalPageComponent {
-  userData:UserClass=new UserClass("","",new Date(),"","","",false,"",new setting(false,false,false,false,false));
-  userAdmin:string="";
-  userTelephone:string=""
-  wallet:number=0;
+  userData:UserClass = new UserClass("","",new Date(),"","","",false,"",new setting(false,false,false,false,false));
+  userRole:string = "";
+  userTelephone:string = ""
+  wallet:number = 0;
   maxDate: Date;
   userUpdate:any;
-  avatarUrl:string="";
-  avatarSelectUrl:string="";
+  avatarUrl:string = "";
+  avatarSelectUrl:string = "";
   file: File | undefined;
   settingUpdate:any;
-  newPassword:string="";
-  confirmPassword:string="";
+  newPassword:string = "";
+  confirmPassword:string = "";
   editProfileState= 0;
-  editSettingState=0;
-  editPasswordState=0;
+  editSettingState= 0;
+  editPasswordState= 0;
+  collectionList:BookModel[] = [];
+  lowForBookList:string[] = ["bookID","name","entryTime","status","view","management"];
 
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
               private user:authService,
@@ -43,7 +47,7 @@ export class PersonalPageComponent {
       const [header, payload, signature] = jwtToken.split('.');
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
-      this.userAdmin = decodedPayload.role;
+      this.userRole = decodedPayload.role;
     }
     this.getUserData(data.telephone);
     const currentYear = new Date().getFullYear();
@@ -53,30 +57,39 @@ export class PersonalPageComponent {
   }
 
   getUserData(telephone:string){
-    this.http.get(endPoints.user+"/"+telephone,this.user.optionsAuthorization2()).subscribe(
-      (data:any)=>{
+    this.http.get(endPoints.user+"/"+telephone + "/profile",this.user.optionsAuthorization2()).subscribe(
+      (data:any)=> {
       this.userData = data.body;
       this.getAvatar();
-      this.getWallet();
-      this.userUpdate={
-        name:this.userData.name,
-        description:this.userData.description,
-        email:this.userData.email,
-        birthdays:this.userData.birthdays,
-        setting:this.userData.setting
-      }
-      this.settingUpdate = {
-        hideMyProfile: this.userData.setting.hideMyProfile,
-        emailWhenSuccessfulTransaction:this.userData.setting.emailWhenSuccessfulTransaction,
-        emailWhenOrderIsPaid:this.userData.setting.emailWhenOrderIsPaid,
-        emailWhenOrdersAboutToExpire:this.userData.setting.emailWhenOrdersAboutToExpire,
-        hideMyCollectionList:this.userData.setting.hideMyCollectionList
-      };
+      this.getCollectionList();
+      this.getWishList();
+      this.userUpdate=this.generateUserUpdate();
+      this.settingUpdate = this.generateSettingUpdate();
     },error => this.showError(error.status+error.message))
   }
 
-  getWallet(){
-    if(this.isLoginUser() || this.userAdmin == 'ROOT'){
+  generateUserUpdate(){
+    return{
+      name:this.userData.name,
+      description:this.userData.description,
+      email:this.userData.email,
+      birthdays:this.userData.birthdays,
+      setting:this.userData.setting
+    }
+  }
+
+  generateSettingUpdate (){
+    return{
+      hideMyProfile: this.userData.setting.hideMyProfile,
+      emailWhenSuccessfulTransaction:this.userData.setting.emailWhenSuccessfulTransaction,
+      emailWhenOrderIsPaid:this.userData.setting.emailWhenOrderIsPaid,
+      emailWhenOrdersAboutToExpire:this.userData.setting.emailWhenOrdersAboutToExpire,
+      hideMyCollectionList:this.userData.setting.hideMyCollectionList
+    }
+  }
+
+  getCollectionList(){
+    if(this.isLoginUser() || this.isRoot()){
       this.http.get(endPoints.wallet + "/" + this.userData.telephone,this.user.optionsAuthorization2()).subscribe(
         (data:any)=> this.wallet = data.body.balance
       ,error => this.showError(error.status+error.message));
@@ -84,10 +97,7 @@ export class PersonalPageComponent {
   }
 
   isLoginUser(){
-    return this.userTelephone==this.userData.telephone;
-  }
-  public showError(notification: string): void {
-    this.snackBar.open(notification, 'Error', {duration: 5000});
+    return this.userTelephone === this.userData.telephone;
   }
 
   updateInformation(){
@@ -98,7 +108,7 @@ export class PersonalPageComponent {
       birthdays:this.userData.birthdays}
     if(this.userUpdate !== userOrigen){
       const datePipe = new DatePipe('en-US');
-      this.userUpdate.birthdays=datePipe.transform(this.userUpdate.birthdays, 'yyyy-MM-dd');
+      this.userUpdate.birthdays = datePipe.transform(this.userUpdate.birthdays, 'yyyy-MM-dd');
       this.http.put(endPoints.user + "/" + this.userData.telephone,this.userUpdate,this.user.optionsAuthorization2()).subscribe(
         () => this.getUserData(this.userData.telephone)
       ,error => this.showError(error.status+error.message)
@@ -129,24 +139,25 @@ export class PersonalPageComponent {
             oldPassword:res.input,
             newPassword:this.newPassword
           }
-          this.http.put(endPoints.user+"/"+this.userData.telephone+"/password",changePassword,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+          this.http.put(endPoints.user + "/" + this.userData.telephone + "/password",changePassword,this.user.optionsAuthorization2()).subscribe((data:any)=>{
             const title = 'Reminders';
             const message ='Password modified successfully';
             const confirm = false;
             const input = false;
             const dialogPage1 =this.openAlertDialogPage(title,message,confirm,input);
-            dialogPage1.afterClosed().subscribe(()=> {
-              this.newPassword = "";
-              this.confirmPassword = "";
-              this.editPasswordState = 0;
-            });
-            },error => this.showError(error.status+error.message)
-          )
+            dialogPage1.afterClosed().subscribe(()=> this.initPassword());
+            },error => this.showError(error.status+error.message))
         }
       });
     }else {
       this.showError("Confirm Password is not the same as the new password")
     }
+  }
+
+  initPassword(){
+    this.newPassword = "";
+    this.confirmPassword = "";
+    this.editPasswordState = 0;
   }
 
   resetPassword(){
@@ -163,11 +174,7 @@ export class PersonalPageComponent {
           const confirm = false;
           const input = false;
           const dialogPage1 = this.openAlertDialogPage(title,message,confirm,input)
-          dialogPage1.afterClosed().subscribe(()=> {
-            this.newPassword = "";
-            this.confirmPassword = "";
-            this.editPasswordState = 0;
-          })
+          dialogPage1.afterClosed().subscribe(()=> this.initPassword())
         },error => this.showError(error.status+error.message));
       }
     });
@@ -196,13 +203,33 @@ export class PersonalPageComponent {
   }
 
   avatarUpdate(){
-    if(this.avatarSelectUrl!=""){
+    if(this.avatarSelectUrl !== ""){
       const formData = new FormData();
       formData.append('file', this.file as Blob);
       this.http.put(endPoints.avatar + "/" + this.userData.telephone,formData,this.user.optionsAuthorization2()).subscribe(
         () => this.getUserData(this.userData.telephone)
       ,error => this.showError(error.status+error.message))
     }
+  }
+
+  getWishList(){
+    if(this.userData.role === "CLIENT"){
+      this.http.get(endPoints.collection + "/" + this.userData.telephone + "/book",this.user.optionsAuthorization2()).subscribe(
+        (data:any)=>this.collectionList = data.body
+      ,(error) => {
+          if (error.status === 403) {
+            console.log("This user has hidden sus favorites list")
+          }else {
+            this.showError(error.status+error.message)
+          }
+        })
+    }
+  }
+
+  remove(bookId:string){
+    this.http.put(endPoints.collection+"/"+this.userData.telephone+"/remove_book",bookId,this.user.optionsAuthorization2()).subscribe(
+      ()=> this.getUserData(this.userData.telephone)
+      ,error => this.showError(error.status+error.message))
   }
 
   openRechargePage(){
@@ -215,7 +242,7 @@ export class PersonalPageComponent {
         telephone:this.userData.telephone
       }
     }).afterClosed().subscribe(
-      ()=> this.getWallet());
+      () => this.getCollectionList());
   }
 
   openWithdrawMoneyPage(){
@@ -228,7 +255,7 @@ export class PersonalPageComponent {
         telephone:this.userData.telephone
       }
     }).afterClosed().subscribe(
-      () => this.getWallet());
+      () => this.getCollectionList());
   }
 
   openBillingRecordsPage(){
@@ -253,5 +280,29 @@ export class PersonalPageComponent {
         input:input
       }
     })
+  }
+
+  openBookPage(bookId:string){
+    this.dialog.open(BookPageComponent,{
+      width:"800px",
+      minWidth:"800px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        bookId:bookId
+      }
+    }).afterClosed().subscribe(()=>this.getWishList());
+  }
+
+  wishListIsDisplay(){
+    return this.collectionList.length !== 0
+  }
+
+  isRoot(){
+    return this.userRole === "ROOT";
+  }
+
+  public showError(notification: string): void {
+    this.snackBar.open(notification, 'Error', {duration: 5000});
   }
 }
