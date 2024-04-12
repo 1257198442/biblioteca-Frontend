@@ -1,0 +1,48 @@
+<main>
+
+  <p class="author-name" *ngIf="!isEdit">{{authorData.name}}</p>
+  <mat-form-field class="author-name-edit" *ngIf="isEdit">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="authorDataByModify.name">
+  </mat-form-field>
+  <p class="author-nationality" *ngIf="!isEdit">Nationality: {{authorData.nationality}}</p>
+  <mat-form-field class="author-nationality-edit" *ngIf="isEdit">
+    <mat-label>Nationality</mat-label>
+    <input matInput [(ngModel)]="authorDataByModify.nationality">
+  </mat-form-field>
+
+  <p class="author-description" *ngIf="!isEdit">Description: {{authorData.description}}</p>
+  <mat-form-field class="author-description-edit" *ngIf="isEdit">
+    <mat-label>Description</mat-label>
+    <textarea matInput [(ngModel)]="authorDataByModify.description"></textarea>
+  </mat-form-field>
+
+  <div class="image-container" >
+    <img class="author-img" [src]="authorImageSelectedUrl" alt="404_no fount" >
+    <div class="overlay" *ngIf="isEdit">
+      <label for="sf">
+        <h3>Change Image</h3>
+      </label>
+      <input class="fileInput" type="file" (change)="onImageSelected($event)" id="sf" >
+    </div>
+  </div>
+  <br>
+  <mat-icon class="edit" *ngIf="(userAdmin === 'ADMINISTRATOR' || userAdmin === 'ROOT')" (click)="edit()">edit</mat-icon>
+  <mat-card class="bookList" >
+    <p class="book-list-title" *ngIf="authorData.name">Writings by {{authorData.name}}</p>
+    <ng-container *ngFor="let b of paginatedBooks">
+      <mat-card class="book" (click)="openBookPage(b.bookID)">
+        <img class="book-image" [src]="b.imgUrl"  alt="" [matTooltip]="b.name+' [' + b.language + ']'">
+        <p class="book-name">{{b.name}}&ngsp;[{{b.language}}]</p>
+        <p class="book-author" *ngIf="b.author"><span class="book-author-name" *ngFor="let author of b?.author" [matTooltip]="author.description" >{{author.name}}</span></p>
+        <p class="book-author" *ngIf="!b.author">no author data</p>
+        <p class="borrow-count" *ngIf="b.borrowCount != null">Borrowed {{b.borrowCount}} times</p>
+        <p class="book-deposit" *ngIf="b.deposit || b.deposit === 0" [matTooltip]='"To borrow this book you need to pay a deposit of "+b.deposit+" euros."' >€{{b.deposit}}</p>
+        <div *ngIf="b.status == 'ENABLE'" class="enable" matTooltip="Borrowable"></div>
+        <div *ngIf="b.status == 'OCCUPIED'" class="occupied" matTooltip="Lent"></div>
+        <div *ngIf="b.status == 'DISABLE'" class="disable" matTooltip="Unavailable"></div>
+      </mat-card>
+    </ng-container>
+    <mat-paginator [length]="authorsBooksData.length" [pageSize]="pageSize" (page)="onPageChange($event)"></mat-paginator>
+ </mat-card>
+</main>

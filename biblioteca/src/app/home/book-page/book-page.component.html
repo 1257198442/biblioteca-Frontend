@@ -11,7 +11,7 @@
     <p>  Language: {{book?.language}}</p>
     <p *ngIf="book?.publisher">  Publisher: {{book?.publisher}}</p>
     <p *ngIf="book?.deposit">  Deposit: €{{book?.deposit}}</p>
-    <p *ngIf="book?.author&&book?.author.length!=0">Author:<span class="author-name" *ngFor="let author of book?.author" [matTooltip]="author.description">{{author.name}}[{{author.nationality}}]</span></p>
+    <p *ngIf="book?.author&&book?.author.length!=0">Author:<span class="author-name" *ngFor="let author of book?.author" [matTooltip]="author.description" (click)="pop2(author.authorId)">{{author.name}}[{{author.nationality}}]</span></p>
     <p *ngIf="book?.type&&book?.type!=0" class="book-type-box" >  Book Type:</p>
     <mat-card-content *ngIf="book?.type">
       <mat-chip *ngFor="let type of book?.type" matTooltip="{{type.description}}">
@@ -48,8 +48,7 @@
     </mat-card>
 
   </mat-expansion-panel>
-
-    <mat-expansion-panel *ngIf="userRole!=='CLIENT' &&userRole!=''" [expanded]= "step === 1" (opened)="step=1" (closed)="step=0" hideToggle>
+    <mat-expansion-panel *ngIf="userRole !== 'CLIENT' && userRole!='' && !hiddenEdit" [expanded]= "step === 1" (opened)="step=1" (closed)="step=0" hideToggle>
       <mat-expansion-panel-header>
         <mat-panel-title>
           Modify book data
