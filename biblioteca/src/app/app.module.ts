@@ -48,6 +48,7 @@ import {FeedbackPageComponent} from "./home/borrow/feedback-page/feedback-page.c
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {LineChartComponent} from "./home/line-chart.component";
 import {NgChartsModule} from "ng2-charts";
+import {AuthorPageComponent} from "./home/author-page/author-page.component";
 
 
 @NgModule({
@@ -72,7 +73,8 @@ import {NgChartsModule} from "ng2-charts";
     BorrowComponent,
     ReturnPageComponent,
     FeedbackPageComponent,
-    LineChartComponent
+    LineChartComponent,
+    AuthorPageComponent
   ],
   imports: [
     BrowserModule,

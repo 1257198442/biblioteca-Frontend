@@ -13,7 +13,7 @@ import {PersonalPageComponent} from "../home/personal-page/personal-page.compone
 import {AddBookPageComponent} from "./add-book-page/add-book-page.component";
 import {BookPageComponent} from "../home/book-page/book-page.component";
 import {AuthorAddData, BookTypeModel} from "../model/book.model";
-
+import {AuthorPageComponent} from "../home/author-page/author-page.component";
 
 @Component({
   selector: 'app-management',
@@ -62,7 +62,7 @@ export class ManagementComponent{
   }
 
   init(){
-    if(this.userTelephone != ""){
+    if(this.userTelephone !== ""){
       this.getAllUserList();
       this.getLibraryData();
       this.getAllBookList();
@@ -170,11 +170,11 @@ export class ManagementComponent{
   }
 
   toModifyRole(telephone:string, role:string){
-    if(role == "ADMINISTRATOR"){
+    if(role === "ADMINISTRATOR"){
       this.toAdministrators(telephone);
-    }else if(role =="CLIENT"){
+    }else if(role ==="CLIENT"){
       this.toUser(telephone);
-    }else if(role =="BAN"){
+    }else if(role ==="BAN"){
         this.toBan(telephone)
     } else {
       this.showError("operating error.")
@@ -182,10 +182,10 @@ export class ManagementComponent{
   }
 
   modifyRoleButtonIsDisplay(role:string,modifyRole:string){
-    if(this.isRoot() && role != modifyRole){
+    if(this.isRoot() && role !== modifyRole){
       return true;
     }
-    return this.isAdministrators() && role != modifyRole && modifyRole == "ADMINISTRATOR";
+    return this.isAdministrators() && role !== modifyRole && modifyRole === "ADMINISTRATOR";
   }
 
   shouldDisplayElement(element:any){
@@ -240,41 +240,39 @@ export class ManagementComponent{
     const confirm = true;
     const input = false;
     const dialogRef = this.openAlertDialogPage(title,message,confirm,input);
-    dialogRef.afterClosed().subscribe(res=>{
-      if(res==='confirm'){
-        this.http.delete(endPoints.book+"/"+bookID,this.user.optionsAuthorization2()).subscribe(
-          ()=> this.getAllBookList()
-        ,error=> this.showError(error.status+error.message))
+    dialogRef.afterClosed().subscribe(res => {
+      if(res === 'confirm'){
+        this.http.delete(endPoints.book + "/" + bookID,this.user.optionsAuthorization2()).subscribe(
+          () => this.getAllBookList()
+        ,error => this.showError(error.status+error.message))
       }
     });
   }
 
   locked(bookID:string){
-    this.http.put(endPoints.book+"/"+bookID+"/status","DISABLE",this.user.optionsAuthorization2())
-      .subscribe(
-        ()=> this.getAllBookList()
+    this.http.put(endPoints.book + "/" + bookID + "/status","DISABLE",this.user.optionsAuthorization2()).subscribe(
+        () => this.getAllBookList()
       ,error => this.showError(error.status+error.message));
   }
 
   available(bookID:string){
-    this.http.put(endPoints.book+"/"+bookID+"/status","ENABLE",this.user.optionsAuthorization2())
-      .subscribe(
-        ()=> this.getAllBookList()
+    this.http.put(endPoints.book + "/" + bookID+"/status","ENABLE",this.user.optionsAuthorization2()).subscribe(
+        () => this.getAllBookList()
       ,error => this.showError(error.status+error.message));
   }
 
   getAllBookType(){
-    this.http.get(endPoints.type).subscribe((data:any)=> {
-      this.allType=data;
-    },error => this.showError(error.status+error.message));
+    this.http.get(endPoints.type).subscribe(
+      (data:any) => this.allType = data
+      ,error => this.showError(error.status+error.message));
   }
 
   addBookType(){
     this.http.post(endPoints.type,this.type,this.user.optionsAuthorization2()).subscribe(()=>{
-      this.stepType=0;
+      this.stepType = 0;
       this.getAllBookType();
       const title = 'Successfully';
-      const message = 'Book type ['+this.type.name+'] added successfully';
+      const message = 'Book type [' + this.type.name + '] added successfully';
       const confirm = false;
       const input = false;
       this.openAlertDialogPage(title,message,confirm,input)
@@ -288,9 +286,9 @@ export class ManagementComponent{
     const input = false;
     const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
     dialogPage.afterClosed().subscribe(res => {
-      if(res==='confirm'){
+      if(res === 'confirm'){
         this.http.delete(endPoints.type + "/" + name,this.user.optionsAuthorization2()).subscribe(
-          ()=> this.getAllBookType()
+          () => this.getAllBookType()
         ,error => this.showError(error.status+error.message))
       }
     });
@@ -332,7 +330,7 @@ export class ManagementComponent{
   }
 
   addAuthor(){
-    if (this.author.name != ""){
+    if (this.author.name !== ""){
       this.http.post(endPoints.author,this.author,this.user.optionsAuthorization2()).subscribe((authorData:any)=> {
         const title = 'Reminders';
         const message = ':) Author ' + authorData.body.name + ' added successfully.';
@@ -341,7 +339,7 @@ export class ManagementComponent{
         const dialogRef = this.openAlertDialogPage(title,message,confirm,input)
         dialogRef.afterClosed().subscribe(()=> {
           this.getAuthorList();
-          this.step=0;
+          this.step = 0;
         });
       },error => this.showError(error.status + error.message));
     }
@@ -364,9 +362,7 @@ export class ManagementComponent{
       data:{
         telephone:telephone,
       }
-    }).afterClosed().subscribe(()=>{
-      this.getAllUserList()
-    });
+    }).afterClosed().subscribe(() => this.getAllUserList());
   }
 
   openBookPage(bookId:string){
@@ -389,9 +385,7 @@ export class ManagementComponent{
       maxHeight:"600px",
       data:{
       }
-    }).afterClosed().subscribe(()=> {
-      this.getAllBookList()
-    });
+    }).afterClosed().subscribe(() => this.getAllBookList());
   }
 
   openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
@@ -404,6 +398,17 @@ export class ManagementComponent{
         input:input
       }
     })
+  }
+
+  openAuthorPage(authorId:string){
+    this.dialog.open(AuthorPageComponent,{
+      width:"1000px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        authorId:authorId
+      }
+    }).afterClosed().subscribe(() => this.init())
   }
 
   public showError(notification: string): void {

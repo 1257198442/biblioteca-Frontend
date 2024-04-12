@@ -49,10 +49,10 @@
         <mat-card class="book" (click)="openBookPage(b.bookID)">
           <img class="book-image" [src]="b.imgUrl"  alt="" [matTooltip]="b.name+' ['+b.language+']'">
           <p class="book-name">{{b.name}}&ngsp;[{{b.language}}]</p>
-          <p class="book-author" *ngIf="b.author&&b.author.length!=0"><span class="author-name" *ngFor="let author of b?.author" [matTooltip]="author.description">{{author.name}}</span></p>
-          <p class="book-author" *ngIf="!b.author||b.author.length==0">no author data</p>
+          <p class="book-author" *ngIf="b.author && b.author.length !=0"><span class="author-name" *ngFor="let author of b?.author" [matTooltip]="author.description">{{author.name}}</span></p>
+          <p class="book-author" *ngIf="!b.author || b.author.length ===0">no author data</p>
           <p class="borrow-count" *ngIf="showBorrowCount">Borrowed {{b.borrowCount}} times</p>
-          <p class="book-deposit" *ngIf="b.deposit||b.deposit==0" [matTooltip]='"To borrow this book you need to pay a deposit of "+b.deposit+" euros."' >€{{b.deposit}}</p>
+          <p class="book-deposit" *ngIf="b.deposit || b.deposit === 0" [matTooltip]='"To borrow this book you need to pay a deposit of "+b.deposit+" euros."' >€{{b.deposit}}</p>
           <div *ngIf="b.status == 'ENABLE'" class="enable" matTooltip="Available for Loan"></div>
           <div *ngIf="b.status == 'OCCUPIED'" class="occupied" matTooltip="Locked"></div>
           <div *ngIf="b.status == 'DISABLE'" class="disable" matTooltip="Currently Loaned Out"></div>

@@ -10,6 +10,7 @@ import {RechargeComponent} from "../personal-page/recharge/recharge.component";
 import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
 import {DatePipe} from "@angular/common";
 import {BorrowPageComponent} from "../borrow-page/borrow-page.component";
+import {AuthorPageComponent} from "../author-page/author-page.component";
 @Component({
   selector: 'app-book-page',
   templateUrl: './book-page.component.html',
@@ -36,6 +37,7 @@ export class BookPageComponent {
   isOk=false;
   wallet=0;
   isWishBook:boolean=false;
+  hiddenEdit=false;
 
   myFilter = (d: Date | null): boolean => {
     const currentDate = new Date();
@@ -144,19 +146,23 @@ export class BookPageComponent {
   }
 
   update(){
-    this.http.put(endPoints.book + "/" + this.bookId,this.bookUpdate,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-      if(this.selectedImage !== this.book?.imgUrl && this.selectedImage != null){
-        const formData = new FormData();
-        formData.append('file', this.file as Blob);
-        this.http.put(endPoints.book + "/" + this.bookId + "/image",formData,this.user.optionsAuthorization2()).subscribe(
-          ()=> {
-            this.init()
-            this.step=0},
-            error=>this.showError(error.status+error.message))}
+    this.http.put(endPoints.book + "/" + this.bookId,this.bookUpdate,this.user.optionsAuthorization2()).subscribe(()=>{
+      this.updateImage();
+      this.step=0
     },(error)=> {
       this.showError(error.status+error.message);
       this.step=0;
     })
+  }
+
+  updateImage(){
+    if(this.selectedImage !== this.book?.imgUrl && this.selectedImage != null){
+      const formData = new FormData();
+      formData.append('file', this.file as Blob);
+      this.http.put(endPoints.book + "/" + this.bookId + "/image",formData,this.user.optionsAuthorization2()).subscribe(
+        ()=> this.init()
+        , error=>this.showError(error.status+error.message))}
+
   }
 
   onFileSelected(event: any): void {
@@ -282,6 +288,23 @@ export class BookPageComponent {
       }
     })
   }
+
+  pop2(authorId:string){
+    this.hiddenEdit = true;
+    this.dialog.open(AuthorPageComponent,{
+      width:"1000px",
+      minWidth:"1000px",
+      height:"auto",
+      maxHeight:"600px",
+      data:{
+        authorId:authorId
+      }
+    }).afterClosed().subscribe(()=> {
+      this.init()
+      this.hiddenEdit=false;
+    })
+  }
+
 
   public showError(notification: string): void {
     this.snackBar.open(notification, 'Error', {duration: 5000});
