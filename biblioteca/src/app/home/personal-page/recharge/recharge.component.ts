@@ -61,16 +61,16 @@ export class RechargeComponent {
 
   rechargeDataIsError(){
     if(this.sumOfMoney<=0) {
-      this.showError(":) 403 Minimum recharge amount is €1")
+      this.showError(":) 422 Minimum recharge amount is €1")
       return true;
     }else if(this.cardNumber.length<19){
-      this.showError(":) 403 Incorrectly formatted bank card number")
+      this.showError(":) 422 Incorrectly formatted bank card number")
       return true;
     }else if(this.cvv.length<3) {
-      this.showError(":) 403 CVV is incorrectly formatted")
+      this.showError(":) 422 CVV is incorrectly formatted")
       return true;
     }else if(this.expirationDate.length<5) {
-      this.showError(":) 403 Expiration Date is incorrectly formatted")
+      this.showError(":) 422 Expiration Date is incorrectly formatted")
       return true;
     }else {
       return false;
