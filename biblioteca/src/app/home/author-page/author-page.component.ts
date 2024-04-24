@@ -143,7 +143,7 @@ constructor(@Inject(MAT_DIALOG_DATA)data:any,
       width:"800px",
       minWidth:"800px",
       height:"auto",
-      maxHeight:"600px",
+      maxHeight:"900px",
       data:{
         bookId:bookId,
       }

@@ -14,9 +14,9 @@
   <p class="author-description" *ngIf="!isEdit">Description: {{authorData.description}}</p>
   <mat-form-field class="author-description-edit" *ngIf="isEdit">
     <mat-label>Description</mat-label>
-    <textarea matInput [(ngModel)]="authorDataByModify.description"></textarea>
+    <textarea matInput [(ngModel)]="authorDataByModify.description" maxlength="500"></textarea>
+    <mat-hint>Maximum 500 characters</mat-hint>
   </mat-form-field>
-
   <div class="image-container" >
     <img class="author-img" [src]="authorImageSelectedUrl" alt="404_no fount" >
     <div class="overlay" *ngIf="isEdit">

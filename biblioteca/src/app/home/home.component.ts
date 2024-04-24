@@ -213,7 +213,7 @@ export class HomeComponent {
       width:"800px",
       minWidth:"800px",
       height:"auto",
-      maxHeight:"600px",
+      maxHeight:"900px",
       data:{
         bookId:bookId
       }

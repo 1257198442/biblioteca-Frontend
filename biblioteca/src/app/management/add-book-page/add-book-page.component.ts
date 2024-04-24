@@ -6,6 +6,7 @@ import {AuthorAddData, AuthorModel, BookTypeModel, BookUpLoadModel} from "../../
 
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {endPoints} from "../../endPoints";
+import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
 
 @Component({
   selector: 'app-add-book-page',
@@ -21,7 +22,9 @@ export class AddBookPageComponent {
   allLanguage=[];
   selectType:BookTypeModel|undefined;
   selectAuthor:AuthorModel|undefined;
-  step=0;
+  stepAuthor=0;
+  stepType= 0;
+  type:BookTypeModel = {name:"",description:""}
   author:AuthorAddData={name:"", description:"", nationality:""}
 
   userRole:string="";
@@ -113,12 +116,30 @@ export class AddBookPageComponent {
 
   addAuthor(){
     if (this.author.name!=""){
-      this.http.post(endPoints.author,this.author,this.user.optionsAuthorization2()).subscribe(
-        ()=> {
+      this.http.post(endPoints.author,this.author,this.user.optionsAuthorization2()).subscribe(()=> {
+        this.stepAuthor=0;
+        this.author = {name:"", description:"", nationality:""};
         this.getAllAuthor();
-        this.step=0;
-      },error => this.showError(error.status+error.message))
+        const title = 'Successfully';
+        const message = 'Author [' + this.author.name + '] added successfully';
+        const confirm = false;
+        const input = false;
+        this.openAlertDialogPage(title,message,confirm,input)
+      },error => this.showError(error.status+error.message));
     }
+  }
+
+  addBookType(){
+    this.http.post(endPoints.type,this.type,this.user.optionsAuthorization2()).subscribe(()=>{
+      this.stepType = 0;
+      this.type = {name:"",description:""};
+      this.getAllBookType();
+      const title = 'Successfully';
+      const message = 'Book type [' + this.type.name + '] added successfully';
+      const confirm = false;
+      const input = false;
+      this.openAlertDialogPage(title,message,confirm,input)
+    },error => this.showError(error.status+error.message));
   }
 
   removeType(type:BookTypeModel){
@@ -134,6 +155,19 @@ export class AddBookPageComponent {
     index = this.showAuthor.indexOf(author)
     this.showAuthor.splice(index,1);
   }
+
+  openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
+    return this.dialog.open(AlertDialogComponent,{
+      width:'500px',
+      data:{
+        title:title,
+        message:message,
+        confirm:confirm,
+        input:input
+      }
+    })
+  }
+
 
   public showError(notification: string){
     this.snackBar.open(notification, 'Error', {duration: 5000});

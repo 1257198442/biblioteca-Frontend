@@ -31,7 +31,7 @@ import { ChartDataset, ChartOptions } from 'chart.js';
 })
 export class LineChartComponent  {
   public lineChartData: ChartDataset[] = [
-    { data: [], label: 'Monthly Lending Counts', borderColor: '#3BAFBE', backgroundColor: '#FFD166',pointBackgroundColor:"#FFD166"}
+    { data: [], label: 'Lending Counts', borderColor: '#3BAFBE', backgroundColor: '#FFD166',pointBackgroundColor:"#FFD166"}
   ];
   public lineChartLabels:string[] = [];
   public lineChartOptions: ChartOptions = {

@@ -140,8 +140,10 @@
           </mat-form-field>
           <mat-form-field class="example-full-width">
             <mat-label>Description</mat-label>
-            <input matInput [(ngModel)]="author.description" >
+            <textarea  matInput [(ngModel)]="author.description" [maxlength]="500"></textarea>
+            <mat-hint>Maximum 500 characters</mat-hint>
           </mat-form-field>
+
           <br>
           <button mat-flat-button  (click)="addAuthor();step=0" *ngIf="author.name!=''">OK</button>
         </mat-expansion-panel>
@@ -171,7 +173,8 @@
 
               <mat-form-field class="example-full-width">
                 <mat-label>Description</mat-label>
-                <input matInput [(ngModel)]="type.description" [maxlength]="200">
+                <textarea  matInput [(ngModel)]="type.description" [maxlength]="500"></textarea>
+                <mat-hint>Maximum 500 characters</mat-hint>
               </mat-form-field>
 
               <button mat-flat-button class="example-full-width" (click)="addBookType();stepType=0" *ngIf="type.name!=''&&type.description!=''">OK</button>

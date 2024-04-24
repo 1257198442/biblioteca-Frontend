@@ -271,6 +271,7 @@ export class ManagementComponent{
     this.http.post(endPoints.type,this.type,this.user.optionsAuthorization2()).subscribe(()=>{
       this.stepType = 0;
       this.getAllBookType();
+      this.type = {name:"",description:""};
       const title = 'Successfully';
       const message = 'Book type [' + this.type.name + '] added successfully';
       const confirm = false;
@@ -370,7 +371,7 @@ export class ManagementComponent{
       width:"800px",
       minWidth:"800px",
       height:"auto",
-      maxHeight:"600px",
+      maxHeight:"900px",
       data:{
         bookId:bookId
       }
@@ -382,7 +383,7 @@ export class ManagementComponent{
       width:"700px",
       minWidth:"700px",
       height:"auto",
-      maxHeight:"600px",
+      maxHeight:"900px",
       data:{
       }
     }).afterClosed().subscribe(() => this.getAllBookList());

@@ -1,18 +1,16 @@
 <mat-card>
   <mat-card-title>
     ADD BOOK DATA
-  </mat-card-title>
-  <br>
+  </mat-card-title><br>
   <mat-card-content>
-  <mat-form-field class="name">
-    <mat-label>Book name</mat-label>
-    <input matInput [(ngModel)]="bookUpload.name" >
-  </mat-form-field>
+    <mat-form-field class="name">
+      <mat-label>Book name</mat-label>
+      <input matInput [(ngModel)]="bookUpload.name" >
+    </mat-form-field>
     <mat-form-field class="barcode">
       <mat-label>barcode</mat-label>
       <input matInput [(ngModel)]="bookUpload.barcode" >
-    </mat-form-field>
-    <br>
+    </mat-form-field><br>
     <mat-form-field class="isbn">
       <mat-label>ISBN</mat-label>
       <input matInput #ISBN [disabled]="ISSN.value!=''" [(ngModel)]="bookUpload.isbn" >
@@ -20,96 +18,91 @@
     <mat-form-field class="issn">
       <mat-label>ISSN</mat-label>
       <input matInput #ISSN [disabled]="ISBN.value!=''" [(ngModel)]="bookUpload.issn" >
-    </mat-form-field>
-    <br>
+    </mat-form-field><br>
     <mat-form-field class="deposit">
-    <mat-label>Deposit</mat-label>
-    <input matInput type="number" max="100" [(ngModel)]="bookUpload.deposit" >
-  </mat-form-field>
-
+      <mat-label>Deposit</mat-label>
+      <input matInput type="number" max="100" [(ngModel)]="bookUpload.deposit" >
+    </mat-form-field>
     <mat-form-field class="language" *ngIf="allLanguage">
       <mat-label>Language</mat-label>
       <mat-select [(ngModel)]="bookUpload.language" >
-        <mat-option *ngFor="let language of allLanguage" [value]="language">
-          {{language}}
-        </mat-option>
+        <mat-option *ngFor="let language of allLanguage" [value]="language">{{language}}</mat-option>
       </mat-select>
-    </mat-form-field>
-    <br>
+    </mat-form-field><br>
     <mat-form-field class="publisher">
-    <mat-label>Book publisher</mat-label>
-    <input matInput [(ngModel)]="bookUpload.publisher" >
-  </mat-form-field>
-    <br>
-  <mat-form-field class="description">
-    <mat-label>Book description</mat-label>
-    <textarea matInput [(ngModel)]="bookUpload.description" maxlength="500"></textarea>
-    <mat-hint>Maximum 500 characters</mat-hint>
-  </mat-form-field>
-    <br>
+      <mat-label>Book publisher</mat-label>
+      <input matInput [(ngModel)]="bookUpload.publisher" >
+    </mat-form-field><br>
+    <mat-form-field class="description">
+      <mat-label>Book description</mat-label>
+      <textarea matInput [(ngModel)]="bookUpload.description" maxlength="500"></textarea>
+      <mat-hint>Maximum 500 characters</mat-hint>
+    </mat-form-field><br>
     <mat-card-title><h3>Book Author</h3></mat-card-title>
     <mat-card-content>
       <mat-chip *ngFor="let author of showAuthor" >
         <mat-label>{{author.name}}</mat-label>
         <button matChipRemove (click)="removeAuthor(author)" class="add"><mat-icon>cancel</mat-icon></button>
-      </mat-chip>
-      <br>
+      </mat-chip><br>
       <mat-form-field *ngIf="allAuthor" class="type">
         <mat-label>Select author</mat-label>
         <mat-select [(ngModel)]="selectAuthor">
-          <mat-option *ngFor="let author of allAuthor" [value]="author">
-            {{author.name}}
-          </mat-option>
+          <mat-option *ngFor="let author of allAuthor" [value]="author">{{author.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <button mat-icon-button *ngIf="selectAuthor" (click)="bookAddAuthor()"><mat-icon>add</mat-icon></button>
     </mat-card-content>
-
-  <mat-expansion-panel [expanded]= "step === 1" (opened)="step=1" (closed)="step=0" >
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Add Author
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <mat-card>
-      <mat-form-field class="example-full-width">
-        <mat-label>Author Name</mat-label>
-        <input matInput [(ngModel)]="author.name" >
-      </mat-form-field>
-
+    <mat-expansion-panel [expanded]= "stepAuthor === 1" (opened)="stepAuthor=1" (closed)="stepAuthor=0" >
+      <mat-expansion-panel-header>
+        <mat-panel-title>Add Author</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-card>
+        <mat-form-field class="example-full-width">
+          <mat-label>Author Name</mat-label>
+          <input matInput [(ngModel)]="author.name" >
+        </mat-form-field>
       <mat-form-field class="example-full-width">
         <mat-label>Nationality</mat-label>
         <input matInput [(ngModel)]="author.nationality" >
       </mat-form-field>
-
       <mat-form-field class="example-full-width">
         <mat-label>Description</mat-label>
         <input matInput [(ngModel)]="author.description" >
       </mat-form-field>
-
-      <button mat-flat-button  (click)="addAuthor();step=0" *ngIf="author.name!=''">OK</button>
+      <button mat-flat-button (click)="addAuthor();stepAuthor=0" *ngIf="author.name!=''">OK</button>
     </mat-card>
-  </mat-expansion-panel>
-
+  </mat-expansion-panel><br>
   <mat-card-title><h3>Book Type</h3></mat-card-title>
   <mat-card-content>
     <mat-chip *ngFor="let type of showType" >
       <mat-label>{{type.name}}</mat-label>
       <button matChipRemove (click)="removeType(type)" class="add"><mat-icon>cancel</mat-icon></button>
-    </mat-chip>
-  <br>
-  <mat-form-field *ngIf="allType" class="type">
-    <mat-label>Select type</mat-label>
-    <mat-select [(ngModel)]="selectType">
-      <mat-option *ngFor="let type of allType" [value]="type">
-        {{type.name}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <button mat-icon-button *ngIf="selectType" (click)="addType()"><mat-icon>add</mat-icon></button>
+    </mat-chip><br>
+    <mat-form-field *ngIf="allType" class="type">
+      <mat-label>Select type</mat-label>
+      <mat-select [(ngModel)]="selectType">
+        <mat-option *ngFor="let type of allType" [value]="type">{{type.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-icon-button *ngIf="selectType" (click)="addType()"><mat-icon>add</mat-icon></button>
   </mat-card-content>
-  <br>
-  <button mat-flat-button (click)="uploadBook()">OK</button>
+    <mat-expansion-panel [expanded]= "stepType === 1" (opened)="stepType=1" (closed)="stepType=0" >
+      <mat-expansion-panel-header>
+        <mat-panel-title>Add Book Type</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-card>
+        <mat-form-field class="example-full-width">
+          <mat-label>Type Name</mat-label>
+          <input matInput [(ngModel)]="type.name" >
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Description</mat-label>
+          <textarea  matInput [(ngModel)]="type.description" [maxlength]="500"></textarea>
+          <mat-hint>Maximum 500 characters</mat-hint>
+        </mat-form-field>
+        <button mat-flat-button class="example-full-width" (click)="addBookType();stepType=0" *ngIf="type.name!=''&&type.description!=''">OK</button>
+      </mat-card>
+    </mat-expansion-panel><br>
+    <button mat-flat-button (click)="uploadBook()">OK</button>
   </mat-card-content>
 </mat-card>
