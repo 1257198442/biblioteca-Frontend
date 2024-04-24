@@ -8,7 +8,7 @@
     <li *ngIf="isLogin"> <a>Post Article</a></li>
     <li *ngIf="admin()&&isLogin"> <a routerLink="management" routerLinkActive="active">Management</a></li>
     <li *ngIf="isLogin">
-      <a mat-button [matMenuTriggerFor]="menu">Records</a>
+      <a [matMenuTriggerFor]="menu">Records</a>
       <mat-menu #menu="matMenu">
         <button mat-menu-item routerLink="borrow" routerLinkActive="active">Borrow Records</button>
         <button mat-menu-item>Article Records</button>

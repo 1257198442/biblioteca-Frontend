@@ -30,7 +30,7 @@ export class SignUpComponent {
     if(this.notNull()){
       this.http.post(endPoints.user,this.computingPhone()).subscribe(()=> {
           const title = 'Reminders';
-          const message = ':) Successful registration.'
+          const message = ':) Registration Successfully.'
           const confirm = false
           const input = false
           const dialogPage = this.openAlertDialogPage(title,message,confirm,input);

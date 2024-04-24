@@ -51,7 +51,7 @@ export class WithdrawMoneyComponent {
           this.http.post(endPoints.wallet+"/withdrawal",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=> {
             this.btnStatus(false)
             const title= 'Successes';
-            const message= ':) Withdraw Money '+this.telephone+' with '+this.sumOfMoney+'€ successfully.';
+            const message= ':) Cash out '+this.telephone+' with '+this.sumOfMoney+'€ successfully.';
             const confirm= false;
             const input = false;
             this.openAlertDialogPage(title,message,confirm,input)
