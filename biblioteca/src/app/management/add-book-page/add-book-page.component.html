@@ -35,8 +35,8 @@
     </mat-form-field><br>
     <mat-form-field class="description">
       <mat-label>Book description</mat-label>
-      <textarea matInput [(ngModel)]="bookUpload.description" maxlength="500"></textarea>
-      <mat-hint>Maximum 500 characters</mat-hint>
+      <textarea matInput [(ngModel)]="bookUpload.description" maxlength="5000"></textarea>
+      <mat-hint>Maximum 5000 characters</mat-hint>
     </mat-form-field><br>
     <mat-card-title><h3>Book Author</h3></mat-card-title>
     <mat-card-content>
@@ -66,8 +66,11 @@
         <input matInput [(ngModel)]="author.nationality" >
       </mat-form-field>
       <mat-form-field class="example-full-width">
-        <mat-label>Description</mat-label>
-        <input matInput [(ngModel)]="author.description" >
+<!--        <mat-label>Description</mat-label>-->
+<!--        <input matInput [(ngModel)]="author.description" >-->
+        <mat-label>Author description</mat-label>
+        <textarea matInput [(ngModel)]="author.description" maxlength="5000"></textarea>
+        <mat-hint>Maximum 5000 characters</mat-hint>
       </mat-form-field>
       <button mat-flat-button (click)="addAuthor();stepAuthor=0" *ngIf="author.name!=''">OK</button>
     </mat-card>
@@ -97,8 +100,8 @@
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <mat-label>Description</mat-label>
-          <textarea  matInput [(ngModel)]="type.description" [maxlength]="500"></textarea>
-          <mat-hint>Maximum 500 characters</mat-hint>
+          <textarea  matInput [(ngModel)]="type.description" [maxlength]="5000"></textarea>
+          <mat-hint>Maximum 5000 characters</mat-hint>
         </mat-form-field>
         <button mat-flat-button class="example-full-width" (click)="addBookType();stepType=0" *ngIf="type.name!=''&&type.description!=''">OK</button>
       </mat-card>

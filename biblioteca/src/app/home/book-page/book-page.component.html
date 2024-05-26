@@ -87,8 +87,8 @@
 
         <mat-form-field *ngIf="bookUpdate" class="description-input">
           <mat-label>Description</mat-label>
-          <textarea matInput [(ngModel)]="bookUpdate.description" maxlength="500" ></textarea>
-          <mat-hint>Maximum 500 characters</mat-hint>
+          <textarea class="description-t" matInput [(ngModel)]="bookUpdate.description" maxlength="5000" ></textarea>
+          <mat-hint>Maximum 5000 characters</mat-hint>
         </mat-form-field>
 
         <mat-card-title><h3>Book Author</h3></mat-card-title>

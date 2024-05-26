@@ -118,12 +118,12 @@ export class AddBookPageComponent {
     if (this.author.name!=""){
       this.http.post(endPoints.author,this.author,this.user.optionsAuthorization2()).subscribe(()=> {
         this.stepAuthor=0;
-        this.author = {name:"", description:"", nationality:""};
         this.getAllAuthor();
         const title = 'Successfully';
         const message = 'Author [' + this.author.name + '] added successfully';
         const confirm = false;
         const input = false;
+        this.author = {name:"", description:"", nationality:""};
         this.openAlertDialogPage(title,message,confirm,input)
       },error => this.showError(error.status+error.message));
     }
@@ -132,12 +132,12 @@ export class AddBookPageComponent {
   addBookType(){
     this.http.post(endPoints.type,this.type,this.user.optionsAuthorization2()).subscribe(()=>{
       this.stepType = 0;
-      this.type = {name:"",description:""};
       this.getAllBookType();
       const title = 'Successfully';
       const message = 'Book type [' + this.type.name + '] added successfully';
       const confirm = false;
       const input = false;
+      this.type = {name:"",description:""};
       this.openAlertDialogPage(title,message,confirm,input)
     },error => this.showError(error.status+error.message));
   }

@@ -26,7 +26,7 @@
             <p class="max" *ngIf="weather">MAX:{{weather.main.temp_max.toString().split(".")[0]}}° </p>
           </div>
           <div class="img-box">
-            <img *ngIf="weatherImg" class="weather-img" [src]="weatherImg" alt="">
+            <img *ngIf="weatherImg" class="weather-img" [src]="weatherImg"  loading="lazy" alt="">
           </div>
         </div>
 
@@ -80,6 +80,20 @@
         </div>
       </div>
     </mat-card>
+    <mat-card class="wallet-box" >
+      <button class="login-btn" mat-flat-button *ngIf="!isLogin()" (click)="login()">Login</button>
+      <button class="signup-btn" mat-flat-button *ngIf="!isLogin()" (click)="signup()">Sign up</button>
+      <div *ngIf="isLogin()">
+        <div *ngIf="isLogin()" class="hidden" (click)="display=!display"></div>
+        <p class="hello">Hello</p>
+        <p class="name">{{userName}}</p>
+        <p class="wallet">Balance</p>
+        <p *ngIf="display" class="balance"> {{userBalance}} <span class="sym">€</span></p>
+        <p *ngIf="!display" class="balance_x"> XX.XX <span class="sym">€</span></p>
+      </div>
 
+
+    </mat-card>
   </div>
+  <app-book-search-page></app-book-search-page>
 </main>

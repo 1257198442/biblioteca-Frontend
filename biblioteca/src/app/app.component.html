@@ -3,17 +3,9 @@
   <ul class="nav-display">
     <li><p class="logo">LIBRARY</p></li>
     <li><a routerLink="" routerLinkActive="active">Home</a></li>
-    <li><a routerLink="book" routerLinkActive="active">Book</a></li>
     <li *ngIf="!isLogin"><a (click)="openSignUpPage()">Sign up</a></li>
-    <li *ngIf="isLogin"> <a>Post Article</a></li>
     <li *ngIf="admin()&&isLogin"> <a routerLink="management" routerLinkActive="active">Management</a></li>
-    <li *ngIf="isLogin">
-      <a [matMenuTriggerFor]="menu">Records</a>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="borrow" routerLinkActive="active">Borrow Records</button>
-        <button mat-menu-item>Article Records</button>
-      </mat-menu>
-    </li>
+    <li *ngIf="isLogin"> <a routerLink="borrow" routerLinkActive="active">Borrow Records</a></li>
     <div *ngIf="isLogin" class="information"><a>{{userData.name}}</a></div>
     <div *ngIf="!isLogin" class="information"><a (click)="login()"> Login</a></div>
 
@@ -48,12 +40,6 @@
       </button>
       <button mat-menu-item *ngIf="isLogin">
         <a routerLink="home" routerLinkActive="active" (click)="logout()">Logout</a>
-      </button>
-      <button mat-menu-item *ngIf="isLogin">
-        <a>Post Article</a>
-      </button>
-      <button mat-menu-item *ngIf="isLogin">
-        <a>Article Record</a>
       </button>
       <button mat-menu-item *ngIf="admin()&&isLogin">
         <a routerLink="management" routerLinkActive="active">Management</a>

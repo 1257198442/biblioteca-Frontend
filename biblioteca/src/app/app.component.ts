@@ -33,6 +33,13 @@ export class AppComponent implements OnInit{
     this.getLibraryData();
     setInterval(() => {
       const currentToken = sessionStorage.getItem('jwtToken');
+      if(currentToken==null){
+        this.isLogin= false;
+        this.userRole="";
+        this.userTelephone="";
+        this.storedToken = "";
+        this.router.navigate(['/home']);
+      }
       if (currentToken !== this.storedToken) {
         this.storedToken = currentToken !== null ? currentToken : "";
         this.getToken();

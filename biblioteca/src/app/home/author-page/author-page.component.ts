@@ -1,11 +1,10 @@
 import {Component, Inject, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
 import {MatPaginator} from "@angular/material/paginator";
 import {AuthorModel, BookModel} from "../../model/book.model";
 import {authService} from "../../authService";
 import {endPoints} from "../../endPoints";
-import {BookPageComponent} from "../book-page/book-page.component";
 import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
 
 
@@ -136,18 +135,6 @@ constructor(@Inject(MAT_DIALOG_DATA)data:any,
         input:input
       }
     })
-  }
-
-  openBookPage(bookId:string){
-    this.dialog.open(BookPageComponent,{
-      width:"800px",
-      minWidth:"800px",
-      height:"auto",
-      maxHeight:"900px",
-      data:{
-        bookId:bookId,
-      }
-    }).afterClosed().subscribe(() => this.getAuthorsBooks(this.authorId))
   }
 
 }

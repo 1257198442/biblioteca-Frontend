@@ -26,10 +26,13 @@ mat-card-content{
 .red-font{
   color: #FF6B6B;
 }
-.name,.isbn,.deposit{
+.barcode,.isbn,.deposit{
   width: 35%;
 }
-.barcode,.issn,.language{
+.name{
+  width: 75%;
+}
+.issn,.language{
   margin-left: 5%;
   width: 35%;
 }

@@ -38,9 +38,12 @@ export class ManagementComponent{
   origenLibraryData:any;
   updateLibraryData:any;
   type:BookTypeModel = {name:"",description:""}
+  typeNeedModify:BookTypeModel = {name:"",description:""}
   author:AuthorAddData = {name:"", description:"", nationality:""}
   stepType= 0;
   step= 0;
+  stepTypeModify = 0
+  typeNameDisabled = false;
   userDataSource:any;
   bookDataSource:any;
   allType:BookTypeModel[] = [];
@@ -344,6 +347,28 @@ export class ManagementComponent{
         });
       },error => this.showError(error.status + error.message));
     }
+  }
+  needModify(type:any){
+    this.typeNeedModify = type;
+    this.stepTypeModify = 1;
+    this.typeNameDisabled = true;
+  }
+  modifyBookType(){
+    if(this.typeNeedModify.name != "" && this.typeNeedModify.description != ""){
+      this.http.put(endPoints.type + "/" + this.typeNeedModify.name,this.typeNeedModify.description,this.user.optionsAuthorization2()).subscribe(()=>{
+        this.getAllBookType();
+        this.initTypeNeedModify();
+        this.stepTypeModify = 0;
+        this.typeNameDisabled = false;
+      },(error)=>{
+        this.showError(error.status+error.message);
+      })
+    }
+  }
+
+  initTypeNeedModify(){
+    this.typeNeedModify = {name:"",description:""};
+    this.typeNameDisabled = false;
   }
 
   clear(){

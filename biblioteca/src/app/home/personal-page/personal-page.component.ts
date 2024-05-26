@@ -61,8 +61,8 @@ export class PersonalPageComponent {
       (data:any)=> {
       this.userData = data.body;
       this.getAvatar();
+      this.getWallet();
       this.getCollectionList();
-      this.getWishList();
       this.userUpdate=this.generateUserUpdate();
       this.settingUpdate = this.generateSettingUpdate();
     },error => this.showError(error.status+error.message))
@@ -88,7 +88,7 @@ export class PersonalPageComponent {
     }
   }
 
-  getCollectionList(){
+  getWallet(){
     if(this.isLoginUser() || this.isRoot()){
       this.http.get(endPoints.wallet + "/" + this.userData.telephone,this.user.optionsAuthorization2()).subscribe(
         (data:any)=> this.wallet = data.body.balance
@@ -212,7 +212,7 @@ export class PersonalPageComponent {
     }
   }
 
-  getWishList(){
+  getCollectionList(){
     if(this.userData.role === "CLIENT"){
       this.http.get(endPoints.collection + "/" + this.userData.telephone + "/book",this.user.optionsAuthorization2()).subscribe(
         (data:any)=>this.collectionList = data.body
@@ -242,7 +242,7 @@ export class PersonalPageComponent {
         telephone:this.userData.telephone
       }
     }).afterClosed().subscribe(
-      () => this.getCollectionList());
+      () => this.getWallet());
   }
 
   openWithdrawMoneyPage(){
@@ -255,7 +255,7 @@ export class PersonalPageComponent {
         telephone:this.userData.telephone
       }
     }).afterClosed().subscribe(
-      () => this.getCollectionList());
+      () => this.getWallet());
   }
 
   openBillingRecordsPage(){
@@ -291,7 +291,7 @@ export class PersonalPageComponent {
       data:{
         bookId:bookId
       }
-    }).afterClosed().subscribe(()=>this.getWishList());
+    }).afterClosed().subscribe(()=>this.getCollectionList());
   }
 
   wishListIsDisplay(){

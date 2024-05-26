@@ -4,12 +4,13 @@ import {endPoints} from "../endPoints";
 import {MatDialog} from "@angular/material/dialog";
 import {BookPageComponent} from "./book-page/book-page.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {MatPaginator} from "@angular/material/paginator";
 import {Router} from "@angular/router";
 import {Borrow} from "../model/borrow.model";
 import {DatePipe} from "@angular/common";
 import {LineChartComponent} from "./line-chart.component";
 import {authService} from "../authService";
+import {LoginComponent} from "../login/login.component";
+import {SignUpComponent} from "../sign-up/sign-up.component";
 
 
 @Component({
@@ -21,6 +22,8 @@ export class HomeComponent {
   storedToken:any;
   userTelephone="";
   userRole="";
+  userName="";
+  userBalance = 0;
   currentDate: Date = new Date()
   randomBook:any;
   monthAbbreviations: { [key: number]: string } = {
@@ -48,6 +51,7 @@ export class HomeComponent {
   low=['reference','bookID','limitTime'];
   componentPage = 0;
   totalPages = 1;
+  display = true;
 
   constructor(private http:HttpClient,
               private dialog:MatDialog,
@@ -59,6 +63,7 @@ export class HomeComponent {
   }
 
   init(){
+    this.updateTime();
     setInterval(() => {
       this.updateTime();
       const currentToken = sessionStorage.getItem('jwtToken');
@@ -70,6 +75,9 @@ export class HomeComponent {
     setInterval(() => {
       this.nextPage();
     }, 10000);
+    setInterval(()=>{
+      this.getBalance()
+    },5000)
     this.getRandomBook();
     this.getWeather()
   }
@@ -79,6 +87,7 @@ export class HomeComponent {
       const [header, payload, signature] = this.storedToken.split('.');
       const decodedPayload = JSON.parse(atob(payload));
       this.userTelephone = decodedPayload.user;
+      this.userName = decodedPayload.name;
       this.userRole = decodedPayload.role;
       this.totalPages=2;
       if(this.isClient()){
@@ -90,6 +99,7 @@ export class HomeComponent {
     }else {
       this.userTelephone = "";
       this.userRole = "";
+      this.userName = "";
       this.totalPages= 1;
     }
   }
@@ -201,12 +211,36 @@ export class HomeComponent {
       ,error => this.showError(error.status+error.message));
   }
 
+  login(){
+    this.dialog.open(LoginComponent, {width:"470px",});
+  }
+  signup(){
+    this.dialog.open(SignUpComponent, {width:"470px",});
+  }
+
   getLendingData(){
     this.http.get(endPoints.lending+"/no_return/search?telephone="+encodeURIComponent(this.userTelephone),this.user.optionsAuthorization2())
       .subscribe(
         (data:any)=> this.lendingList=data.body
       ,error => this.showError(error.status+error.message));
   }
+
+  getBalance(){
+    if(this.userTelephone !=""){
+      this.http.get(endPoints.wallet + "/" + this.userTelephone,this.user.optionsAuthorization2())
+        .subscribe((data:any)=> this.userBalance = data.body.balance
+          ,error => {
+          if(error.status==401){
+            sessionStorage.removeItem('jwtToken')
+            this.userRole = "";
+            this.userBalance = 0;
+            this.userTelephone = "";
+          }
+          this.showError(error.status+error.message)
+        })
+    }
+    }
+
 
   openBookPage(bookId:string){
     this.dialog.open(BookPageComponent,{

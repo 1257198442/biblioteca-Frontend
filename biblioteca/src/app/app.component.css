@@ -45,10 +45,13 @@ li{
 }
 
 .information a{
+  height: 30px;
   color: #3BAFBE;
   width:  calc(100% - 40px);
   display: block;
   text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 li:first-child:hover{
   background-color: #3BAFBE;
@@ -88,6 +91,8 @@ li:first-child{
   font-size: 20px!important;
   transform: translateY(-16px);
   margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 mat-card-content{

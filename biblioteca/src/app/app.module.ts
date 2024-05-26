@@ -49,6 +49,7 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {LineChartComponent} from "./home/line-chart.component";
 import {NgChartsModule} from "ng2-charts";
 import {AuthorPageComponent} from "./home/author-page/author-page.component";
+import { BookCardComponent } from './home/book-search-page/book-card/book-card.component';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import {AuthorPageComponent} from "./home/author-page/author-page.component";
     ReturnPageComponent,
     FeedbackPageComponent,
     LineChartComponent,
-    AuthorPageComponent
+    AuthorPageComponent,
+    BookCardComponent
   ],
   imports: [
     BrowserModule,

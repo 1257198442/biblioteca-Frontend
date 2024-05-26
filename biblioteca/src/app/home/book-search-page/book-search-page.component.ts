@@ -5,7 +5,6 @@ import {HttpClient} from "@angular/common/http";
 import {authService} from "../../authService";
 import {MatDialog} from "@angular/material/dialog";
 import {endPoints} from "../../endPoints";
-import {BookPageComponent} from "../book-page/book-page.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -84,18 +83,6 @@ export class BookSearchPageComponent {
     const startIndex = this.currentPage * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     return this.books.slice(startIndex, endIndex);
-  }
-
-  openBookPage(bookId:string){
-    this.dialog.open(BookPageComponent,{
-      width:"800px",
-      minWidth:"800px",
-      height:"auto",
-      maxHeight:"900px",
-      data:{
-        bookId:bookId,
-      }
-    }).afterClosed().subscribe(()=>this.searchBooks())
   }
 
   public showError(notification: string): void {
