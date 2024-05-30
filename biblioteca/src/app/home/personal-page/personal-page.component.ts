@@ -19,7 +19,7 @@ import {BookPageComponent} from "../book-page/book-page.component";
   styleUrls: ['./personal-page.component.css']
 })
 export class PersonalPageComponent {
-  userData:UserClass = new UserClass("","",new Date(),"","","",false,"",new setting(false,false,false,false,false));
+  userData:UserClass = new UserClass("","",new Date(),"","","",false,"",new setting(false,false,false));
   userRole:string = "";
   userTelephone:string = ""
   wallet:number = 0;
@@ -80,11 +80,11 @@ export class PersonalPageComponent {
 
   generateSettingUpdate (){
     return{
-      hideMyProfile: this.userData.setting.hideMyProfile,
+      // hideMyProfile: this.userData.setting.hideMyProfile,
       emailWhenSuccessfulTransaction:this.userData.setting.emailWhenSuccessfulTransaction,
       emailWhenOrderIsPaid:this.userData.setting.emailWhenOrderIsPaid,
       emailWhenOrdersAboutToExpire:this.userData.setting.emailWhenOrdersAboutToExpire,
-      hideMyCollectionList:this.userData.setting.hideMyCollectionList
+      // hideMyCollectionList:this.userData.setting.hideMyCollectionList
     }
   }
 

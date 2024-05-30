@@ -23,6 +23,7 @@
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
+
   <mat-form-field>
     <mat-label>Email</mat-label>
     <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
@@ -33,10 +34,19 @@
       Email is <strong>required</strong>
     </mat-error>
   </mat-form-field>
+
   <mat-form-field>
-    <input [(ngModel)]="registrationData.password" matInput placeholder="Password" type="password"/>
+    <mat-label>Password</mat-label>
+    <input type="password" matInput [formControl]="passwordFormControl" placeholder="0-9/a-z/A-Z">
+    <mat-error *ngIf="passwordCorrectFormat(1)">
+      Password must contain at least one letter and one number
+    </mat-error>
+    <mat-error *ngIf="passwordCorrectFormat(2)">
+      Password is <strong>required</strong>
+    </mat-error>
   </mat-form-field>
 </mat-dialog-content>
+
 <mat-dialog-actions>
   <button mat-flat-button mat-dialog-close>Cancel</button>
   <button (click)="Registration()" [disabled]="!notNull()" mat-flat-button>OK</button>

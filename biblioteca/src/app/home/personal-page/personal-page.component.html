@@ -66,16 +66,12 @@
       </mat-expansion-panel-header>
       <mat-card>
         <section class="setting-box">
-          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.hideMyProfile">I want to hide my Profile</mat-checkbox>
-          <br>
           <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenSuccessfulTransaction">I would like to receive email alerts of successful transactions</mat-checkbox>
           <br>
           <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrderIsPaid">I would like to receive email alerts for order generation</mat-checkbox>
           <br>
           <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrdersAboutToExpire">I would like to receive email alerts that my order is approaching its deadline</mat-checkbox>
           <br>
-          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.hideMyCollectionList">I want to hide my CollectionList</mat-checkbox>
-
         </section>
         <button mat-flat-button (click)="updateSetting();editSettingState=0">OK</button>
       </mat-card>
