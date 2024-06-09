@@ -111,3 +111,7 @@ label h3{
 .resetPassword,.changePassword{
   width: 50%;
 }
+.setting-item{
+  display: block;
+}
+

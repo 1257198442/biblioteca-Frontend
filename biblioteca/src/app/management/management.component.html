@@ -1,5 +1,5 @@
 <main>
-<mat-card *ngIf="isAdministrators()||isRoot()">
+<mat-card *ngIf="user.isAdmin(userData)">
   <mat-card-content>
     <mat-tab-group>
       <mat-tab label="USER">
@@ -79,8 +79,8 @@
           <ng-container matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef> Management </th>
             <td mat-cell *matCellDef="let element" >
-              <button mat-icon-button (click)="locked(element.bookID)" *ngIf="isRoot() || element.status == 'ENABLE'" matTooltip="disable"><mat-icon>block_flipped</mat-icon></button>
-              <button mat-icon-button (click)="available(element.bookID)" *ngIf="isRoot() || element.status == 'DISABLE'" matTooltip="enable"><mat-icon>check</mat-icon></button>
+              <button mat-icon-button (click)="locked(element.bookID)" *ngIf="user.isROOT(userData) || element.status == 'ENABLE'" matTooltip="disable"><mat-icon>block_flipped</mat-icon></button>
+              <button mat-icon-button (click)="available(element.bookID)" *ngIf="user.isROOT(userData) || element.status == 'DISABLE'" matTooltip="enable"><mat-icon>check</mat-icon></button>
               <button mat-icon-button (click)="deleteBook(element.bookID) " matTooltip="removing"><mat-icon>delete</mat-icon></button>
             </td>
           </ng-container>
@@ -205,58 +205,58 @@
         </mat-card>
       </mat-tab>
 
-      <mat-tab label="LIBRARY">
+      <mat-tab label="LIBRARY" [disabled]="!user.isROOT(userData)">
         <mat-card-title>
           <h1>Library Setting</h1>
         </mat-card-title>
         <mat-card-content>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData" >
             <mat-label>Phone</mat-label>
-            <input matInput  [(ngModel)]="updateLibraryData.telephone" [disabled]="!isRoot()">
+            <input matInput  [(ngModel)]="updateLibraryData.telephone" [disabled]="!user.isROOT(userData)">
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
             <mat-label>Email</mat-label>
-            <input matInput  [(ngModel)]="updateLibraryData.email" [disabled]="!isRoot()">
+            <input matInput  [(ngModel)]="updateLibraryData.email" [disabled]="!user.isROOT(userData)">
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
             <mat-label>address</mat-label>
-            <input matInput  [(ngModel)]="updateLibraryData.address" [disabled]="!isRoot()">
+            <input matInput  [(ngModel)]="updateLibraryData.address" [disabled]="!user.isROOT(userData)">
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
             <mat-label>Postal Code</mat-label>
-            <input matInput  [(ngModel)]="updateLibraryData.postalCode" [disabled]="!isRoot()">
+            <input matInput  [(ngModel)]="updateLibraryData.postalCode" [disabled]="!user.isROOT(userData)">
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
             <mat-label>Business Hours</mat-label>
-            <input matInput  [(ngModel)]="updateLibraryData.businessHours" [disabled]="!isRoot()">
+            <input matInput  [(ngModel)]="updateLibraryData.businessHours" [disabled]="!user.isROOT(userData)">
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
             <mat-label>Introduction</mat-label>
-            <textarea matInput  [(ngModel)]="updateLibraryData.introduction" maxlength="150" [disabled]="!isRoot()"></textarea>
+            <textarea matInput  [(ngModel)]="updateLibraryData.introduction" maxlength="150" [disabled]="!user.isROOT(userData)"></textarea>
             <mat-hint>Maximum 150 characters</mat-hint>
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
             <mat-label>Google Mail Address</mat-label>
-            <input matInput  [(ngModel)]="updateLibraryData.googleMail" [disabled]="!isRoot()">
+            <input matInput  [(ngModel)]="updateLibraryData.googleMail" [disabled]="!user.isROOT(userData)">
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
             <mat-label>Instagram Address</mat-label>
-            <input matInput  [(ngModel)]="updateLibraryData.instagram" [disabled]="!isRoot()">
+            <input matInput  [(ngModel)]="updateLibraryData.instagram" [disabled]="!user.isROOT(userData)">
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
             <mat-label>Facebook Address</mat-label>
-            <input matInput  [(ngModel)]="updateLibraryData.facebook" [disabled]="!isRoot()">
+            <input matInput  [(ngModel)]="updateLibraryData.facebook" [disabled]="!user.isROOT(userData)">
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
             <mat-label>Discord Address</mat-label>
-            <input matInput  [(ngModel)]="updateLibraryData.discord" [disabled]="!isRoot()">
+            <input matInput  [(ngModel)]="updateLibraryData.discord" [disabled]="!user.isROOT(userData)">
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="updateLibraryData">
             <mat-label>Twitter Address</mat-label>
-            <input matInput  [(ngModel)]="updateLibraryData.twitter" [disabled]="!isRoot()">
+            <input matInput  [(ngModel)]="updateLibraryData.twitter" [disabled]="!user.isROOT(userData)">
           </mat-form-field>
           <br>
-          <button mat-flat-button (click)="updateLibrary()" *ngIf="isRoot()">OK</button>
+          <button mat-flat-button (click)="updateLibrary()" *ngIf="user.isROOT(userData)">OK</button>
         </mat-card-content>
       </mat-tab>
 

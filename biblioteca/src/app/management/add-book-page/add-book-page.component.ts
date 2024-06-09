@@ -25,22 +25,12 @@ export class AddBookPageComponent {
   stepAuthor=0;
   stepType= 0;
   type:BookTypeModel = {name:"",description:""}
-  author:AuthorAddData={name:"", description:"", nationality:""}
+  author:AuthorAddData = {name:"", description:"", nationality:""}
 
-  userRole:string="";
-  userTelephone:string=""
   constructor(private http:HttpClient,
-              @Inject(MAT_DIALOG_DATA)data:any,
               private user:authService,
               private dialog:MatDialog,
               private snackBar: MatSnackBar) {
-    const jwtToken=sessionStorage.getItem("jwtToken");
-    if(jwtToken){
-      const [header, payload, signature] = jwtToken.split('.');
-      const decodedPayload = JSON.parse(atob(payload));
-      this.userTelephone = decodedPayload.user;
-      this.userRole = decodedPayload.role;
-    }
     this.init();
   }
 
@@ -67,7 +57,6 @@ export class AddBookPageComponent {
       (data:any) => this.allLanguage = data
     ,error => this.showError(error.status+error.message))
   }
-
 
   addType(){
     if(this.selectType){
@@ -104,7 +93,6 @@ export class AddBookPageComponent {
   }
 
   uploadBook(){
-    console.log(this.bookUpload)
     if(this.bookUpload.name){
         this.http.post(endPoints.book,this.bookUpload,this.user.optionsAuthorization2()).subscribe(
           () => this.dialog.closeAll()
@@ -167,7 +155,6 @@ export class AddBookPageComponent {
       }
     })
   }
-
 
   public showError(notification: string){
     this.snackBar.open(notification, 'Error', {duration: 5000});

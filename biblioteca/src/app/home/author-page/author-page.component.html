@@ -19,23 +19,24 @@
     </mat-form-field>
   </div>
 
-
-  <div class="image-container" >
-    <img class="author-img" [src]="authorImageSelectedUrl" alt="404_no fount" >
+  <div class="image-container">
+    <img class="author-img" [src]="authorImageSelectedUrl" alt="404_no fount">
     <div class="overlay" *ngIf="isEdit">
       <label for="sf">
         <h3>Change Image</h3>
       </label>
-      <input class="fileInput" type="file" (change)="onImageSelected($event)" id="sf" >
+      <input class="fileInput" type="file" (change)="onImageSelected($event)" id="sf">
     </div>
   </div>
-  <br>
-  <mat-icon class="edit" *ngIf="(userAdmin === 'ADMINISTRATOR' || userAdmin === 'ROOT')" (click)="edit()">edit</mat-icon>
-  <mat-card class="bookList" >
+
+  <mat-icon class="edit" *ngIf="user.isAdmin(userData)" (click)="edit()">edit</mat-icon>
+  <mat-card class="bookList">
     <p class="book-list-title" *ngIf="authorData.name">Writings by {{authorData.name}}</p>
     <ng-container *ngFor="let b of paginatedBooks">
-      <app-book-card [book]="b" [showBorrowCount]="true" (dialogClosed)="getAuthorsBooks(authorData.authorId)"></app-book-card>
+      <app-book-card [book]="b" [showBorrowCount]="true"
+                     (dialogClosed)="getAuthorsBooks(authorData.authorId)"></app-book-card>
     </ng-container>
-    <mat-paginator [length]="authorsBooksData.length" [pageSize]="pageSize" (page)="onPageChange($event)"></mat-paginator>
- </mat-card>
+    <mat-paginator [length]="authorsBooksData.length" [pageSize]="pageSize"
+                   (page)="onPageChange($event)"></mat-paginator>
+  </mat-card>
 </main>

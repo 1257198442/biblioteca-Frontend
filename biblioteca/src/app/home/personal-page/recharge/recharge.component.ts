@@ -23,13 +23,12 @@ export class RechargeComponent {
   spinner=false;
   cvv="";
   expirationDate="";
-  constructor(@Inject(MAT_DIALOG_DATA)data:any,
-              private snackBar: MatSnackBar,
+  constructor(private snackBar: MatSnackBar,
               private user:authService,
               private http:HttpClient,
               private dialog:MatDialog,
               public dialogRef: MatDialogRef<RechargeComponent>) {
-    this.telephone = data.telephone;
+    this.telephone = this.user.getUserData().userTelephone;
     this.getBalance();
   }
 

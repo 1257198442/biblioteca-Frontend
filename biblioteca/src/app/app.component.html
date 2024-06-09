@@ -6,22 +6,22 @@
     <li *ngIf="!isLogin"><a (click)="openSignUpPage()">Sign up</a></li>
     <li *ngIf="admin()&&isLogin"> <a routerLink="management" routerLinkActive="active">Management</a></li>
     <li *ngIf="isLogin"> <a routerLink="borrow" routerLinkActive="active">Borrow Records</a></li>
-    <div *ngIf="isLogin" class="information"><a>{{userData.name}}</a></div>
+    <div *ngIf="isLogin" class="information"><a>{{userInf.name}}</a></div>
     <div *ngIf="!isLogin" class="information"><a (click)="login()"> Login</a></div>
 
     <mat-card class="personal" *ngIf="isLogin">
       <mat-card-title>
         <img [src]="avatarUrl"  alt="404--NOT FOUND">
-        <p class="user-name">{{userData.name}}</p>
+        <p class="user-name">{{userInf.name}}</p>
       </mat-card-title>
 
       <mat-card-content>
         <a (click)="openPersonalPage()"><mat-icon>person</mat-icon> Personal page</a>
         <a><mat-icon>bookmark</mat-icon> My Bookmark</a>
-        <a routerLink="home" routerLinkActive="active"  (click)="logout()"><mat-icon>logout</mat-icon> Logout</a>
+        <a routerLink="home" routerLinkActive="active" (click)="logout()"><mat-icon>logout</mat-icon> Logout</a>
       </mat-card-content>
       <mat-card-footer>
-        <p>{{userData.createTime}}</p>
+        <p>{{userInf.createTime}}</p>
       </mat-card-footer>
     </mat-card>
 
@@ -36,7 +36,7 @@
         <a routerLink="" routerLinkActive="active">Home</a>
       </button>
       <button mat-menu-item *ngIf="!isLogin">
-        <a  (click)="login()">Login</a>
+        <a (click)="login()">Login</a>
       </button>
       <button mat-menu-item *ngIf="isLogin">
         <a routerLink="home" routerLinkActive="active" (click)="logout()">Logout</a>
@@ -45,10 +45,13 @@
         <a routerLink="management" routerLinkActive="active">Management</a>
       </button>
       <button mat-menu-item *ngIf="isLogin">
-        <a>Borrow Records</a>
+        <a routerLink="borrow" routerLinkActive="active">Borrow Records</a>
       </button>
       <button mat-menu-item *ngIf="isLogin">
-        <a>Personal page</a>
+        <a (click)="openPersonalPage()">Personal page</a>
+      </button>
+      <button mat-menu-item *ngIf="!isLogin">
+        <a routerLink="home" routerLinkActive="active" (click)="logout()" >logout</a>
       </button>
     </mat-menu>
   </ul>

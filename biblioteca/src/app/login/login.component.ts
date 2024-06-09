@@ -43,16 +43,11 @@ export class LoginComponent {
                  this.showError("Wrong network connection")
                }
                this.dialogRef.close();
-             }
-           )
-       }
+             })}
      }
 
   openSignUpPage(){
-    this.dialog.open(SignUpComponent,
-      {
-        width:"470px",
-      });
+    this.dialog.open(SignUpComponent, {width:"470px",});
   }
 
   public showError(notification: string){

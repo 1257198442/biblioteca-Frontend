@@ -3,16 +3,16 @@
     <mat-divider class="divider"></mat-divider>
     <p class="divider-text">Search</p>
     <mat-form-field>
-    <mat-label>Language</mat-label>
-    <mat-select (change)="onSelectChangeLanguage($event)" [(ngModel)]="language" >
-      <ng-container *ngFor="let Language of allLanguage">
-        <mat-option [value]="Language" (click)="language=Language">{{Language}}</mat-option>
-      </ng-container>
-    </mat-select>
-  </mat-form-field>
+      <mat-label>Language</mat-label>
+      <mat-select (change)="onSelectChangeLanguage($event)" [(ngModel)]="language">
+        <ng-container *ngFor="let Language of allLanguage">
+          <mat-option [value]="Language" (click)="language=Language">{{Language}}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
     <mat-form-field class="select-type">
       <mat-label>Type</mat-label>
-      <mat-select  (change)="onSelectPlaceholder($event)" [(ngModel)]="typeS">
+      <mat-select (change)="onSelectPlaceholder($event)" [(ngModel)]="typeS">
         <mat-option value="All" (click)="typeS='All'">
           All
         </mat-option>
@@ -23,9 +23,9 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label>Search</mat-label>
-      <mat-select (change)="onSelectPlaceholder($event)" [(ngModel)]="placeholder" >
+      <mat-select (change)="onSelectPlaceholder($event)" [(ngModel)]="placeholder">
         <ng-container *ngFor="let find of finds">
-          <mat-option [value]="find" (click)="placeholder=find">{{find}}</mat-option>
+          <mat-option [value]="find" (click)="placeholder = find">{{find}}</mat-option>
         </ng-container>
       </mat-select>
     </mat-form-field>
@@ -44,10 +44,11 @@
     </section>
   </mat-card>
 
-  <mat-card class="bookSearch" >
-      <ng-container *ngFor="let b of paginatedBooks">
-      <app-book-card [book]="b" [showBorrowCount]="showBorrowCount" (dialogClosed)="searchBooks()"></app-book-card>
-      </ng-container>
-      <mat-paginator [length]="books.length" [pageSize]="pageSize" (page)="onPageChange($event)" ></mat-paginator>
+  <mat-card class="bookSearch">
+    <ng-container *ngFor="let b of paginatedBooks">
+      <app-book-card [book]="b" [showBorrowCount]="showBorrowCount"
+                     (dialogClosed)="searchBooks()"></app-book-card>
+    </ng-container>
+    <mat-paginator [length]="books.length" [pageSize]="pageSize" (page)="onPageChange($event)"></mat-paginator>
   </mat-card>
 </main>

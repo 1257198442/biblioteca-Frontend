@@ -33,8 +33,6 @@ export class ManagementComponent{
   rolesListROOT:string[] = ["ADMINISTRATOR","CLIENT","BAN"];
   rolesListADMINISTRATOR:string[] = ["ADMINISTRATOR","CLIENT"];
   selectRolesList:string[]=[];
-  userRole:string = "";
-  userTelephone:string = ""
   origenLibraryData:any;
   updateLibraryData:any;
   type:BookTypeModel = {name:"",description:""}
@@ -48,24 +46,19 @@ export class ManagementComponent{
   bookDataSource:any;
   allType:BookTypeModel[] = [];
   authorDataSource:any;
+  userData:any;
   constructor(private http:HttpClient,
-              private user:authService,
+              public user:authService,
               private dialog:MatDialog,
               public router:Router,
               private snackBar: MatSnackBar) {
     this.user.listeningJwtToken();
-    const jwtToken=sessionStorage.getItem("jwtToken");
-    if(jwtToken){
-      const [header, payload, signature] = jwtToken.split('.');
-      const decodedPayload = JSON.parse(atob(payload));
-      this.userTelephone = decodedPayload.user;
-      this.userRole = decodedPayload.role;
-    }
+    this.userData = user.getUserData();
     this.init();
   }
 
   init(){
-    if(this.userTelephone !== ""){
+    if(this.user.isNoNull(this.userData)){
       this.getAllUserList();
       this.getLibraryData();
       this.getAllBookList();
@@ -75,10 +68,10 @@ export class ManagementComponent{
   }
 
   getAllUserList(){
-    if(this.isRoot()){
+    if(this.user.isROOT(this.userData)){
       this.selectRolesList=this.rolesListROOT
     }
-    if(this.isAdministrators()){
+    if(this.user.isADMINISTRATOR(this.userData)){
       this.selectRolesList=this.rolesListADMINISTRATOR
     }
       this.http.get(endPoints.user,this.user.optionsAuthorization2()).subscribe((data:any)=>{
@@ -119,14 +112,6 @@ export class ManagementComponent{
     }
   }
 
-  isRoot(){
-    return this.userRole == "ROOT";
-  }
-
-  isAdministrators(){
-    return this.userRole == "ADMINISTRATOR";
-  }
-
   toAdministrators(telephone:string){
     const title = 'Reminders';
     const message = 'Confirm changing the permissions of user '+telephone+' to ADMINISTRATOR?..';
@@ -137,9 +122,7 @@ export class ManagementComponent{
       if(res === 'confirm'){
         this.http.put(endPoints.user + "/" + telephone + "/role","ADMINISTRATOR",this.user.optionsAuthorization2()).subscribe(
           () => this.getAllUserList()
-          , error => this.showError(error.status+error.message))
-      }
-    });
+          , error => this.showError(error.status+error.message))}});
   }
 
   toUser(telephone:string){
@@ -152,9 +135,7 @@ export class ManagementComponent{
       if(res==='confirm'){
         this.http.put(endPoints.user + "/" + telephone + "/role","CLIENT",this.user.optionsAuthorization2()).subscribe(
           () => this.getAllUserList()
-          , error => this.showError(error.status+error.message))
-      }
-    });
+          , error => this.showError(error.status+error.message))}});
   }
 
   toBan(telephone:string){
@@ -167,9 +148,7 @@ export class ManagementComponent{
       if(res==='confirm'){
         this.http.put(endPoints.user + "/" + telephone + "/role","BAN",this.user.optionsAuthorization2()).subscribe(
           () => this.getAllUserList()
-          , error => this.showError(error.status+error.message))
-      }
-    });
+          , error => this.showError(error.status+error.message))}});
   }
 
   toModifyRole(telephone:string, role:string){
@@ -185,20 +164,20 @@ export class ManagementComponent{
   }
 
   modifyRoleButtonIsDisplay(role:string,modifyRole:string){
-    if(this.isRoot() && role !== modifyRole){
+    if(this.user.isROOT(this.userData) && role !== modifyRole){
       return true;
     }
-    return this.isAdministrators() && role !== modifyRole && modifyRole === "ADMINISTRATOR";
+    return this.user.isADMINISTRATOR(this.userData) && role !== modifyRole && modifyRole === "ADMINISTRATOR";
   }
 
   shouldDisplayElement(element:any){
-    if (this.userTelephone === element.telephone) {
+    if (this.userData.userTelephone === element.telephone) {
       return false;
     }
     if (element.role === 'ROOT') {
       return false;
     }
-    return !(this.userRole === 'ADMINISTRATOR' && (element.role === 'ADMINISTRATOR' || element.role === 'BAN'));
+    return !(this.user.isADMINISTRATOR(this.userData) && (element.role === 'ADMINISTRATOR' || element.role === 'BAN'));
   }
 
   updateLibrary(){
@@ -210,10 +189,7 @@ export class ManagementComponent{
       const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
       dialogPage.afterClosed().subscribe(res => {
         if(res==='confirm'){
-          this.putLibrary()
-        }
-      });
-    }
+          this.putLibrary()}});}
   }
 
   putLibrary(){
@@ -247,9 +223,7 @@ export class ManagementComponent{
       if(res === 'confirm'){
         this.http.delete(endPoints.book + "/" + bookID,this.user.optionsAuthorization2()).subscribe(
           () => this.getAllBookList()
-        ,error => this.showError(error.status+error.message))
-      }
-    });
+        ,error => this.showError(error.status+error.message))}});
   }
 
   locked(bookID:string){
@@ -293,9 +267,7 @@ export class ManagementComponent{
       if(res === 'confirm'){
         this.http.delete(endPoints.type + "/" + name,this.user.optionsAuthorization2()).subscribe(
           () => this.getAllBookType()
-        ,error => this.showError(error.status+error.message))
-      }
-    });
+        ,error => this.showError(error.status+error.message))}});
   }
 
   getAuthorList(){
@@ -328,9 +300,7 @@ export class ManagementComponent{
       if(res === 'confirm'){
         this.http.delete(endPoints.author + "/" + authorId,this.user.optionsAuthorization2()).subscribe(
           () => this.getAuthorList()
-        ,error => this.showError(error.status+error.message))
-      }
-    });
+        ,error => this.showError(error.status+error.message))}});
   }
 
   addAuthor(){
@@ -343,16 +313,16 @@ export class ManagementComponent{
         const dialogRef = this.openAlertDialogPage(title,message,confirm,input)
         dialogRef.afterClosed().subscribe(()=> {
           this.getAuthorList();
-          this.step = 0;
-        });
-      },error => this.showError(error.status + error.message));
-    }
+          this.step = 0;});
+      },error => this.showError(error.status + error.message));}
   }
+
   needModify(type:any){
     this.typeNeedModify = type;
     this.stepTypeModify = 1;
     this.typeNameDisabled = true;
   }
+
   modifyBookType(){
     if(this.typeNeedModify.name != "" && this.typeNeedModify.description != ""){
       this.http.put(endPoints.type + "/" + this.typeNeedModify.name,this.typeNeedModify.description,this.user.optionsAuthorization2()).subscribe(()=>{
@@ -361,9 +331,7 @@ export class ManagementComponent{
         this.stepTypeModify = 0;
         this.typeNameDisabled = false;
       },(error)=>{
-        this.showError(error.status+error.message);
-      })
-    }
+        this.showError(error.status+error.message);})}
   }
 
   initTypeNeedModify(){
@@ -421,9 +389,7 @@ export class ManagementComponent{
         title:title,
         message:message,
         confirm:confirm,
-        input:input
-      }
-    })
+        input:input}})
   }
 
   openAuthorPage(authorId:string){

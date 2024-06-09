@@ -20,9 +20,6 @@ import {SignUpComponent} from "../sign-up/sign-up.component";
 })
 export class HomeComponent {
   storedToken:any;
-  userTelephone="";
-  userRole="";
-  userName="";
   userBalance = 0;
   currentDate: Date = new Date()
   randomBook:any;
@@ -52,12 +49,12 @@ export class HomeComponent {
   componentPage = 0;
   totalPages = 1;
   display = true;
-
+  userData:any;
   constructor(private http:HttpClient,
               private dialog:MatDialog,
               private snackBar: MatSnackBar,
               private datePipe: DatePipe,
-              private user:authService,
+              public user:authService,
               private router:Router) {
     this.init();
   }
@@ -68,7 +65,7 @@ export class HomeComponent {
       this.updateTime();
       const currentToken = sessionStorage.getItem('jwtToken');
       if (currentToken !== this.storedToken) {
-        this.storedToken = currentToken!=null?currentToken:"";
+        this.storedToken = currentToken != null ? currentToken : "";
         this.initPage()
       }
     }, 1000);
@@ -83,23 +80,16 @@ export class HomeComponent {
   }
 
   initPage(){
-    if(this.storedToken){
-      const [header, payload, signature] = this.storedToken.split('.');
-      const decodedPayload = JSON.parse(atob(payload));
-      this.userTelephone = decodedPayload.user;
-      this.userName = decodedPayload.name;
-      this.userRole = decodedPayload.role;
+    this.userData = this.user.getUserData();
+    if(this.user.isNoNull(this.userData)){
       this.totalPages=2;
-      if(this.isClient()){
+      if(this.user.isCLIENT(this.userData)){
         this.getLendingData();
       }
-      if (this.isAdmin()){
+      if (this.user.isAdmin(this.userData)){
         this.getLendingStatistics();
       }
     }else {
-      this.userTelephone = "";
-      this.userRole = "";
-      this.userName = "";
       this.totalPages= 1;
     }
   }
@@ -127,7 +117,7 @@ export class HomeComponent {
   }
 
   openTableOfMonth(){
-    if(this.isAdmin()) {
+    if(this.user.isAdmin(this.userData)) {
       const title = "Table analyzing this year's data";
       const list = this.lendingMonthlyCounts;
       const label = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -136,7 +126,7 @@ export class HomeComponent {
   }
 
   openTableOfWeek(){
-    if(this.isAdmin()){
+    if(this.user.isAdmin(this.userData)){
       const  title = "Table analyzing this Week‘s data";
       const list = this.lendingWeeklyCounts;
       const label = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -145,24 +135,12 @@ export class HomeComponent {
   }
 
   openTableOfYear(){
-    if(this.isAdmin()){
+    if(this.user.isAdmin(this.userData)){
       const  title = "Table analyzing this Week‘s data";
       const list = this.lendingYearlyCounts;
       const label= this.generateYearArray(this.lendingYearlyCounts.length);
       this.openLineChartPage(title,list,label)
     }
-  }
-
-  isAdmin(){
-    return this.userRole == "ROOT" || this.userRole == "ADMINISTRATOR";
-  }
-
-  isClient(){
-    return this.userRole == "CLIENT";
-  }
-
-  isLogin(){
-    return this.userTelephone != "";
   }
 
   getWeather(){
@@ -219,24 +197,25 @@ export class HomeComponent {
   }
 
   getLendingData(){
-    this.http.get(endPoints.lending+"/no_return/search?telephone="+encodeURIComponent(this.userTelephone),this.user.optionsAuthorization2())
+    this.http.get(endPoints.lending+"/no_return/search?telephone="+encodeURIComponent(this.userData.userTelephone),this.user.optionsAuthorization2())
       .subscribe(
-        (data:any)=> this.lendingList=data.body
+        (data:any) => this.lendingList = data.body
       ,error => this.showError(error.status+error.message));
   }
 
   getBalance(){
-    if(this.userTelephone !=""){
-      this.http.get(endPoints.wallet + "/" + this.userTelephone,this.user.optionsAuthorization2())
+    if(this.user.isNoNull(this.userData)){
+      this.http.get(endPoints.wallet + "/" + this.userData.userTelephone,this.user.optionsAuthorization2())
         .subscribe((data:any)=> this.userBalance = data.body.balance
           ,error => {
           if(error.status==401){
             sessionStorage.removeItem('jwtToken')
-            this.userRole = "";
+            // this.userRole = "";
+            // this.userTelephone = "";
+            this.userData = this.user.getUserData();
             this.userBalance = 0;
-            this.userTelephone = "";
           }
-          this.showError(error.status+error.message)
+          this.showError("Login has expired")
         })
     }
     }

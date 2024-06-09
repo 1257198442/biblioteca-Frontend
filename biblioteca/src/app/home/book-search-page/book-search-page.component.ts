@@ -17,7 +17,6 @@ export class BookSearchPageComponent {
   pageSize = 16;
   currentPage = 0;
   finds:string[]=["name","authorName","publisher","barcode","issn","isbn"]
-
   placeholder:string="name";
   language:string="All";
   typeS:string="All";
@@ -27,20 +26,10 @@ export class BookSearchPageComponent {
   allLanguage=["All","Chinese","English","Spanish","French","German","Latin","Japanese","Arabic","Hindi","Portuguese","Korean","Ukrainian","Italian","Norwegian","Dutch","Polish"];
   ENABLEOnly=false;
   showBorrowCount=false;
-
-  userRole:string="";
-  userTelephone:string=""
   constructor(private http:HttpClient,
               private user:authService,
               private dialog:MatDialog,
               private snackBar: MatSnackBar) {
-    const jwtToken=sessionStorage.getItem("jwtToken");
-    if(jwtToken){
-      const [header, payload, signature] = jwtToken.split('.');
-      const decodedPayload = JSON.parse(atob(payload));
-      this.userTelephone = decodedPayload.user;
-      this.userRole = decodedPayload.role;
-    }
     this.searchBooks();
     this.getAllBookType();
 

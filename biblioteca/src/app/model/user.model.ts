@@ -46,11 +46,14 @@ export class setting {
   emailWhenSuccessfulTransaction:boolean;
   emailWhenOrderIsPaid:boolean;
   emailWhenOrdersAboutToExpire:boolean;
+  emailWhenOrdersUpdates:boolean;
   constructor(emailWhenSuccessfulTransaction:boolean,
               emailWhenOrderIsPaid:boolean,
-              emailWhenOrdersAboutToExpire:boolean) {
+              emailWhenOrdersAboutToExpire:boolean,
+              emailWhenOrdersUpdates:boolean) {
     this.emailWhenSuccessfulTransaction=emailWhenSuccessfulTransaction;
     this.emailWhenOrderIsPaid = emailWhenOrderIsPaid;
     this.emailWhenOrdersAboutToExpire = emailWhenOrdersAboutToExpire;
+    this.emailWhenOrdersUpdates = emailWhenOrdersUpdates;
   }
 }

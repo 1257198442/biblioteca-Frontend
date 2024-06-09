@@ -13,10 +13,12 @@ mat-card-title{
 
 .cardNumber{
   width: 420px;
+  display: block;
 }
 
 .payType{
   width: 420px;
+  display: block;
 }
 
 .date{
@@ -37,4 +39,8 @@ mat-card-title{
   z-index: 100;
   top: 330px;
   left: calc(50% - 50px);
+}
+.input-sum{
+  display: block;
+  width: 200px;
 }

@@ -1,7 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-
 import {authService} from "../../authService";
 import {endPoints} from "../../endPoints";
 import {AuthorModel, BookTypeModel, BookUpLoadModel} from "../../model/book.model";
@@ -22,8 +21,6 @@ export class BookPageComponent {
   bookId:string;
   selectedImage: string | ArrayBuffer | null = null;
   file: File | undefined;
-  userRole:string="";
-  userTelephone:string=""
   bookUpdate:BookUpLoadModel={name:"",description:"",publisher:"",authorId:[],bookType:[],deposit:0,language:"",isbn:"",issn:"",barcode:""};
   allLanguage=[];
   allAuthor:AuthorModel[]=[];
@@ -34,10 +31,11 @@ export class BookPageComponent {
   showType:BookTypeModel[] = [];
   progressBar=false;
   step=0;
-  isOk=false;
+  confirm=false;
   wallet=0;
-  isWishBook:boolean=false;
+  isWishBook=false;
   hiddenEdit=false;
+  userData:any;
 
   myFilter = (d: Date | null): boolean => {
     const currentDate = new Date();
@@ -48,17 +46,13 @@ export class BookPageComponent {
 
   constructor(private http:HttpClient,
               @Inject(MAT_DIALOG_DATA)data:any,
-              private user:authService,
+              public user:authService,
               private snackBar: MatSnackBar,
               private dialog:MatDialog) {
     this.bookId=data.bookId;
-    const jwtToken=sessionStorage.getItem("jwtToken");
-    if(jwtToken){
-      this.isLogin=true;
-      const [header, payload, signature] = jwtToken.split('.');
-      const decodedPayload = JSON.parse(atob(payload));
-      this.userTelephone = decodedPayload.user;
-      this.userRole = decodedPayload.role;
+    this.userData = user.getUserData();
+    if(user.isNoNull(this.userData)){
+      this.isLogin=true
       this.getWallet();
     }
     this.init();
@@ -177,8 +171,8 @@ export class BookPageComponent {
 
   borrow(date:string){
     if(date !== ""){
-      if(this.isOk){
-        const title='A deposit of €' + this.book.deposit + ' will be deducted from the ' + this.userTelephone + ' account after confirmation.';
+      if(this.confirm){
+        const title='A deposit of €' + this.book.deposit + ' will be deducted from the ' + this.userData.userTelephone + ' account after confirmation.';
         const message = 'Account password';
         const confirm = true;
         const input = true;
@@ -202,7 +196,7 @@ export class BookPageComponent {
     const time = datePipe.transform(date, 'yyyy-MM-dd');
     return {
       bookId: this.book?.bookID,
-      telephone: this.userTelephone,
+      telephone: this.userData.userTelephone,
       limitTime: time + " 23:59:59",
       password: password
     }
@@ -228,14 +222,14 @@ export class BookPageComponent {
   }
 
   getWallet(){
-    this.http.get(endPoints.wallet + "/" + this.userTelephone,this.user.optionsAuthorization2()).subscribe(
+    this.http.get(endPoints.wallet + "/" + this.userData.userTelephone,this.user.optionsAuthorization2()).subscribe(
       (data:any) => this.wallet = data.body.balance
     ,error => this.showError(error.status + error.message))
   }
 
   getCollectionListData(){
-    if(this.isLogin&&this.userRole==='CLIENT'){
-      this.http.get(endPoints.collection + "/" + this.userTelephone,this.user.optionsAuthorization2()).subscribe(
+    if(this.isLogin&&this.user.isCLIENT(this.userData)){
+      this.http.get(endPoints.collection + "/" + this.userData.userTelephone,this.user.optionsAuthorization2()).subscribe(
         (data:any)=>{
         const index = data.body.bookId.indexOf(this.bookId);
         this.isWishBook = index != -1;
@@ -244,15 +238,19 @@ export class BookPageComponent {
   }
 
   addWishList(){
-    this.http.put(endPoints.collection + "/" + this.userTelephone + "/add_book",this.bookId,this.user.optionsAuthorization2()).subscribe(
+    this.http.put(endPoints.collection + "/" + this.userData.userTelephone + "/add_book",this.bookId,this.user.optionsAuthorization2()).subscribe(
       () => this.getCollectionListData()
     ,error => this.showError(error.status + error.message))
   }
 
   removeWishList(){
-    this.http.put(endPoints.collection + "/" + this.userTelephone + "/remove_book",this.bookId,this.user.optionsAuthorization2()).subscribe(
+    this.http.put(endPoints.collection + "/" + this.userData.userTelephone + "/remove_book",this.bookId,this.user.optionsAuthorization2()).subscribe(
       () => this.getCollectionListData()
     ,error => this.showError(error.status + error.message))
+  }
+
+  isCLIENT(rol:string){
+    return rol === "CLIENT";
   }
 
   openBorrowPage(reference:string){
@@ -272,7 +270,7 @@ export class BookPageComponent {
       height:"auto",
       maxHeight:"600px",
       data:{
-        telephone:this.userTelephone
+        telephone:this.userData.userTelephone
       }
     })
   }

@@ -9,15 +9,15 @@
     <div><strong>Book Deposit:</strong> €{{returnData?.book.deposit}}</div>
     <div><strong>Borrow Time:</strong> {{returnData?.lendingTime}}</div>
     <div><strong>Limit Time:</strong> {{returnData?.limitTime}}</div>
-    <div><strong>Return Time:</strong> {{returnData?.restitutionTime}}</div>
+    <div><strong>Return Time:</strong> {{returnData?.returnTime}}</div>
     <div><strong>Return Status:</strong> {{returnData?.returnStatus}}</div>
   </div>
-  <h2  *ngIf="returnData?.bookDamageDegree">Degree of damage to books returned</h2>
-  <div class="order-info"  *ngIf="returnData?.bookDamageDegree">
-    <div><strong>Book Degree:</strong> {{returnData?.bookDamageDegree.degree}}</div>
-    <div><strong>Return Addendum:</strong> {{returnData?.bookDamageDegree.addendum}}</div>
-    <div><strong>Return Deposit:</strong> €{{returnData?.bookDamageDegree.returnDeposit}}</div>
-    <div><strong>Details Deductions:</strong> {{returnData?.bookDamageDegree.detailsDeductions}}</div>
-    <div><strong>Addendum Time:</strong> {{returnData?.bookDamageDegree.time}}</div>
+  <h2  *ngIf="returnData?.bookConditionReport">Degree of damage to books returned</h2>
+  <div class="order-info"  *ngIf="returnData?.bookConditionReport">
+    <div><strong>Book Degree:</strong> {{returnData?.bookConditionReport.bookDamageDegree}}</div>
+    <div><strong>Return Addendum:</strong> {{returnData?.bookConditionReport.addendum}}</div>
+    <div><strong>Return Deposit:</strong> €{{returnData?.bookConditionReport.returnDeposit}}</div>
+    <div><strong>Details Deductions:</strong> {{returnData?.bookConditionReport.detailsDeductions}}</div>
+    <div><strong>Addendum Time:</strong> {{returnData?.bookConditionReport.time}}</div>
   </div>
 </mat-card>

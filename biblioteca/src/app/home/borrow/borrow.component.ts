@@ -31,45 +31,38 @@ export class BorrowComponent implements OnChanges{
   @ViewChild('restitutionSort') restitutionSort!: MatSort;
   @ViewChild('returnBoxPaginator') returnBoxPaginator!: MatPaginator;
   @ViewChild('returnBoxSort') returnBoxSort!: MatSort;
-
   title="All Unreturned list";
-  userRole:string="";
-  userTelephone:string=""
   all=false;
-
   low=['reference','bookID','lendingTime','limitTime','telephone','return','view'];
   returnLow=['reference','bookID','returnStatus','status','telephone','view'];
   returnBoxLow=['reference','bookID','returnStatus','telephone','isReturn','view'];
   lendingDataSource:any;
   restitutionDataSource:any;
   returnBoxDataSource:any;
+  userData:any
 
   constructor(private http:HttpClient,
-              private user:authService,
+              public user:authService,
               private snackBar:MatSnackBar,
               private dialog:MatDialog,
               public router:Router) {
     this.user.listeningJwtToken();
-    const jwtToken=sessionStorage.getItem("jwtToken");
-    if(jwtToken){
-      const [header, payload, signature] = jwtToken.split('.');
-      const decodedPayload = JSON.parse(atob(payload));
-      this.userTelephone = decodedPayload.user;
-      this.userRole = decodedPayload.role;
-      this.checkUserData();
+    this.userData = user.getUserData();
+    if(user.isNoNull(this.userData)){
+      this.getAllBorrowData();
     }
   }
 
   getAllBorrowData(){
-    if(this.userRole=="CLIENT"){
+    if(this.user.isCLIENT(this.userData)){
       this.clientGetBorrowData();
-    }else if(this.userRole=="ADMINISTRATOR"||this.userRole=="ROOT"){
+    }else if(this.user.isAdmin(this.userData)){
       this.adminGetBorrowData();
     }
   }
 
   clientGetBorrowData(){
-    this.http.get(endPoints.lending+"/client_return_and_lending/search?telephone="+encodeURIComponent(this.userTelephone),this.user.optionsAuthorization2()).subscribe((data:any)=>{
+    this.http.get(endPoints.lending+"/client_return_and_lending/search?telephone="+encodeURIComponent(this.userData.userTelephone),this.user.optionsAuthorization2()).subscribe((data:any)=>{
       this.lendingDataSource=new MatTableDataSource(data.body.lendingDataList);
         this.restitutionDataSource=new MatTableDataSource(data.body.returnDataList);
         this.lendingDataInit()
@@ -263,11 +256,11 @@ export class BorrowComponent implements OnChanges{
     }
   }
 
-  checkUserData() {
-    if (this.userTelephone !== '') {
-      this.getAllBorrowData();
-    }
-  }
+  // checkUserData() {
+  //   if (this.userTelephone !== '') {
+  //     this.getAllBorrowData();
+  //   }
+  // }
 
   openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
     return this.dialog.open(AlertDialogComponent,{

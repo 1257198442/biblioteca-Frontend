@@ -18,16 +18,15 @@ import {PersonalPageComponent} from "./home/personal-page/personal-page.componen
 })
 export class AppComponent implements OnInit{
   isLogin:boolean = false;
-  userData:UserClass = new UserClass("","",new Date(),"","","",true,"",new setting(true,true,true));
+  userInf:UserClass = new UserClass("","",new Date(),"","","",true,"",new setting(false,false,false,false));
   library:any;
-  userRole:string="";
-  userTelephone:string=""
   storedToken:any;
   avatarUrl:string = "";
+  userData:any
 
   constructor(private http: HttpClient,
               private dialog: MatDialog,
-              private transmit: authService,
+              private user: authService,
               private snackBar: MatSnackBar,
               private router: Router) {
     this.getLibraryData();
@@ -35,19 +34,15 @@ export class AppComponent implements OnInit{
       const currentToken = sessionStorage.getItem('jwtToken');
       if(currentToken==null){
         this.isLogin= false;
-        this.userRole="";
-        this.userTelephone="";
         this.storedToken = "";
         this.router.navigate(['/home']);
       }
       if (currentToken !== this.storedToken) {
         this.storedToken = currentToken !== null ? currentToken : "";
-        this.getToken();
-        if(this.userTelephone !== ""){
+        this.userData = this.user.getUserData();
+        if(this.user.isNoNull(this.userData)){
           this.getUserData();
-          this.isLogin=true;
-        }
-      }
+          this.isLogin=true;}}
     }, 1000);
   }
 
@@ -55,41 +50,33 @@ export class AppComponent implements OnInit{
     this.dialog.open(LoginComponent, {
       width:"470px",
     }).afterClosed().subscribe(()=> {
-      this.getToken();
-      if(this.userTelephone !== ""){
+      // this.getToken();
+      this.userData = this.user.getUserData();
+      if(this.user.isNoNull(this.userData)){
         this.getUserData();
         this.isLogin=true;
       }
     });
   }
 
-  getToken(){
-    const jwtToken = sessionStorage.getItem('jwtToken');
-    if (jwtToken) {
-      const [header, payload, signature] = jwtToken.split('.');
-      const decodedPayload = JSON.parse(atob(payload));
-      this.userTelephone = decodedPayload.user;
-      this.userRole = decodedPayload.role;
-    }
-  }
-
   logout(){
-    this.userTelephone = "";
-    this.userRole = "";
+    // this.userTelephone = "";
+    // this.userRole = "";
+    this.userData = this.user.initUserData();
     sessionStorage.removeItem('jwtToken');
     this.isLogin = false;
   }
 
   getUserData(){
-    this.http.get(endPoints.user + "/" + this.userTelephone,this.transmit.optionsAuthorization2()).subscribe(
+    this.http.get(endPoints.user + "/" + this.userData.userTelephone + "/profile",this.user.optionsAuthorization2()).subscribe(
       (data:any)=> {
-        this.userData = data.body;
+        this.userInf = data.body;
         this.getAvatar();
       },error => this.showError(error.message))
   }
 
   admin(){
-    return this.userData.role === "ADMINISTRATOR" || this.userData.role === "ROOT";
+    return this.userInf.role === "ADMINISTRATOR" || this.userInf.role === "ROOT";
   }
 
   getLibraryData(){
@@ -107,7 +94,7 @@ export class AppComponent implements OnInit{
   }
 
   getAvatar(){
-    this.http.get(endPoints.avatar + "/" + this.userTelephone).subscribe(
+    this.http.get(endPoints.avatar + "/" + this.userData.userTelephone).subscribe(
         (data:any) => this.avatarUrl = data.url
         , error => this.showError(error.status+error.message))
   }
@@ -119,7 +106,7 @@ export class AppComponent implements OnInit{
       height:"auto",
       maxHeight:"600px",
       data:{
-        telephone:this.userData.telephone,
+        telephone:this.userInf.telephone,
       }
     }).afterClosed().subscribe(() => this.getUserData())
   }

@@ -1,5 +1,4 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {Component} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {HttpClient} from "@angular/common/http";
 import {authService} from "../../../authService";
@@ -15,8 +14,10 @@ import {Record} from "../../../model/record.model";
 export class BillingRecordsComponent {
   telephone:string="";
   recordsList:Record[]=[];
-  constructor(@Inject(MAT_DIALOG_DATA)data:any, private snackBar: MatSnackBar, private user:authService, private http:HttpClient) {
-    this.telephone = data.telephone;
+  constructor(private snackBar: MatSnackBar,
+              private user:authService,
+              private http:HttpClient) {
+    this.telephone = this.user.getUserData().userTelephone;
     this.getRecords();
   }
 

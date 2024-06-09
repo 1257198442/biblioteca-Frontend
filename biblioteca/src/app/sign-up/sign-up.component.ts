@@ -5,7 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {endPoints} from "../endPoints";
 import {ReturnDataClass} from "../model/returnData.model";
-import {AbstractControl, FormControl, ValidatorFn, Validators} from "@angular/forms";
+import {FormControl, Validators} from "@angular/forms";
 import {countriesDialCodes} from "../model/countryDialCode.model";
 import {AlertDialogComponent} from "./alert-dialog.component";
 
@@ -16,16 +16,15 @@ import {AlertDialogComponent} from "./alert-dialog.component";
 })
 
 export class SignUpComponent {
-  registrationData:ReturnDataClass;
+  registrationData:ReturnDataClass = new ReturnDataClass("","","","");
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('',[Validators.required,Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$')]);
   dialCode:string="+34";
   constructor(private http:HttpClient,
               private snackBar:MatSnackBar,
               private dialog:MatDialog,
-              public dialogRef: MatDialogRef<SignUpComponent>) {
-    this.registrationData = new ReturnDataClass("","","","");
-  }
+              public dialogRef: MatDialogRef<SignUpComponent>) {}
+
   Registration(){
     this.registrationData.email = this.emailFormControl.value == null ? "" : this.emailFormControl.value;
     this.registrationData.password = this.passwordFormControl.value == null ? "" : this.passwordFormControl.value;
@@ -75,6 +74,7 @@ export class SignUpComponent {
       return this.emailFormControl.hasError('required')
     }
   }
+
   passwordCorrectFormat(num:number){
     if(num==1){
       return this.passwordFormControl.hasError('pattern') && !this.passwordFormControl.hasError('required');
@@ -92,9 +92,7 @@ export class SignUpComponent {
         title:title,
         message:message,
         confirm:confirm,
-        input:input
-      }
-    })
+        input:input}})
   }
 }
 

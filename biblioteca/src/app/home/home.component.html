@@ -13,8 +13,8 @@
     </mat-card>
 
     <mat-card class="action-box" >
-      <button mat-mini-fab class="btn1" color="primary" *ngIf="isLogin()" (click)="prevPage()"> <mat-icon>chevron_left</mat-icon> </button>
-      <button mat-mini-fab class="btn2" color="primary" *ngIf="isLogin()" (click)="nextPage()"> <mat-icon>chevron_right</mat-icon> </button>
+      <button mat-mini-fab class="btn1" color="primary" *ngIf="user.isNoNull(userData)" (click)="prevPage()"> <mat-icon>chevron_left</mat-icon> </button>
+      <button mat-mini-fab class="btn2" color="primary" *ngIf="user.isNoNull(userData)" (click)="nextPage()"> <mat-icon>chevron_right</mat-icon> </button>
       <div class="show" [style.transform]="'translateX(' + (-this.componentPage * 465) + 'px)'">
 
         <div class="page">
@@ -30,7 +30,7 @@
           </div>
         </div>
 
-        <div class="page" *ngIf="!isAdmin()&&isLogin()">
+        <div class="page" *ngIf="user.isCLIENT(userData)">
           <p class="lending-data-title">Lending Data</p>
           <div class="table-box">
             <table mat-table [dataSource]="lendingList" (click)="toBorrowPage()">
@@ -53,7 +53,7 @@
           </div>
         </div>
 
-        <div class="page" *ngIf="isAdmin()&&isLogin()">
+        <div class="page" *ngIf="user.isAdmin(userData)">
           <div class="page1" >
             <p class="title-overall">Library loan statistics</p>
             <div class="statistics-box" (click)="openTableOfYear()" matTooltip="The total number of books lent out since the establishment of the website is {{lendingStatistics?.all}}">
@@ -81,12 +81,12 @@
       </div>
     </mat-card>
     <mat-card class="wallet-box" >
-      <button class="login-btn" mat-flat-button *ngIf="!isLogin()" (click)="login()">Login</button>
-      <button class="signup-btn" mat-flat-button *ngIf="!isLogin()" (click)="signup()">Sign up</button>
-      <div *ngIf="isLogin()">
-        <div *ngIf="isLogin()" class="hidden" (click)="display=!display"></div>
+      <button class="login-btn" mat-flat-button *ngIf="!user.isNoNull(userData)" (click)="login()">Login</button>
+      <button class="signup-btn" mat-flat-button *ngIf="!user.isNoNull(userData)" (click)="signup()">Sign up</button>
+      <div *ngIf="user.isNoNull(userData)">
+        <div *ngIf="user.isNoNull(userData)" class="hidden" (click)="display=!display"></div>
         <p class="hello">Hello</p>
-        <p class="name">{{userName}}</p>
+        <p class="name">{{userData.userName}}</p>
         <p class="wallet">Balance</p>
         <p *ngIf="display" class="balance"> {{userBalance}} <span class="sym">€</span></p>
         <p *ngIf="!display" class="balance_x"> XX.XX <span class="sym">€</span></p>

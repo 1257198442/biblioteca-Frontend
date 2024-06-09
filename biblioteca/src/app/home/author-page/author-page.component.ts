@@ -21,27 +21,23 @@ export class AuthorPageComponent {
   pageSize = 16;
   currentPage = 0;
   authorId="";
-  userAdmin:string="";
   isEdit= false;
   file: File | undefined;
   authorImageUrl:string = ""
   authorImageSelectedUrl: string = "";
+  userData:any;
 
 constructor(@Inject(MAT_DIALOG_DATA)data:any,
             private http:HttpClient,
-            private user:authService,
+            public user:authService,
             private dialog:MatDialog,) {
 
-  const jwtToken=sessionStorage.getItem("jwtToken");
-  if(jwtToken){
-    const [header, payload, signature] = jwtToken.split('.');
-    const decodedPayload = JSON.parse(atob(payload));
-    this.userAdmin = decodedPayload.role;
-  }
+      this.userData = user.getUserData();
       this.getAuthorData(data.authorId);
       this.getAuthorsBooks(data.authorId);
       this.authorId = data.authorId;
   }
+
   getAuthorData(authorId:string){
   this.http.get(endPoints.author + "/" + authorId).subscribe(
     (data:any)=> {
@@ -72,6 +68,7 @@ constructor(@Inject(MAT_DIALOG_DATA)data:any,
     const endIndex = startIndex + this.pageSize;
     return this.authorsBooksData.slice(startIndex, endIndex);
   }
+
   onImageSelected(event:any): void {
     this.file = event.target.files[0];
     const reader: FileReader = new FileReader();
@@ -118,12 +115,13 @@ constructor(@Inject(MAT_DIALOG_DATA)data:any,
             this.putAuthor();
           }else {
             this.authorImageSelectedUrl = this.authorImageUrl;
-          }
-        })
-      }
-    }
+          }})}}
     this.isEdit=!this.isEdit
   }
+
+  // isAdmin(rol:string){
+  //   return rol === 'ADMINISTRATOR' || rol === 'ROOT'
+  // }
 
   openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
     return this.dialog.open(AlertDialogComponent,{

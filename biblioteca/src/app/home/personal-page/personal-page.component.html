@@ -2,12 +2,12 @@
       <mat-card-title>Personal Page</mat-card-title>
   <mat-card-content>
     <mat-card-title-group>Personal Information</mat-card-title-group>
-    <p>Name: {{userData.name}}</p>
-    <p>Email: {{userData.email}}</p>
-    <p>Birthdays: {{userData.birthdays}}</p>
-    <p>description: {{userData.description}}</p>
-    <p>Registration Time: {{userData.createTime}}</p>
-    <div *ngIf="isLoginUser()||isRoot()">
+    <p>Name: {{userInf.name}}</p>
+    <p>Email: {{userInf.email}}</p>
+    <p>Birthdays: {{userInf.birthdays}}</p>
+    <p>description: {{userInf.description}}</p>
+    <p>Registration Time: {{userInf.createTime}}</p>
+    <div *ngIf="isLoginUser()||user.isROOT(userData)">
       <p class="wallet">E-wallet balance:{{wallet}}€</p>
       <p class="recharge" (click)="openRechargePage()">Recharge</p>
       <p class="billing-records" (click)="openWithdrawMoneyPage()">Cash out</p>
@@ -17,14 +17,14 @@
     <div class="avatarBox">
       <div class="image-container">
         <img [src]="avatarSelectUrl" alt="404_no fount" class="avatar">
-        <div class="overlay" *ngIf="isLoginUser()||isRoot()"><label for="sf"><h3>Change avatar</h3></label>
+        <div class="overlay" *ngIf="isLoginUser()||user.isROOT(userData)"><label for="sf"><h3>Change avatar</h3></label>
           <input type="file" (change)="onFileSelected($event)" id="sf" class="fileInput">
         </div>
         <button class="avatar-save" mat-flat-button *ngIf="avatarUrl !== avatarSelectUrl" (click)="avatarUpdate()">SAVE</button>
       </div>
     </div>
 
-    <mat-expansion-panel class="modify" [expanded]= "editProfileState === 1" (opened)="editProfileState=1" (closed)="editProfileState=0" *ngIf="isLoginUser()||isRoot()">
+    <mat-expansion-panel class="modify" [expanded]= "editProfileState === 1" (opened)="editProfileState=1" (closed)="editProfileState=0" *ngIf="isLoginUser()||user.isROOT(userData)">
       <mat-expansion-panel-header>
         <mat-panel-title>
           Modify personal data
@@ -58,7 +58,7 @@
       </mat-card>
     </mat-expansion-panel>
 
-    <mat-expansion-panel class="modify" [expanded]= "editSettingState === 1" (opened)="editSettingState=1" (closed)="editSettingState=0" *ngIf="isLoginUser()||isRoot()">
+    <mat-expansion-panel class="modify" [expanded]= "editSettingState === 1" (opened)="editSettingState=1" (closed)="editSettingState=0" *ngIf="isLoginUser()||user.isROOT(userData)">
       <mat-expansion-panel-header>
         <mat-panel-title>
           Setting personal
@@ -66,18 +66,16 @@
       </mat-expansion-panel-header>
       <mat-card>
         <section class="setting-box">
-          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenSuccessfulTransaction">I would like to receive email alerts of successful transactions</mat-checkbox>
-          <br>
-          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrderIsPaid">I would like to receive email alerts for order generation</mat-checkbox>
-          <br>
-          <mat-checkbox *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrdersAboutToExpire">I would like to receive email alerts that my order is approaching its deadline</mat-checkbox>
-          <br>
+          <mat-checkbox class="setting-item" *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenSuccessfulTransaction">I would like to receive email alerts of successful transactions</mat-checkbox>
+          <mat-checkbox class="setting-item" *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrderIsPaid">I would like to receive email alerts for order generation</mat-checkbox>
+          <mat-checkbox class="setting-item" *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrdersAboutToExpire">I would like to receive email alerts that my order is approaching its deadline</mat-checkbox>
+          <mat-checkbox class="setting-item" *ngIf="settingUpdate" [(ngModel)]="settingUpdate.emailWhenOrdersUpdates">I would like to receive email alerts with more detailed information on book return orders</mat-checkbox>
         </section>
         <button mat-flat-button (click)="updateSetting();editSettingState=0">OK</button>
       </mat-card>
     </mat-expansion-panel>
 
-    <mat-expansion-panel [expanded]= "editPasswordState === 1" (opened)="editPasswordState = 1" (closed)="editPasswordState = 0" *ngIf="isLoginUser()||isRoot()">
+    <mat-expansion-panel [expanded]= "editPasswordState === 1" (opened)="editPasswordState = 1" (closed)="editPasswordState = 0" *ngIf="isLoginUser()||user.isROOT(userData)">
       <mat-expansion-panel-header>
         <mat-panel-title>
           Modify Password
@@ -93,7 +91,7 @@
           <mat-label >Confirm Password</mat-label>
           <input matInput type="password" [(ngModel)]="confirmPassword">
         </mat-form-field>
-        <button mat-flat-button *ngIf="isRoot()" (click)="resetPassword()" class="resetPassword">Reset Password</button>
+        <button mat-flat-button *ngIf="user.isROOT(userData)" (click)="resetPassword()" class="resetPassword">Reset Password</button>
         <button mat-flat-button *ngIf="newPassword.length != 0 && newPassword == confirmPassword" (click)="changePassword()" class="changePassword">OK</button>
       </mat-card>
     </mat-expansion-panel>
@@ -124,7 +122,7 @@
       </ng-container>
       <ng-container matColumnDef="management">
         <th mat-header-cell *matHeaderCellDef> Management </th>
-        <td mat-cell *matCellDef="let element"> <button mat-icon-button *ngIf="isRoot() || isLoginUser()" (click)="remove(element.bookID)"><mat-icon> delete</mat-icon> </button></td>
+        <td mat-cell *matCellDef="let element"> <button mat-icon-button *ngIf="user.isROOT(userData) || isLoginUser()" (click)="remove(element.bookID)"><mat-icon> delete</mat-icon> </button></td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef=" lowForBookList "></tr>
       <tr mat-row *matRowDef="let row; columns: lowForBookList;"></tr>

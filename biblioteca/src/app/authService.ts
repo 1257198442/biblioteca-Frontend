@@ -41,4 +41,44 @@ export class authService {
   public routerHome(){
     this.router.navigateByUrl('/home').then(() => this.router.navigate(['/home']));
   }
+
+  public getUserData(){
+    const jwtToken=sessionStorage.getItem("jwtToken");
+    if(jwtToken){
+      const [header, payload, signature] = jwtToken.split('.');
+      const decodedPayload = JSON.parse(atob(payload));
+      return {
+        userTelephone:decodedPayload.user,
+        userName:decodedPayload.name,
+        userRole:decodedPayload.role
+      }
+    }
+    return this.initUserData();
+  }
+
+  initUserData(){
+    return {
+      userTelephone:"",
+      userName:"",
+      userRole:""
+    };
+  }
+
+  public isNoNull(userData:any){
+    return userData.userTelephone !== "" && userData.userName !== "" && userData.userRole !=="";
+  }
+  public isAdmin(userData:any){
+    return (userData.userRole === "ROOT" || userData.userRole === "ADMINISTRATOR") && this.isNoNull(userData);
+  }
+
+  public isADMINISTRATOR(userData:any){
+    return userData.userRole === "ADMINISTRATOR" && this.isNoNull(userData);
+  }
+
+  public isCLIENT(userData:any){
+    return userData.userRole === "CLIENT" && this.isNoNull(userData);
+  }
+  public isROOT(userData:any){
+    return userData.userRole === "ROOT" && this.isNoNull(userData);
+  }
 }
