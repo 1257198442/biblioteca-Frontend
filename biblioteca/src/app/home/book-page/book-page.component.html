@@ -40,7 +40,7 @@
       </mat-form-field>
       <br>
       <span class="deposit">€{{book?.deposit}}</span>
-      <span class="balance" matTooltip="Click to recharge" (click)="openRechargePage()">Account balance of €{{wallet}}</span>
+      <span class="balance" matTooltip="Click to recharge" (click)="openRechargePage()">Account balance of €{{wallet}}<span *ngIf="book?.deposit > wallet" style="color: #FF6B6B;font-weight: 600">&ngsp; The balance is insufficient.</span></span>
       <p *ngIf="date.value" class="clause">You need to return the book by {{date.value}}  23:59:59 in order to avoid the deduction of additional fees</p>
       <mat-checkbox *ngIf="date.value" [(ngModel)]="confirm">I have been advised of the rules regarding return time and deduction of additional charges.</mat-checkbox>
       <br>
