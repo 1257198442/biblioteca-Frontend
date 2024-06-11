@@ -22,7 +22,7 @@ export class BookPageComponent implements OnInit{
   selectedImage: string | ArrayBuffer | null = null;
   file: File | undefined;
   bookUpdate:BookUpLoadModel={name:"",description:"",publisher:"",authorId:[],bookType:[],deposit:0,language:"",isbn:"",issn:"",barcode:""};
-  allLanguage=[];
+  allLanguage:string[]=[];
   allAuthor:AuthorModel[]=[];
   allType:BookTypeModel[] = [];
   selectAuthor:AuthorModel = {authorId:"",name:"",nationality:"",description:"",imgUrl:""};

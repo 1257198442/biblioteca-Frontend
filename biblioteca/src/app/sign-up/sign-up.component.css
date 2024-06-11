@@ -16,4 +16,7 @@ mat-dialog-actions button{
   --mdc-filled-button-label-text-color: white !important;
   font-size: 20px;
 }
-
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+}

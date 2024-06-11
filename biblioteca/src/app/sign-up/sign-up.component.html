@@ -17,7 +17,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field style="width: 55%;margin-left: 2%">
-    <input [(ngModel)]="registrationData.telephone" matInput placeholder="Telephone" type="tel" name="telephone"/>
+    <input [(ngModel)]="registrationData.telephone" matInput placeholder="Telephone" type="number" name="number"/>
     <button (click)="registrationData.telephone=''" *ngIf="registrationData.telephone" aria-label="Clear" mat-icon-button
             matSuffix>
       <mat-icon>close</mat-icon>
