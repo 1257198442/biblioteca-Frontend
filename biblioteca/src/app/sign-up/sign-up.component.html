@@ -2,7 +2,7 @@
 <h3 mat-dialog-title>Sign up</h3>
 <mat-dialog-content>
   <mat-form-field>
-    <input [(ngModel)]="registrationData.name" matInput placeholder="Name" type="text"/>
+    <input [(ngModel)]="registrationData.name" matInput placeholder="Name" type="text" name="name"/>
     <button (click)="registrationData.name=''" *ngIf="registrationData.name" aria-label="Clear"  mat-icon-button
             matSuffix>
       <mat-icon>close</mat-icon>
@@ -17,7 +17,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field style="width: 55%;margin-left: 2%">
-    <input [(ngModel)]="registrationData.telephone" matInput placeholder="Telephone" type="tel"/>
+    <input [(ngModel)]="registrationData.telephone" matInput placeholder="Telephone" type="tel" name="telephone"/>
     <button (click)="registrationData.telephone=''" *ngIf="registrationData.telephone" aria-label="Clear" mat-icon-button
             matSuffix>
       <mat-icon>close</mat-icon>
@@ -26,7 +26,7 @@
 
   <mat-form-field>
     <mat-label>Email</mat-label>
-    <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
+    <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com" name="email"/>
     <mat-error *ngIf="emailCorrectFormat(1)">
       Please enter a valid email address
     </mat-error>
@@ -37,7 +37,7 @@
 
   <mat-form-field>
     <mat-label>Password</mat-label>
-    <input type="password" matInput [formControl]="passwordFormControl" placeholder="0-9/a-z/A-Z">
+    <input type="password" matInput [formControl]="passwordFormControl" placeholder="0-9/a-z/A-Z" name="password"/>
     <mat-error *ngIf="passwordCorrectFormat(1)">
       Password must contain at least one letter and one number
     </mat-error>

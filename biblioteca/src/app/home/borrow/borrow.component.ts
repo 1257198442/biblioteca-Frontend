@@ -1,8 +1,8 @@
-import {Component, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 
 
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatPaginator} from "@angular/material/paginator";
@@ -23,7 +23,7 @@ import {FeedbackPageComponent} from "./feedback-page/feedback-page.component";
   styleUrls: ['./borrow.component.css'],
 })
 
-export class BorrowComponent implements OnChanges{
+export class BorrowComponent implements OnChanges,OnInit{
 
   @ViewChild('lendingPaginator') lendingPaginator!: MatPaginator;
   @ViewChild('lendingSort') lendingSort!: MatSort;
@@ -45,10 +45,12 @@ export class BorrowComponent implements OnChanges{
               public user:authService,
               private snackBar:MatSnackBar,
               private dialog:MatDialog,
-              public router:Router) {
+              public router:Router) {}
+
+  ngOnInit(): void {
     this.user.listeningJwtToken();
-    this.userData = user.getUserData();
-    if(user.isNoNull(this.userData)){
+    this.userData = this.user.getUserData();
+    if(this.user.isNoNull(this.userData)){
       this.getAllBorrowData();
     }
   }
@@ -69,6 +71,7 @@ export class BorrowComponent implements OnChanges{
       this.restitutionDataInit();
     },error => this.showError(error));
   }
+
   adminGetBorrowData(){
     this.http.get(endPoints.lending+"/admin_return_and_lending",this.user.optionsAuthorization2()).subscribe(
       (data:any)=> {
@@ -80,6 +83,7 @@ export class BorrowComponent implements OnChanges{
       this.returnBoxDataInit();
     },error => this.showError(error));
   }
+
   lendingDataInit() {
     this.lendingDataSource.paginator = this.lendingPaginator;
     this.lendingDataSource.sort = this.lendingSort;
@@ -255,12 +259,6 @@ export class BorrowComponent implements OnChanges{
       this.getAllBorrowData();
     }
   }
-
-  // checkUserData() {
-  //   if (this.userTelephone !== '') {
-  //     this.getAllBorrowData();
-  //   }
-  // }
 
   openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
     return this.dialog.open(AlertDialogComponent,{

@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -12,20 +12,26 @@ import {BookDamageDegreeData} from "../../../model/book-damage-degree.model";
   templateUrl: './feedback-page.component.html',
   styleUrls: ['./feedback-page.component.css']
 })
-export class FeedbackPageComponent {
+export class FeedbackPageComponent implements OnInit{
   bookDamageDegree:BookDamageDegreeData={ degree:"PERFECT", addendum:"The books are very well protected"};
   progressBar=false;
   reference:string="";
   userData:any;
+  data:any;
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
               private http:HttpClient,
               private user:authService,
               private snackBar:MatSnackBar,
               private dialog:MatDialog,
               public dialogRef: MatDialogRef<FeedbackPageComponent>) {
-    this.reference = data.reference;
-    this.userData = user.getUserData();
+   this.data = data;
   }
+
+  ngOnInit(): void {
+    this.reference = this.data.reference;
+    this.userData = this.user.getUserData();
+  }
+
   submit(){
     if(this.user.isNoNull(this.userData)){
       this.progressBar=true;

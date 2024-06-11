@@ -124,6 +124,8 @@ mat-card-content{
 }
 .clause{
   color: #555555;
+  padding: 20px;
+
 }
 mat-expansion-panel {
   margin-top: 16px;

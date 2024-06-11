@@ -35,8 +35,8 @@
           <ng-container matColumnDef="isReturn">
             <th *matHeaderCellDef mat-header-cell> Status of return </th>
             <td *matCellDef="let element" mat-cell>
-              <button (click)="openFeedbackPage(element.reference)" *ngIf="element.returnStatus=='WAITING_FOR_VERIFICATION'" mat-icon-button><mat-icon>check</mat-icon></button>
-              <button (click)="bookNoReturn(element.reference)" *ngIf="element.returnStatus=='WAITING_FOR_VERIFICATION'" mat-icon-button><mat-icon>close</mat-icon></button>
+              <button (click)="openFeedbackPage(element.reference)" [matTooltip]="'Confirmation of book return'" *ngIf="element.returnStatus=='WAITING_FOR_VERIFICATION'" mat-icon-button ><mat-icon>check</mat-icon></button>
+              <button (click)="bookNoReturn(element.reference)" [matTooltip]="'Disavowal of book return'" *ngIf="element.returnStatus=='WAITING_FOR_VERIFICATION'" mat-icon-button><mat-icon>close</mat-icon></button>
             </td>
           </ng-container>
 

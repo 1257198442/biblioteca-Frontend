@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -11,7 +11,7 @@ import {authService} from "../../../authService";
   templateUrl: './recharge.component.html',
   styleUrls: ['./recharge.component.css']
 })
-export class RechargeComponent {
+export class RechargeComponent implements OnInit{
   sumOfMoney:number=0;
   transactionRecord:any;
   telephone:string="";
@@ -23,12 +23,19 @@ export class RechargeComponent {
   spinner=false;
   cvv="";
   expirationDate="";
-  constructor(private snackBar: MatSnackBar,
+  data:any;
+  constructor(@Inject(MAT_DIALOG_DATA)data:any,
+              private snackBar: MatSnackBar,
               private user:authService,
               private http:HttpClient,
               private dialog:MatDialog,
               public dialogRef: MatDialogRef<RechargeComponent>) {
-    this.telephone = this.user.getUserData().userTelephone;
+    this.data = data;
+  }
+
+  ngOnInit(): void {
+    this.telephone = this.data.telephone;
+    // this.telephone = this.user.getUserData().userTelephone;
     this.getBalance();
   }
 

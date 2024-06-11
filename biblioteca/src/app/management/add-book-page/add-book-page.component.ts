@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
 import {authService} from "../../authService";
@@ -13,7 +13,7 @@ import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
   templateUrl: './add-book-page.component.html',
   styleUrls: ['./add-book-page.component.css']
 })
-export class AddBookPageComponent {
+export class AddBookPageComponent implements OnInit{
   bookUpload:BookUpLoadModel={name:"",description:"",publisher:"",authorId:[],bookType:[],deposit:0,language:"",isbn:"",issn:"",barcode:""}
   allAuthor:AuthorModel[]=[];
   allType:BookTypeModel[]=[];
@@ -30,11 +30,9 @@ export class AddBookPageComponent {
   constructor(private http:HttpClient,
               private user:authService,
               private dialog:MatDialog,
-              private snackBar: MatSnackBar) {
-    this.init();
-  }
+              private snackBar: MatSnackBar) {}
 
-  init(){
+  ngOnInit(): void {
     this.getAllAuthor();
     this.getAllBookType();
     this.getAllBookLanguage();

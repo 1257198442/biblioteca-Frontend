@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
 import {authService} from "../../authService";
@@ -18,10 +18,10 @@ import {BookPageComponent} from "../book-page/book-page.component";
   templateUrl: './personal-page.component.html',
   styleUrls: ['./personal-page.component.css']
 })
-export class PersonalPageComponent {
+export class PersonalPageComponent implements OnInit{
   userInf:UserClass = new UserClass("","",new Date(),"","","",false,"",new setting(false,false,false,false));
   wallet:number = 0;
-  maxDate: Date;
+  maxDate: Date = new Date();
   userUpdate:any;
   avatarUrl:string = "";
   avatarSelectUrl:string = "";
@@ -35,13 +35,18 @@ export class PersonalPageComponent {
   collectionList:BookModel[] = [];
   lowForBookList:string[] = ["bookID","name","entryTime","status","view","management"];
   userData:any;
+  data:any;
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
               public user:authService,
               private http:HttpClient,
               private dialog:MatDialog,
               private snackBar: MatSnackBar) {
-    this.userData = user.getUserData();
-    this.getUserInf(data.telephone);
+    this.data = data;
+  }
+
+  ngOnInit(): void {
+    this.userData = this.user.getUserData();
+    this.getUserInf(this.data.telephone);
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth();
     const currentDay = new Date().getDay();

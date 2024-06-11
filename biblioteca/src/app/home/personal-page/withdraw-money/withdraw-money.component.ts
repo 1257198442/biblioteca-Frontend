@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -12,7 +12,7 @@ import {endPoints} from "../../../endPoints";
   templateUrl: './withdraw-money.component.html',
   styleUrls: ['./withdraw-money.component.css']
 })
-export class WithdrawMoneyComponent {
+export class WithdrawMoneyComponent implements OnInit{
   sumOfMoney:number=0;
   transactionRecord:any;
   telephone:string="";
@@ -22,6 +22,7 @@ export class WithdrawMoneyComponent {
   transactionDetails={lastName:"", firstName:"", city:"", billingAddress:"", postalCode:""}
   WithdrawMoneyBtn=false;
   spinner=false;
+  data:any;
 
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
               private snackBar: MatSnackBar,
@@ -29,8 +30,11 @@ export class WithdrawMoneyComponent {
               private http:HttpClient,
               private dialog:MatDialog,
               public dialogRef: MatDialogRef<RechargeComponent>) {
+    this.data = data;
+  }
 
-    this.telephone = data.telephone;
+  ngOnInit(): void {
+    this.telephone = this.data.telephone;
     this.getBalance();
   }
 

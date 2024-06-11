@@ -10,7 +10,7 @@
   </mat-form-field>
   <mat-form-field class="tel" style="width: 55%;margin-left: 2%;transform: translateY(8px)">
     <mat-label>Telephone</mat-label>
-    <input [(ngModel)]="loginData.telephone" matInput placeholder="Telephone" type="text"/>
+    <input [(ngModel)]="loginData.telephone" matInput placeholder="Telephone" type="number"/>
     <button (click)="loginData.telephone='';loginData.password=''" *ngIf="loginData.telephone" aria-label="Clear" mat-icon-button
             matSuffix>
       <mat-icon>close</mat-icon>

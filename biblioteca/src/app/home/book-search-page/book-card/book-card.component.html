@@ -1,5 +1,5 @@
 <mat-card class="book" (click)="openBookPage(book.bookID)">
-  <img class="book-image" [src]="book.imgUrl" alt="" [matTooltip]="book.name+' ['+book.language+']'">
+  <img class="book-image" *ngIf="book?.imgUrl" [src]="book.imgUrl" alt="" [matTooltip]="book.name+' ['+book.language+']'">
   <p class="book-name">{{book.name}}&ngsp;[{{book.language}}]</p>
   <p class="book-author" *ngIf="book.author && book.author.length !=0"><span class="author-name" *ngFor="let author of book?.author" [matTooltip]="author.description">{{author.name}}</span></p>
   <p class="book-author" *ngIf="!book.author || book.author.length ===0">no author data</p>

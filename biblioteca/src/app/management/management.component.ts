@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {authService} from "../authService";
 import {endPoints} from "../endPoints";
@@ -20,7 +20,7 @@ import {AuthorPageComponent} from "../home/author-page/author-page.component";
   templateUrl: './management.component.html',
   styleUrls: ['./management.component.css']
 })
-export class ManagementComponent{
+export class ManagementComponent implements OnInit{
   @ViewChild('userPaginator') userPaginator!: MatPaginator;
   @ViewChild('bookPaginator') bookPaginator!: MatPaginator;
   @ViewChild('authorPaginator') authorPaginator!: MatPaginator;
@@ -51,9 +51,11 @@ export class ManagementComponent{
               public user:authService,
               private dialog:MatDialog,
               public router:Router,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar) {}
+
+  ngOnInit(): void {
     this.user.listeningJwtToken();
-    this.userData = user.getUserData();
+    this.userData = this.user.getUserData();
     this.init();
   }
 
@@ -352,7 +354,7 @@ export class ManagementComponent{
       width:"800px",
       minWidth:"800px",
       height:"auto",
-      maxHeight:"600px",
+      maxHeight:"90vh",
       data:{
         telephone:telephone,
       }
@@ -364,7 +366,7 @@ export class ManagementComponent{
       width:"800px",
       minWidth:"800px",
       height:"auto",
-      maxHeight:"900px",
+      maxHeight:"90vh",
       data:{
         bookId:bookId
       }
@@ -376,7 +378,7 @@ export class ManagementComponent{
       width:"700px",
       minWidth:"700px",
       height:"auto",
-      maxHeight:"900px",
+      maxHeight:"90vh",
       data:{
       }
     }).afterClosed().subscribe(() => this.getAllBookList());

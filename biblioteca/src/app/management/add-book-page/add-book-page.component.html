@@ -5,23 +5,23 @@
   <mat-card-content>
     <mat-form-field class="name">
       <mat-label>Book name</mat-label>
-      <input matInput [(ngModel)]="bookUpload.name" >
+      <input matInput [(ngModel)]="bookUpload.name" name="book_name"/>
     </mat-form-field>
     <mat-form-field class="barcode">
       <mat-label>barcode</mat-label>
-      <input matInput [(ngModel)]="bookUpload.barcode" >
+      <input matInput [(ngModel)]="bookUpload.barcode" name="barcode"/>
     </mat-form-field><br>
     <mat-form-field class="isbn">
       <mat-label>ISBN</mat-label>
-      <input matInput #ISBN [disabled]="ISSN.value!=''" [(ngModel)]="bookUpload.isbn" >
+      <input matInput #ISBN [disabled]="ISSN.value!=''" [(ngModel)]="bookUpload.isbn" name="isbn"/>
     </mat-form-field>
     <mat-form-field class="issn">
       <mat-label>ISSN</mat-label>
-      <input matInput #ISSN [disabled]="ISBN.value!=''" [(ngModel)]="bookUpload.issn" >
+      <input matInput #ISSN [disabled]="ISBN.value!=''" [(ngModel)]="bookUpload.issn" name="issn"/>
     </mat-form-field><br>
     <mat-form-field class="deposit">
       <mat-label>Deposit</mat-label>
-      <input matInput type="number" max="100" [(ngModel)]="bookUpload.deposit" >
+      <input matInput type="number" max="100" [(ngModel)]="bookUpload.deposit" name="deposit"/>
     </mat-form-field>
     <mat-form-field class="language" *ngIf="allLanguage">
       <mat-label>Language</mat-label>
@@ -31,11 +31,11 @@
     </mat-form-field><br>
     <mat-form-field class="publisher">
       <mat-label>Book publisher</mat-label>
-      <input matInput [(ngModel)]="bookUpload.publisher" >
+      <input matInput [(ngModel)]="bookUpload.publisher" name="publisher"/>
     </mat-form-field><br>
     <mat-form-field class="description">
       <mat-label>Book description</mat-label>
-      <textarea matInput [(ngModel)]="bookUpload.description" maxlength="5000"></textarea>
+      <textarea matInput [(ngModel)]="bookUpload.description" maxlength="5000" name="book_upload_description"></textarea>
       <mat-hint>Maximum 5000 characters</mat-hint>
     </mat-form-field><br>
     <mat-card-title><h3>Book Author</h3></mat-card-title>
@@ -59,17 +59,17 @@
       <mat-card>
         <mat-form-field class="example-full-width">
           <mat-label>Author Name</mat-label>
-          <input matInput [(ngModel)]="author.name" >
+          <input matInput [(ngModel)]="author.name" name="author_name"/>
         </mat-form-field>
       <mat-form-field class="example-full-width">
         <mat-label>Nationality</mat-label>
-        <input matInput [(ngModel)]="author.nationality" >
+        <input matInput [(ngModel)]="author.nationality" name="nationality"/>
       </mat-form-field>
       <mat-form-field class="example-full-width">
 <!--        <mat-label>Description</mat-label>-->
 <!--        <input matInput [(ngModel)]="author.description" >-->
         <mat-label>Author description</mat-label>
-        <textarea matInput [(ngModel)]="author.description" maxlength="5000"></textarea>
+        <textarea matInput [(ngModel)]="author.description" maxlength="5000" name="author_description"></textarea>
         <mat-hint>Maximum 5000 characters</mat-hint>
       </mat-form-field>
       <button mat-flat-button (click)="addAuthor();stepAuthor=0" *ngIf="author.name!=''">OK</button>
@@ -96,11 +96,11 @@
       <mat-card>
         <mat-form-field class="example-full-width">
           <mat-label>Type Name</mat-label>
-          <input matInput [(ngModel)]="type.name" >
+          <input matInput [(ngModel)]="type.name" name="type_name">
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <mat-label>Description</mat-label>
-          <textarea  matInput [(ngModel)]="type.description" [maxlength]="5000"></textarea>
+          <textarea  matInput [(ngModel)]="type.description" [maxlength]="5000" name="type_description"></textarea>
           <mat-hint>Maximum 5000 characters</mat-hint>
         </mat-form-field>
         <button mat-flat-button class="example-full-width" (click)="addBookType();stepType=0" *ngIf="type.name!=''&&type.description!=''">OK</button>

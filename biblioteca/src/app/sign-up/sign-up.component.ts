@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {HttpClient} from "@angular/common/http";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -15,15 +15,18 @@ import {AlertDialogComponent} from "./alert-dialog.component";
   styleUrls: ['./sign-up.component.css']
 })
 
-export class SignUpComponent {
+export class SignUpComponent implements OnInit{
   registrationData:ReturnDataClass = new ReturnDataClass("","","","");
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('',[Validators.required,Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$')]);
   dialCode:string="+34";
+
   constructor(private http:HttpClient,
               private snackBar:MatSnackBar,
               private dialog:MatDialog,
               public dialogRef: MatDialogRef<SignUpComponent>) {}
+
+  ngOnInit(): void {}
 
   Registration(){
     this.registrationData.email = this.emailFormControl.value == null ? "" : this.emailFormControl.value;

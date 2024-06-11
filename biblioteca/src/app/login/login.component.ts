@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -13,16 +13,16 @@ import {Login} from "../model/login.model";
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  loginData: Login;
+export class LoginComponent implements OnInit{
+  loginData=new Login("","");
   dialCode:string="+34";
      constructor(private http:HttpClient,
                  private snackBar: MatSnackBar,
                  private loginService:authService,
                  private dialog:MatDialog,
                  public dialogRef: MatDialogRef<LoginComponent>) {
-       this.loginData=new Login("","");
      }
+  ngOnInit(): void {}
 
      login(){
        if (this.loginData.telephone != "" && this.loginData.password != "") {

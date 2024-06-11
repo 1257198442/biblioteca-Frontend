@@ -29,9 +29,9 @@
         </ng-container>
       </mat-select>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field *ngIf="search">
       <mat-label>{{placeholder}}</mat-label>
-      <input matInput [(ngModel)]="search">
+      <input matInput [(ngModel)]="search"/>
     </mat-form-field>
     <button mat-fab color="primary" (click)="searchBooks()">
       <mat-icon>search</mat-icon>

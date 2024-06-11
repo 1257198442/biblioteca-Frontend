@@ -1,9 +1,7 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {BookModel, BookTypeModel} from "../../model/book.model";
 import {HttpClient} from "@angular/common/http";
-import {authService} from "../../authService";
-import {MatDialog} from "@angular/material/dialog";
 import {endPoints} from "../../endPoints";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -12,7 +10,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   templateUrl: './book-search-page.component.html',
   styleUrls: ['./book-search-page.component.css']
 })
-export class BookSearchPageComponent {
+export class BookSearchPageComponent implements OnInit{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   pageSize = 16;
   currentPage = 0;
@@ -27,13 +25,13 @@ export class BookSearchPageComponent {
   ENABLEOnly=false;
   showBorrowCount=false;
   constructor(private http:HttpClient,
-              private user:authService,
-              private dialog:MatDialog,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar) {}
+
+  ngOnInit(): void {
     this.searchBooks();
     this.getAllBookType();
-
   }
+
   searchBooks(){
     const searchUrl = this.search != "" ? this.placeholder + "=" + this.search : "" ;
     const lang = this.language == "All" ? "" : "language=" + this.language

@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {endPoints} from "../endPoints";
 import {MatDialog} from "@angular/material/dialog";
@@ -18,7 +18,7 @@ import {SignUpComponent} from "../sign-up/sign-up.component";
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
   storedToken:any;
   userBalance = 0;
   currentDate: Date = new Date()
@@ -56,32 +56,37 @@ export class HomeComponent {
               private datePipe: DatePipe,
               public user:authService,
               private router:Router) {
-    this.init();
   }
 
-  init(){
+  ngOnInit(): void {
     this.updateTime();
+    this.listenerTransforms();
     setInterval(() => {
       this.updateTime();
-      const currentToken = sessionStorage.getItem('jwtToken');
-      if (currentToken !== this.storedToken) {
-        this.storedToken = currentToken != null ? currentToken : "";
-        this.initPage()
-      }
+      this.listenerTransforms();
     }, 1000);
     setInterval(() => {
       this.nextPage();
     }, 10000);
     setInterval(()=>{
       this.getBalance()
-    },5000)
+    },5000);
     this.getRandomBook();
     this.getWeather()
+  }
+
+  listenerTransforms(){
+    const currentToken = sessionStorage.getItem('jwtToken');
+    if (currentToken !== this.storedToken) {
+      this.storedToken = currentToken != null ? currentToken : "";
+      this.initPage()
+    }
   }
 
   initPage(){
     this.userData = this.user.getUserData();
     if(this.user.isNoNull(this.userData)){
+      this.getBalance()
       this.totalPages=2;
       if(this.user.isCLIENT(this.userData)){
         this.getLendingData();

@@ -7,7 +7,7 @@
   <mat-card-content>
     <mat-form-field class="input-sum">
       <mat-label>Sum of money</mat-label>
-      <input matInput type="number" min="0" [(ngModel)]="sumOfMoney">
+      <input matInput type="number" min="0" [(ngModel)]="sumOfMoney" name="sum_of_money">
     </mat-form-field>
     <mat-form-field class="payType">
       <mat-label>Please select a payment method</mat-label>
@@ -20,41 +20,41 @@
     <mat-form-field class="cardNumber">
       <mat-label>Card number</mat-label>
       <input matInput type="text" maxlength="19" appCardNumber placeholder="0000 0000 0000 0000"
-             [(ngModel)]="cardNumber">
+             [(ngModel)]="cardNumber" name="card_number">
     </mat-form-field>
 
     <mat-form-field class="date">
       <mat-label>Expiration Date</mat-label>
       <input matInput type="text" appExpirationDate maxlength="5" placeholder="MM/YY"
-             [(ngModel)]="expirationDate">
+             [(ngModel)]="expirationDate" name="expiration_date">
     </mat-form-field>
 
     <mat-form-field class="cvv">
       <mat-label>CVV</mat-label>
-      <input matInput type="password" maxlength="3" [(ngModel)]="cvv">
+      <input matInput type="password" maxlength="3" [(ngModel)]="cvv" name="cvv">
     </mat-form-field>
 
     <mat-form-field class="date">
       <mat-label>First Name</mat-label>
-      <input matInput [(ngModel)]="transactionDetails.firstName">
+      <input matInput [(ngModel)]="transactionDetails.firstName" name="transactionDetails_firstName">
     </mat-form-field>
     <mat-form-field class="cvv">
       <mat-label>Last Name</mat-label>
-      <input matInput [(ngModel)]="transactionDetails.lastName">
+      <input matInput [(ngModel)]="transactionDetails.lastName" name="transactionDetails_lastName">
     </mat-form-field>
 
     <mat-form-field class="date">
       <mat-label>City</mat-label>
-      <input matInput [(ngModel)]="transactionDetails.city">
+      <input matInput [(ngModel)]="transactionDetails.city" name="transactionDetails_city">
     </mat-form-field>
     <mat-form-field class="cvv">
       <mat-label>Postal Code</mat-label>
-      <input matInput maxlength="5" [(ngModel)]="transactionDetails.postalCode">
+      <input matInput maxlength="5" [(ngModel)]="transactionDetails.postalCode" name="transactionDetails_postalCode">
     </mat-form-field>
 
     <mat-form-field class="cardNumber">
       <mat-label>Billing Address</mat-label>
-      <input matInput [(ngModel)]="transactionDetails.billingAddress">
+      <input matInput [(ngModel)]="transactionDetails.billingAddress" name="transactionDetails_billingAddress">
     </mat-form-field>
     <mat-spinner *ngIf="spinner" class="spinner"></mat-spinner>
 

@@ -5,7 +5,7 @@
     <li><a routerLink="" routerLinkActive="active">Home</a></li>
     <li *ngIf="!isLogin"><a (click)="openSignUpPage()">Sign up</a></li>
     <li *ngIf="admin()&&isLogin"> <a routerLink="management" routerLinkActive="active">Management</a></li>
-    <li *ngIf="isLogin"> <a routerLink="borrow" routerLinkActive="active">Borrow Records</a></li>
+    <li *ngIf="isLogin"> <a routerLink="borrow" routerLinkActive="active">Orders Records</a></li>
     <div *ngIf="isLogin" class="information"><a>{{userInf.name}}</a></div>
     <div *ngIf="!isLogin" class="information"><a (click)="login()"> Login</a></div>
 
@@ -45,7 +45,7 @@
         <a routerLink="management" routerLinkActive="active">Management</a>
       </button>
       <button mat-menu-item *ngIf="isLogin">
-        <a routerLink="borrow" routerLinkActive="active">Borrow Records</a>
+        <a routerLink="borrow" routerLinkActive="active">Orders Records</a>
       </button>
       <button mat-menu-item *ngIf="isLogin">
         <a (click)="openPersonalPage()">Personal page</a>

@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {authService} from "../../authService";
@@ -15,10 +15,10 @@ import {AuthorPageComponent} from "../author-page/author-page.component";
   templateUrl: './book-page.component.html',
   styleUrls: ['./book-page.component.css'],
 })
-export class BookPageComponent {
+export class BookPageComponent implements OnInit{
   book:any|undefined;
   isLogin:boolean=false;
-  bookId:string;
+  bookId:string="";
   selectedImage: string | ArrayBuffer | null = null;
   file: File | undefined;
   bookUpdate:BookUpLoadModel={name:"",description:"",publisher:"",authorId:[],bookType:[],deposit:0,language:"",isbn:"",issn:"",barcode:""};
@@ -36,6 +36,7 @@ export class BookPageComponent {
   isWishBook=false;
   hiddenEdit=false;
   userData:any;
+  data:any;
 
   myFilter = (d: Date | null): boolean => {
     const currentDate = new Date();
@@ -49,9 +50,12 @@ export class BookPageComponent {
               public user:authService,
               private snackBar: MatSnackBar,
               private dialog:MatDialog) {
-    this.bookId=data.bookId;
-    this.userData = user.getUserData();
-    if(user.isNoNull(this.userData)){
+    this.data = data;
+  }
+  ngOnInit(): void {
+    this.bookId=this.data.bookId;
+    this.userData = this.user.getUserData();
+    if(this.user.isNoNull(this.userData)){
       this.isLogin=true
       this.getWallet();
     }

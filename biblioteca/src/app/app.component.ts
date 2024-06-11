@@ -29,21 +29,6 @@ export class AppComponent implements OnInit{
               private user: authService,
               private snackBar: MatSnackBar,
               private router: Router) {
-    this.getLibraryData();
-    setInterval(() => {
-      const currentToken = sessionStorage.getItem('jwtToken');
-      if(currentToken==null){
-        this.isLogin= false;
-        this.storedToken = "";
-        this.router.navigate(['/home']);
-      }
-      if (currentToken !== this.storedToken) {
-        this.storedToken = currentToken !== null ? currentToken : "";
-        this.userData = this.user.getUserData();
-        if(this.user.isNoNull(this.userData)){
-          this.getUserData();
-          this.isLogin=true;}}
-    }, 1000);
   }
 
   login(){
@@ -91,6 +76,21 @@ export class AppComponent implements OnInit{
         this.getLibraryData();
       }
     });
+    this.getLibraryData();
+    setInterval(() => {
+      const currentToken = sessionStorage.getItem('jwtToken');
+      if(currentToken==null){
+        this.isLogin= false;
+        this.storedToken = "";
+        this.router.navigate(['/home']);
+      }
+      if (currentToken !== this.storedToken) {
+        this.storedToken = currentToken !== null ? currentToken : "";
+        this.userData = this.user.getUserData();
+        if(this.user.isNoNull(this.userData)){
+          this.getUserData();
+          this.isLogin=true;}}
+    }, 1000);
   }
 
   getAvatar(){

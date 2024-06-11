@@ -1,4 +1,4 @@
-import {Component, Inject, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
 import {MatPaginator} from "@angular/material/paginator";
@@ -13,7 +13,7 @@ import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
   templateUrl: './author-page.component.html',
   styleUrls: ['./author-page.component.css']
 })
-export class AuthorPageComponent {
+export class AuthorPageComponent implements OnInit{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   authorsBooksData:BookModel[]=[];
   authorData:AuthorModel={authorId:"",name:"",nationality:"",description:"",imgUrl:""};
@@ -26,16 +26,20 @@ export class AuthorPageComponent {
   authorImageUrl:string = ""
   authorImageSelectedUrl: string = "";
   userData:any;
+  data:any;
 
 constructor(@Inject(MAT_DIALOG_DATA)data:any,
             private http:HttpClient,
             public user:authService,
             private dialog:MatDialog,) {
+  this.data = data;
 
-      this.userData = user.getUserData();
-      this.getAuthorData(data.authorId);
-      this.getAuthorsBooks(data.authorId);
-      this.authorId = data.authorId;
+  }
+  ngOnInit(): void {
+    this.userData = this.user.getUserData();
+    this.getAuthorData(this.data.authorId);
+    this.getAuthorsBooks(this.data.authorId);
+    this.authorId = this.data.authorId;
   }
 
   getAuthorData(authorId:string){
@@ -118,10 +122,6 @@ constructor(@Inject(MAT_DIALOG_DATA)data:any,
           }})}}
     this.isEdit=!this.isEdit
   }
-
-  // isAdmin(rol:string){
-  //   return rol === 'ADMINISTRATOR' || rol === 'ROOT'
-  // }
 
   openAlertDialogPage( title:string,message:string,confirm:boolean,input:boolean){
     return this.dialog.open(AlertDialogComponent,{
