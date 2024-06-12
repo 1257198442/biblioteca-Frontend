@@ -84,12 +84,16 @@
       <button class="login-btn" mat-flat-button *ngIf="!user.isNoNull(userData)" (click)="login()">Login</button>
       <button class="signup-btn" mat-flat-button *ngIf="!user.isNoNull(userData)" (click)="signup()">Sign up</button>
       <div *ngIf="user.isNoNull(userData)">
-        <div *ngIf="user.isNoNull(userData)" class="hidden" (click)="display=!display"></div>
+        <div *ngIf="user.isCLIENT(userData)" class="hidden" (click)="display=!display"></div>
+        <div *ngIf="!user.isCLIENT(userData)" class="hidden" (click)="getBenediction()"></div>
         <p class="hello">Hello</p>
-        <p class="name">{{userData.userName}}</p>
+        <p class="name">{{userData.userName}}!!</p>
+        <p class ="txt" *ngIf="!user.isCLIENT(userData)"> {{benediction}}</p>
+        <div *ngIf="user.isCLIENT(userData)">
         <p class="wallet">Balance</p>
         <p *ngIf="display" class="balance"> {{userBalance}} <span class="sym">€</span></p>
         <p *ngIf="!display" class="balance_x"> XX.XX <span class="sym">€</span></p>
+        </div>
       </div>
 
 
