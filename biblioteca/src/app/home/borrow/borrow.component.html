@@ -66,7 +66,7 @@
         <button (click)="readUserByExtensionBeyond30Days(); all=true" *ngIf="user.isAdmin(userData)" mat-flat-button>Show Beyond 30 Days no Return</button>
         <button (click)="sendReminderEmail('send_email_to_user_by_approaching_date'); all=true" *ngIf="user.isAdmin(userData)" mat-flat-button>Send reminder email</button>
         <button (click)="sendReminderEmail('send_email_to_user_by_order_overdue'); all=true" *ngIf="user.isAdmin(userData)" mat-flat-button>Send order overdue email</button>
-        <button (click)="sendReminderEmail('ban_user_by_overdue_max_30day'); all=true" *ngIf="user.isAdmin(userData)" mat-flat-button>Send order beyond 30 Days no Return email</button>
+        <button (click)="sendReminderEmail('ban_user_by_overdue_max_30day'); all=true" *ngIf="user.isAdmin(userData)" mat-flat-button>Ban users with orders that have not been returned for more than 30 days</button>
 
         <table #lendingSort="matSort" [dataSource]="lendingDataSource" class="table-unreturned" mat-table
                matSort>
