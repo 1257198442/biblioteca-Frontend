@@ -7,7 +7,7 @@
     <p>Birthdays: {{userInf.birthdays}}</p>
     <p>description: {{userInf.description}}</p>
     <p>Registration Time: {{userInf.createTime}}</p>
-    <div *ngIf="isLoginUser()||user.isROOT(userData)">
+    <div *ngIf="(isLoginUser()||user.isROOT(userData))&&userInf.role == 'CLIENT'">
       <p class="wallet">E-wallet balance:{{wallet}}€</p>
       <p class="recharge" (click)="openRechargePage()">Recharge</p>
       <p class="billing-records" (click)="openWithdrawMoneyPage()">Cash out</p>
