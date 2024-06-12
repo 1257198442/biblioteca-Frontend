@@ -12,6 +12,7 @@ import {WithdrawMoneyComponent} from "./withdraw-money/withdraw-money.component"
 import {BillingRecordsComponent} from "./billing-records/billing-records.component";
 import {BookModel} from "../../model/book.model";
 import {BookPageComponent} from "../book-page/book-page.component";
+import {FormControl, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-personal-page',
@@ -34,6 +35,8 @@ export class PersonalPageComponent implements OnInit{
   editPasswordState= 0;
   collectionList:BookModel[] = [];
   lowForBookList:string[] = ["bookID","name","entryTime","status","view","management"];
+  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  nameFormControl = new FormControl('', [Validators.required]);
   userData:any;
   data:any;
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
@@ -57,6 +60,8 @@ export class PersonalPageComponent implements OnInit{
     this.http.get(endPoints.user+"/"+telephone + "/profile",this.user.optionsAuthorization2()).subscribe(
       (data:any)=> {
       this.userInf = data.body;
+      this.emailFormControl.setValue(this.userInf.email);
+      this.nameFormControl.setValue(this.userInf.name)
       this.getAvatar();
       this.getWallet();
       this.getCollectionList();
@@ -97,6 +102,8 @@ export class PersonalPageComponent implements OnInit{
   }
 
   updateInformation(){
+    this.userUpdate.email = this.emailFormControl.value == null ? "" : this.emailFormControl.value;
+    this.userUpdate.name =  this.nameFormControl.value == null ? "" : this.nameFormControl.value;
     const userOrigen = {
       name:this.userInf.name,
       description:this.userInf.description,
@@ -175,13 +182,27 @@ export class PersonalPageComponent implements OnInit{
       }
     });
   }
-
+  noNull(){
+      return  this.emailCorrectFormat(1) ? false :
+        !this.nameCorrectFormat();
+  }
   getAvatar(){
     this.http.get(endPoints.avatar + "/" + this.userInf.telephone).subscribe(
       (data:any)=>{
       this.avatarUrl = data.url;
       this.avatarSelectUrl = this.avatarUrl;
     },error=> this.showError(error.status+error.message))
+  }
+
+  emailCorrectFormat(num:number){
+    if(num==1){
+      return this.emailFormControl.hasError('email') && !this.emailFormControl.hasError('required');
+    }else {
+      return this.emailFormControl.hasError('required')
+    }
+  }
+  nameCorrectFormat(){
+    return this.nameFormControl.hasError('required');
   }
 
   onFileSelected(event: any){
