@@ -55,10 +55,6 @@ export class BookPageComponent implements OnInit{
   ngOnInit(): void {
     this.bookId=this.data.bookId;
     this.userData = this.user.getUserData();
-    if(this.user.isNoNull(this.userData)){
-      this.isLogin=true
-      this.getWallet();
-    }
     this.init();
   }
 
@@ -68,6 +64,10 @@ export class BookPageComponent implements OnInit{
     this.getAllBookType();
     this.getAllBookLanguage();
     this.getCollectionListData();
+    if(this.user.isNoNull(this.userData)){
+      this.isLogin=true
+      this.getWallet();
+    }
   }
 
   getBookData(){
@@ -291,7 +291,7 @@ export class BookPageComponent implements OnInit{
     })
   }
 
-  pop2(authorId:string){
+  openAuthorPage(authorId:string){
     this.hiddenEdit = true;
     this.dialog.open(AuthorPageComponent,{
       width:"1000px",
