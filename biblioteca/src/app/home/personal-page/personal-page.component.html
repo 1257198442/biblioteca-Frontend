@@ -33,20 +33,30 @@
       <mat-card>
         <mat-form-field *ngIf="userUpdate">
           <mat-label>Name</mat-label>
-          <input matInput  [(ngModel)]="userUpdate.name">
+          <input matInput  [formControl]="nameFormControl">
+          <mat-error *ngIf="nameCorrectFormat()">
+            name is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field *ngIf="userUpdate">
           <mat-label>Select your birthday date</mat-label>
-          <input matInput [max]="maxDate" [matDatepicker]="picker" [(ngModel)]="userUpdate.birthdays" >
+          <input matInput [max]="maxDate" [matDatepicker]="picker" [ngModel]="userUpdate.birthdays" >
           <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+
         </mat-form-field>
 
         <mat-form-field *ngIf="userUpdate">
           <mat-label>Email</mat-label>
-          <input matInput [(ngModel)]="userUpdate.email" type="email">
+          <input matInput [formControl]="emailFormControl" type="email">
+          <mat-error *ngIf="emailCorrectFormat(1)">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="emailCorrectFormat(2)">
+            Email is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field *ngIf="userUpdate">
@@ -54,7 +64,7 @@
           <textarea matInput  [(ngModel)]="userUpdate.description" maxlength="150"></textarea>
           <mat-hint>Maximum 150 characters</mat-hint>
         </mat-form-field>
-        <button mat-flat-button (click)="updateInformation();editProfileState=0">SAVE</button>
+        <button mat-flat-button (click)="updateInformation();editProfileState=0" [disabled]="!noNull()">SAVE</button>
       </mat-card>
     </mat-expansion-panel>
 

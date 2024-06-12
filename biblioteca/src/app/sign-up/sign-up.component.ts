@@ -17,8 +17,10 @@ import {AlertDialogComponent} from "./alert-dialog.component";
 
 export class SignUpComponent implements OnInit{
   registrationData:ReturnDataClass = new ReturnDataClass("","","","");
+  telephoneFormControl = new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]);
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('',[Validators.required,Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$')]);
+  nameFormControl = new FormControl('',[Validators.required]);
   dialCode:string="+34";
 
   constructor(private http:HttpClient,
@@ -29,6 +31,7 @@ export class SignUpComponent implements OnInit{
   ngOnInit(): void {}
 
   Registration(){
+    this.registrationData.telephone = this.telephoneFormControl.value == null ? "" : this.telephoneFormControl.value;
     this.registrationData.email = this.emailFormControl.value == null ? "" : this.emailFormControl.value;
     this.registrationData.password = this.passwordFormControl.value == null ? "" : this.passwordFormControl.value;
     if(this.notNull()){
@@ -56,9 +59,9 @@ export class SignUpComponent implements OnInit{
   }
 
   notNull(){
-    return this.registrationData.telephone == '' ? false :
+    return this.telephoneCorrectFormat(1) ? false :
       this.emailCorrectFormat(1) ? false :
-        this.registrationData.name == '' ? false :
+        this.nameCorrectFormat() ? false :
           !this.passwordCorrectFormat(1);
   }
 
@@ -68,6 +71,17 @@ export class SignUpComponent implements OnInit{
 
   onSelectCountryDialCode(dialCode:any){
     this.dialCode = dialCode.target.value.dialCode;
+  }
+  nameCorrectFormat(){
+      return this.telephoneFormControl.hasError('required')
+  }
+
+  telephoneCorrectFormat(num:number){
+    if(num==1){
+      return this.telephoneFormControl.hasError('pattern') && !this.telephoneFormControl.hasError('required');
+    }else {
+      return this.telephoneFormControl.hasError('required')
+    }
   }
 
   emailCorrectFormat(num:number){

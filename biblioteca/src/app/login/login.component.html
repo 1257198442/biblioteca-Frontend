@@ -10,21 +10,29 @@
   </mat-form-field>
   <mat-form-field class="tel" style="width: 55%;margin-left: 2%;transform: translateY(8px)">
     <mat-label>Telephone</mat-label>
-    <input [(ngModel)]="loginData.telephone" matInput placeholder="Telephone" type="number"/>
-    <button (click)="loginData.telephone='';loginData.password=''" *ngIf="loginData.telephone" aria-label="Clear" mat-icon-button
-            matSuffix>
-      <mat-icon>close</mat-icon>
-    </button>
+    <input [formControl]="telephoneFormControl" matInput placeholder="Telephone" type="number"/>
+    <button (click)="loginData.telephone='';loginData.password=''" *ngIf="loginData.telephone" aria-label="Clear" mat-icon-button matSuffix>
+      <mat-icon>close</mat-icon></button>
+      <mat-error *ngIf="telephoneCorrectFormat(1)">
+        Please enter a valid telephone
+      </mat-error>
+      <mat-error *ngIf="telephoneCorrectFormat(2)">
+        Telephone is <strong>required</strong>
+      </mat-error>
+
   </mat-form-field>
   <mat-form-field>
     <mat-label>Password</mat-label>
-    <input [(ngModel)]="loginData.password" matInput placeholder="Password" type="password"/>
+    <input [formControl]="passwordFormControl" matInput placeholder="Password" type="password"/>
+    <mat-error *ngIf="passwordCorrectFormat()">
+      Password is <strong>required</strong>
+    </mat-error>
   </mat-form-field>
   <a class="registration" (click)="openSignUpPage()">I don't have an account</a>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-flat-button mat-dialog-close>CANCEL</button>
-  <button (click)="login()" mat-flat-button>LOGIN</button>
+  <button (click)="login()" mat-flat-button [disabled]="!notNull()">LOGIN</button>
 </mat-dialog-actions>
 </main>
 

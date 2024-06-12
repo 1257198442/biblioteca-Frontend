@@ -8,6 +8,7 @@ import {endPoints} from "../endPoints";
 import {countriesDialCodes} from "../model/countryDialCode.model";
 import {SignUpComponent} from "../sign-up/sign-up.component";
 import {Login} from "../model/login.model";
+import {FormControl, Validators} from "@angular/forms";
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -15,6 +16,8 @@ import {Login} from "../model/login.model";
 })
 export class LoginComponent implements OnInit{
   loginData=new Login("","");
+  telephoneFormControl = new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]);
+  passwordFormControl = new FormControl('', [Validators.required]);
   dialCode:string="+34";
      constructor(private http:HttpClient,
                  private snackBar: MatSnackBar,
@@ -24,27 +27,44 @@ export class LoginComponent implements OnInit{
      }
   ngOnInit(): void {}
 
-     login(){
-       if (this.loginData.telephone != "" && this.loginData.password != "") {
-         this.http.post(endPoints.user + "/login", {},this.loginService.optionsAuthorization1(this.loginData,this.dialCode)).subscribe(
-             (response:any) => {
-                const token = response.body.token;
-                if(token!=""||token){
-                  sessionStorage.setItem('jwtToken', token);
-                  this.dialogRef.close();
-                }
-             },
-             (error: any) => {
-               if (error.status == 401) {
-                 this.showError("The account or password is incorrect")
-               } else if(error.status == 403){
-                 this.showError("Your account has been banned.")
-               } else{
-                 this.showError("Wrong network connection")
-               }
-               this.dialogRef.close();
-             })}
+  login(){
+       this.loginData.telephone = this.telephoneFormControl.value == null ? "" : this.telephoneFormControl.value;
+       this.loginData.password = this.passwordFormControl.value == null ? "" : this.passwordFormControl.value;
+       this.http.post(endPoints.user + "/login", {},this.loginService.optionsAuthorization1(this.loginData,this.dialCode)).subscribe(
+         (response:any) => {
+           const token = response.body.token;
+           if(token!=""||token){
+             sessionStorage.setItem('jwtToken', token);
+             this.dialogRef.close();
+            }
+           },
+         (error: any) => {
+           if (error.status == 401) {
+             this.showError("The account or password is incorrect")
+           } else if(error.status == 403){
+             this.showError("Your account has been banned.")
+           } else{
+             this.showError("Wrong network connection")
+           }
+           this.dialogRef.close();
+         })
      }
+
+  notNull(){
+     return  this.telephoneCorrectFormat(1) ? false :
+       !this.passwordCorrectFormat();
+  }
+
+  telephoneCorrectFormat(num:number){
+    if(num==1){
+      return this.telephoneFormControl.hasError('pattern') && !this.telephoneFormControl.hasError('required');
+    }else {
+      return this.telephoneFormControl.hasError('required')
+    }
+  }
+  passwordCorrectFormat(){
+      return this.telephoneFormControl.hasError('required')
+  }
 
   openSignUpPage(){
     this.dialog.open(SignUpComponent, {width:"470px",});

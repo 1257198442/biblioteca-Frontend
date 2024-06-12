@@ -2,26 +2,35 @@
 <h3 mat-dialog-title>Sign up</h3>
 <mat-dialog-content>
   <mat-form-field>
-    <input [(ngModel)]="registrationData.name" matInput placeholder="Name" type="text" name="name"/>
+    <input [formControl]="nameFormControl" matInput placeholder="Name" type="text" name="name"/>
     <button (click)="registrationData.name=''" *ngIf="registrationData.name" aria-label="Clear"  mat-icon-button
             matSuffix>
       <mat-icon>close</mat-icon>
     </button>
+    <mat-error *ngIf="nameCorrectFormat()">
+      Name is <strong>required</strong>
+    </mat-error>
   </mat-form-field>
   <br>
-  <mat-form-field style="width: 33%">
+  <mat-form-field style="width: 33%;    transform: translateY(-8px);">
     <mat-select value="+34" (change)="onSelectCountryDialCode($event)" >
       <mat-option [value]="countryDialCode.dialCode"  *ngFor="let countryDialCode of countriesDialCodes" >
         {{countryDialCode.dialCode}}[{{countryDialCode.abbreviation}}]
       </mat-option>
     </mat-select>
   </mat-form-field>
+
   <mat-form-field style="width: 55%;margin-left: 2%">
-    <input [(ngModel)]="registrationData.telephone" matInput placeholder="Telephone" type="number" name="number"/>
-    <button (click)="registrationData.telephone=''" *ngIf="registrationData.telephone" aria-label="Clear" mat-icon-button
-            matSuffix>
-      <mat-icon>close</mat-icon>
-    </button>
+    <mat-label>Telephone</mat-label>
+    <input [formControl]="telephoneFormControl" matInput placeholder="Telephone" type="number" name="telephone"/>
+    <button (click)="registrationData.telephone=''" *ngIf="registrationData.telephone" aria-label="Clear" mat-icon-button matSuffix>
+      <mat-icon>close</mat-icon></button>
+    <mat-error *ngIf="telephoneCorrectFormat(1)">
+      Please enter a valid telephone
+    </mat-error>
+    <mat-error *ngIf="telephoneCorrectFormat(2)">
+      Telephone is <strong>required</strong>
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field>
