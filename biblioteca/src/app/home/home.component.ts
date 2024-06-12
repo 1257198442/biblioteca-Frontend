@@ -50,6 +50,7 @@ export class HomeComponent implements OnInit{
   totalPages = 1;
   display = true;
   userData:any;
+  benediction="";
   constructor(private http:HttpClient,
               private dialog:MatDialog,
               private snackBar: MatSnackBar,
@@ -61,6 +62,7 @@ export class HomeComponent implements OnInit{
   ngOnInit(): void {
     this.updateTime();
     this.listenerTransforms();
+    this.getBenediction();
     setInterval(() => {
       this.updateTime();
       this.listenerTransforms();
@@ -197,6 +199,7 @@ export class HomeComponent implements OnInit{
   login(){
     this.dialog.open(LoginComponent, {width:"470px",});
   }
+
   signup(){
     this.dialog.open(SignUpComponent, {width:"470px",});
   }
@@ -215,15 +218,24 @@ export class HomeComponent implements OnInit{
           ,error => {
           if(error.status==401){
             sessionStorage.removeItem('jwtToken')
-            // this.userRole = "";
-            // this.userTelephone = "";
             this.userData = this.user.getUserData();
             this.userBalance = 0;
           }
           this.showError("Login has expired")
-        })
+        })}
     }
-    }
+  getBenediction(){
+    const str=["Enjoy your day!",
+      "Have a fantastic day!",
+      "May your day be great!",
+      "Have an amazing day!",
+      "Have a splendid day!",
+      "Have a lovely day!",
+      "Make today awesome!",
+      "Have a good day!"]
+    const sum = Math.floor(Math.random() * str.length);
+    this.benediction = str[sum];
+  }
 
 
   openBookPage(bookId:string){
