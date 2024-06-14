@@ -31,6 +31,7 @@ export class SignUpComponent implements OnInit{
   ngOnInit(): void {}
 
   Registration(){
+    this.registrationData.name = this.telephoneFormControl.value == null ? "" : this.telephoneFormControl.value;
     this.registrationData.telephone = this.telephoneFormControl.value == null ? "" : this.telephoneFormControl.value;
     this.registrationData.email = this.emailFormControl.value == null ? "" : this.emailFormControl.value;
     this.registrationData.password = this.passwordFormControl.value == null ? "" : this.passwordFormControl.value;
