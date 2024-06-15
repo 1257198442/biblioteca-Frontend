@@ -45,8 +45,6 @@ export class AppComponent implements OnInit{
   }
 
   logout(){
-    // this.userTelephone = "";
-    // this.userRole = "";
     this.userData = this.user.initUserData();
     sessionStorage.removeItem('jwtToken');
     this.isLogin = false;

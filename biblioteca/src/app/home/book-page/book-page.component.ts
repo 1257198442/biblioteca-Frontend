@@ -146,6 +146,7 @@ export class BookPageComponent implements OnInit{
   update(){
     this.http.put(endPoints.book + "/" + this.bookId,this.bookUpdate,this.user.optionsAuthorization2()).subscribe(()=>{
       this.updateImage();
+      this.init();
       this.step=0
     },(error)=> {
       this.showError(error.status+error.message);
@@ -160,7 +161,6 @@ export class BookPageComponent implements OnInit{
       this.http.put(endPoints.book + "/" + this.bookId + "/image",formData,this.user.optionsAuthorization2()).subscribe(
         ()=> this.init()
         , error=>this.showError(error.status+error.message))}
-
   }
 
   onFileSelected(event: any): void {
@@ -175,21 +175,25 @@ export class BookPageComponent implements OnInit{
 
   borrow(date:string){
     if(date !== ""){
-      if(this.confirm){
-        const title='A deposit of €' + this.book.deposit + ' will be deducted from the ' + this.userData.userTelephone + ' account after confirmation.';
-        const message = 'Account password';
-        const confirm = true;
-        const input = true;
-        const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
-        dialogPage.afterClosed().subscribe(res => {
-          if(res?.confirm === 'confirm') {
-            this.progressBar = true;
-            this.postLendingData(this.lendingData(date,res.input));
-          }
-        })
-      }else {
-        this.snackBar.open("Please tick the box to confirm the terms and conditions", 'Error', {duration: 5000});
-      }
+        if(this.book.deposit>this.wallet){
+          this.showError("Your wallet balance is low.")
+          return
+        }
+        if(this.confirm){
+          const title='A deposit of €' + this.book.deposit + ' will be deducted from the ' + this.userData.userTelephone + ' account after confirmation.';
+          const message = 'Account password';
+          const confirm = true;
+          const input = true;
+          const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
+          dialogPage.afterClosed().subscribe(res => {
+            if(res?.confirm === 'confirm') {
+              this.progressBar = true;
+              this.postLendingData(this.lendingData(date,res.input));
+            }
+          })
+        }else {
+          this.snackBar.open("Please tick the box to confirm the terms and conditions", 'Error', {duration: 5000});
+        }
     }else {
       this.snackBar.open("Please select a return time!", 'Error', {duration: 5000});
     }

@@ -72,6 +72,16 @@
         </mat-form-field>
 
         <mat-form-field  *ngIf="bookUpdate" class="modify">
+          <mat-label>isbn</mat-label>
+          <input matInput [(ngModel)]="bookUpdate.isbn" [disabled]="book.isbn===''" >
+        </mat-form-field>
+
+        <mat-form-field  *ngIf="bookUpdate"  class="modify">
+          <mat-label>issn</mat-label>
+          <input matInput [(ngModel)]="bookUpdate.issn" [disabled]="book.issn===''">
+        </mat-form-field>
+
+        <mat-form-field  *ngIf="bookUpdate" class="modify">
           <mat-label>Deposit</mat-label>
           <input matInput [(ngModel)]="bookUpdate.deposit" >
         </mat-form-field>

@@ -92,11 +92,16 @@ export class AddBookPageComponent implements OnInit{
 
   uploadBook(){
     if(this.bookUpload.name){
+      if(this.bookUpload.isbn===""&&this.bookUpload.issn==="") {
+        this.showError("Isbn or issn can not be empty");
+      }else if(this.bookUpload.language===''){
+        this.showError("Language can not be empty")
+      }else {
         this.http.post(endPoints.book,this.bookUpload,this.user.optionsAuthorization2()).subscribe(
           () => this.dialog.closeAll()
-        ,error => this.showError(error.status+error.message))
+          ,error => this.showError(error.status+error.message))}
     }else {
-      this.snackBar.open("Please fill in the name of the book", 'Error', {duration: 5000});
+      this.showError("Please fill in the name of the book");
     }
   }
 

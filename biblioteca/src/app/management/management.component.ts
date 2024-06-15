@@ -250,12 +250,12 @@ export class ManagementComponent implements OnInit{
     this.http.post(endPoints.type,this.type,this.user.optionsAuthorization2()).subscribe(()=>{
       this.stepType = 0;
       this.getAllBookType();
-      this.type = {name:"",description:""};
       const title = 'Successfully';
       const message = 'Book type [' + this.type.name + '] added successfully';
       const confirm = false;
       const input = false;
       this.openAlertDialogPage(title,message,confirm,input)
+      this.type = {name:"",description:""};
     });
   }
 

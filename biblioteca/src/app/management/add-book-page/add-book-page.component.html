@@ -5,7 +5,7 @@
   <mat-card-content>
     <mat-form-field class="name">
       <mat-label>Book name</mat-label>
-      <input matInput [(ngModel)]="bookUpload.name" name="book_name"/>
+      <input matInput [(ngModel)]="bookUpload.name"[required]="bookUpload.name===''"  name="book_name"/>
     </mat-form-field>
     <mat-form-field class="barcode">
       <mat-label>barcode</mat-label>
@@ -13,11 +13,11 @@
     </mat-form-field><br>
     <mat-form-field class="isbn">
       <mat-label>ISBN</mat-label>
-      <input matInput #ISBN [disabled]="ISSN.value!=''" [(ngModel)]="bookUpload.isbn" name="isbn"/>
+      <input matInput #ISBN [disabled]="ISSN.value!=''" [(ngModel)]="bookUpload.isbn" [required]="bookUpload.issn===''&&bookUpload.isbn===''" name="isbn"/>
     </mat-form-field>
     <mat-form-field class="issn">
       <mat-label>ISSN</mat-label>
-      <input matInput #ISSN [disabled]="ISBN.value!=''" [(ngModel)]="bookUpload.issn" name="issn"/>
+      <input matInput #ISSN [disabled]="ISBN.value!=''" [(ngModel)]="bookUpload.issn" [required]="bookUpload.issn===''&&bookUpload.isbn===''" name="issn"/>
     </mat-form-field><br>
     <mat-form-field class="deposit">
       <mat-label>Deposit</mat-label>
@@ -25,7 +25,7 @@
     </mat-form-field>
     <mat-form-field class="language" *ngIf="allLanguage">
       <mat-label>Language</mat-label>
-      <mat-select [(ngModel)]="bookUpload.language" >
+      <mat-select [(ngModel)]="bookUpload.language" [required]="bookUpload.language===''" >
         <mat-option *ngFor="let language of allLanguage" [value]="language">{{language}}</mat-option>
       </mat-select>
     </mat-form-field><br>
