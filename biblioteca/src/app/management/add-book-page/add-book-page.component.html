@@ -13,11 +13,11 @@
     </mat-form-field><br>
     <mat-form-field class="isbn">
       <mat-label>ISBN</mat-label>
-      <input matInput #ISBN [disabled]="ISSN.value!=''" [(ngModel)]="bookUpload.isbn" [required]="bookUpload.issn===''&&bookUpload.isbn===''" name="isbn"/>
+      <input matInput #ISBN [(ngModel)]="bookUpload.isbn" [required]="bookUpload.issn===''&&bookUpload.isbn===''" name="isbn"/>
     </mat-form-field>
     <mat-form-field class="issn">
       <mat-label>ISSN</mat-label>
-      <input matInput #ISSN [disabled]="ISBN.value!=''" [(ngModel)]="bookUpload.issn" [required]="bookUpload.issn===''&&bookUpload.isbn===''" name="issn"/>
+      <input matInput #ISSN [(ngModel)]="bookUpload.issn" [required]="bookUpload.issn===''&&bookUpload.isbn===''" name="issn"/>
     </mat-form-field><br>
     <mat-form-field class="deposit">
       <mat-label>Deposit</mat-label>
