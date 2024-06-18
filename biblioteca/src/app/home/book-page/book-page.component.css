@@ -108,6 +108,11 @@ mat-card-content{
 .modify{
   margin-left: 10px;
 }
+.book-name{
+  margin-left: 10px;
+  display: block;
+  width: 100%;
+}
 
 .author-name{
   margin-left: 12px;

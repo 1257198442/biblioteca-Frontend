@@ -12,6 +12,7 @@ import {endPoints} from "../../../endPoints";
   templateUrl: './withdraw-money.component.html',
   styleUrls: ['./withdraw-money.component.css']
 })
+
 export class WithdrawMoneyComponent implements OnInit{
   sumOfMoney:number=0;
   transactionRecord:any;
@@ -42,32 +43,29 @@ export class WithdrawMoneyComponent implements OnInit{
     this.btnStatus(true)
     if(this.rechargeDataIsError()) {
       this.btnStatus(false)
-    }else {
-      this.transactionRecord = this.generateTransactionRecord()
-      const title='Password verification';
-      const message='Account Password.';
-      const input=true;
-      const confirm=true;
-      const dialog = this.openAlertDialogPage(title,message,confirm,input)
-      dialog.afterClosed().subscribe(res => {
-        if(res.confirm == "confirm"){
-          this.transactionRecord.password=res.input;
-          this.http.post(endPoints.wallet+"/withdrawal",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=> {
-            this.btnStatus(false)
-            const title= 'Successes';
-            const message= ':) Cash out '+this.telephone+' with '+this.sumOfMoney+'€ successfully.';
-            const confirm= false;
-            const input = false;
-            this.openAlertDialogPage(title,message,confirm,input)
-            this.dialogRef.close();
-          },error=>{
-            this.btnStatus(false)
-            this.showError(error.status+error.message)
-          })
-        };
-      })
+      return
     }
-  }
+    this.transactionRecord = this.generateTransactionRecord()
+    const title='Password verification';
+    const message='Account Password.';
+    const input=true;
+    const confirm=true;
+    const dialog = this.openAlertDialogPage(title,message,confirm,input)
+    dialog.afterClosed().subscribe(res => {
+      if(res.confirm == "confirm"){
+        this.transactionRecord.password=res.input;
+        this.http.post(endPoints.wallet+"/withdrawal",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=> {
+          this.btnStatus(false)
+          const title= 'Successes';
+          const message= ':) Cash out '+this.telephone+' with '+this.sumOfMoney+'€ successfully.';
+          const confirm= false;
+          const input = false;
+          this.openAlertDialogPage(title,message,confirm,input)
+          this.dialogRef.close();
+          },error=>{
+          this.btnStatus(false)
+          this.showError(error.status+error.message)
+        })}})}
 
   generateTransactionRecord(){
     return {
@@ -95,6 +93,7 @@ export class WithdrawMoneyComponent implements OnInit{
       return false;
     }
   }
+
   public showError(notification: string): void {
       this.snackBar.open(notification, 'Error', {duration: 5000});
   }
@@ -113,8 +112,6 @@ export class WithdrawMoneyComponent implements OnInit{
         message:message,
         confirm:confirm,
         input:input
-      }
-    })
-  }
+      }})}
 
 }

@@ -31,10 +31,8 @@ export class AuthorPageComponent implements OnInit{
 constructor(@Inject(MAT_DIALOG_DATA)data:any,
             private http:HttpClient,
             public user:authService,
-            private dialog:MatDialog,) {
-  this.data = data;
+            private dialog:MatDialog,) {this.data = data;}
 
-  }
   ngOnInit(): void {
     this.userData = this.user.getUserData();
     this.getAuthorData(this.data.authorId);
@@ -50,6 +48,7 @@ constructor(@Inject(MAT_DIALOG_DATA)data:any,
     this.authorImageSelectedUrl = this.authorImageUrl
     this.authorDataByModify = this.modifyAuthorData();})
   }
+
   modifyAuthorData(){
     return {name:this.authorData.name,
             nationality:this.authorData.nationality,
@@ -131,8 +130,6 @@ constructor(@Inject(MAT_DIALOG_DATA)data:any,
         message:message,
         confirm:confirm,
         input:input
-      }
-    })
-  }
+      }})}
 
 }

@@ -1,0 +1,27 @@
+<mat-expansion-panel class="type-panel" [expanded]="stepType === 1" (opened)="stepType=1" (closed)="stepType=0" >
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Add Book Type
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <mat-card>
+    <mat-form-field class="example-full-width">
+      <mat-label>Type Name</mat-label>
+      <input matInput [formControl]="typeNameFormControl">
+      <mat-error *ngIf="typeNameCorrectFormat(1)">
+        Type name cannot be just spaces
+      </mat-error>
+      <mat-error *ngIf="typeNameCorrectFormat(2)">
+        Type name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Description</mat-label>
+      <textarea  matInput [(ngModel)]="type.description" [maxlength]="5000" [required]="type.description===''"></textarea>
+      <mat-hint>Maximum 5000 characters</mat-hint>
+    </mat-form-field>
+
+    <button mat-flat-button class="example-full-width" (click)="addBookType();stepType=0" [disabled]="!noNull()">OK</button>
+  </mat-card>
+</mat-expansion-panel>

@@ -61,10 +61,28 @@
           <input matInput disabled [ngModel]="bookId">
         </mat-form-field>
 
-        <mat-form-field *ngIf="bookUpdate" class="modify">
+        <mat-form-field *ngIf="bookUpdate"  class="book-name">
           <mat-label>Book name</mat-label>
-          <input matInput [(ngModel)]="bookUpdate.name" >
+          <input matInput [formControl]="bookNameFormControl">
+          <mat-error *ngIf="bookNameCorrectFormat(1)">
+            Book name cannot be just spaces
+          </mat-error>
+          <mat-error *ngIf="bookNameCorrectFormat(2)">
+            Book name is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
+
+        <mat-form-field  *ngIf="bookUpdate" class="modify">
+          <mat-label>isbn</mat-label>
+          <input matInput [(ngModel)]="bookUpdate.isbn" [required]="bookUpdate.issn===''&&bookUpdate.isbn===''">
+        </mat-form-field>
+
+        <mat-form-field  *ngIf="bookUpdate"  class="modify">
+          <mat-label>issn</mat-label>
+          <input matInput [(ngModel)]="bookUpdate.issn" [required]="bookUpdate.issn===''&&bookUpdate.isbn===''">
+        </mat-form-field>
+
+        <p style="margin: 0 0 12px 12px;font-size: 18px;color: #FF6B6B" *ngIf="bookUpdate.issn.length===0&&bookUpdate.isbn.length===0">You must fill in either ISSN or ISBN</p>
 
         <mat-form-field  *ngIf="bookUpdate" class="modify">
           <mat-label>Publisher</mat-label>
@@ -72,24 +90,14 @@
         </mat-form-field>
 
         <mat-form-field  *ngIf="bookUpdate" class="modify">
-          <mat-label>isbn</mat-label>
-          <input matInput [(ngModel)]="bookUpdate.isbn" [disabled]="book.isbn===''" >
-        </mat-form-field>
-
-        <mat-form-field  *ngIf="bookUpdate"  class="modify">
-          <mat-label>issn</mat-label>
-          <input matInput [(ngModel)]="bookUpdate.issn" [disabled]="book.issn===''">
-        </mat-form-field>
-
-        <mat-form-field  *ngIf="bookUpdate" class="modify">
           <mat-label>Deposit</mat-label>
-          <input matInput [(ngModel)]="bookUpdate.deposit" >
+          <input matInput [(ngModel)]="bookUpdate.deposit" type="number" max="100" min="0">
         </mat-form-field>
 
-        <mat-form-field *ngIf="bookUpdate&&allLanguage" class="modify">
+        <mat-form-field *ngIf="bookUpdate&&allLanguage" class="modify" >
           <mat-label>Language</mat-label>
-          <mat-select [(ngModel)]="bookUpdate.language" >
-            <mat-option *ngFor="let language of allLanguage" [value]="language">
+          <mat-select [(ngModel)]="bookUpdate.language" [required]="bookUpdate.language===''">
+            <mat-option *ngFor="let language of allLanguage" [value]="language" >
               {{language}}
             </mat-option>
           </mat-select>
@@ -108,16 +116,8 @@
             <button matChipRemove (click)="removeAuthor(author)"><mat-icon>cancel</mat-icon></button>
           </mat-chip>
         </mat-card-content>
-        <br>
-        <mat-form-field *ngIf="allAuthor">
-          <mat-label>Select author</mat-label>
-          <mat-select [(ngModel)]="selectAuthor">
-            <mat-option *ngFor="let author of allAuthor" [value]="author">
-              {{author.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-icon-button *ngIf="selectAuthor" (click)="addAuthor()" class="aa"><mat-icon>add</mat-icon></button>
+        <app-book-add-author-page (_addAuthor)="bookAddAuthor($event)"></app-book-add-author-page>
+        <app-add-author-page ></app-add-author-page>
 
         <mat-card-title><h3>Book Type</h3></mat-card-title>
         <mat-card-content *ngIf="bookUpdate">
@@ -126,25 +126,15 @@
             <button matChipRemove (click)="removeType(type)"><mat-icon>cancel</mat-icon></button>
           </mat-chip>
         </mat-card-content>
-        <br>
-        <mat-form-field *ngIf="allType">
-          <mat-label>Select type</mat-label>
-          <mat-select [(ngModel)]="selectType">
-            <mat-option *ngFor="let type of allType" [value]="type">
-              {{type.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-icon-button (click)="addType()" *ngIf="selectType" class="aa"><mat-icon>add</mat-icon></button>
+        <app-book-add-type-page (_addType)="bookAddType($event)"></app-book-add-type-page>
+        <app-add-type-page ></app-add-type-page>
         <br>
         <img *ngIf="selectedImage" [src]="selectedImage" alt="Selected Image" class="image">
         <br>
         <label for="sf" class="uiInputFile">Select Image</label>
         <input type="file" (change)="onFileSelected($event)" id="sf" class="fileInput">
-
-
       </mat-card>
-      <button mat-flat-button (click)="update()" class="update">UPDATE</button>
+      <button mat-flat-button (click)="update()" [disabled]="!updateBtn()"  class="update">UPDATE</button>
     </mat-expansion-panel>
     <mat-card-content class="end">
       <button mat-flat-button *ngIf="!isWishBook&&user.isCLIENT(userData)" (click)="addWishList()" > ❤ </button>

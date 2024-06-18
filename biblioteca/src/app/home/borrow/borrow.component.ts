@@ -305,6 +305,7 @@ export class BorrowComponent implements OnChanges,OnInit{
   public showError(notification: string){
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
+
 }
 
 

@@ -36,9 +36,11 @@ export class PersonalPageComponent implements OnInit{
   collectionList:BookModel[] = [];
   lowForBookList:string[] = ["bookID","name","entryTime","status","view","management"];
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-  nameFormControl = new FormControl('', [Validators.required]);
+  nameFormControl = new FormControl('', [Validators.required,Validators.pattern('^(?!\\s*$).+')]);
+  passwordFormControl = new FormControl('',[Validators.required,Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$')]);
   userData:any;
   data:any;
+
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
               public user:authService,
               private http:HttpClient,
@@ -115,9 +117,7 @@ export class PersonalPageComponent implements OnInit{
       this.http.put(endPoints.user + "/" + this.userInf.telephone,this.userUpdate,this.user.optionsAuthorization2()).subscribe(
         () => this.getUserInf(this.userInf.telephone)
       ,error => this.showError(error.status+error.message)
-      )
-    }
-  }
+      )}}
 
   updateSetting(){
     const settingOrigen = this.userInf.setting;
@@ -125,37 +125,39 @@ export class PersonalPageComponent implements OnInit{
       this.http.put(endPoints.user + "/" + this.userInf.telephone + "/setting",this.settingUpdate,this.user.optionsAuthorization2()).subscribe(
         () => this.getUserInf(this.userInf.telephone)
         ,error=>this.showError(error.status+error.message)
-      )
-    }
+      )}}
+
+  changePasswordBut(){
+    return !this.passwordCorrectFormat(1)&&!this.passwordCorrectFormat(2)&&this.passwordFormControl.value===this.confirmPassword;
   }
 
   changePassword(){
-    if(this.confirmPassword === this.newPassword){
-      const title = 'Password verification';
-      const message = 'Old Password';
-      const confirm = true;
-      const input = true;
-      const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
-      dialogPage.afterClosed().subscribe(res => {
-        if(res.confirm === 'confirm'){
-          const changePassword= {
-            oldPassword:res.input,
-            newPassword:this.newPassword
-          }
-          this.http.put(endPoints.user + "/" + this.userInf.telephone + "/password",changePassword,this.user.optionsAuthorization2()).subscribe((data:any)=>{
-            const title = 'Reminders';
-            const message ='Password modified successfully';
-            const confirm = false;
-            const input = false;
-            const dialogPage1 =this.openAlertDialogPage(title,message,confirm,input);
-            dialogPage1.afterClosed().subscribe(()=> this.initPassword());
-            },error => this.showError(error.status+error.message))
-        }
-      });
-    }else {
-      this.showError("Confirm Password is not the same as the new password")
+    this.newPassword = this.passwordFormControl.value == null ? "" : this.passwordFormControl.value;
+    if(this.confirmPassword !== this.newPassword){
+      this.showError("Confirm Password is not the same as the new password");
+      return
     }
-  }
+    const title = 'Password verification';
+    const message = 'Old Password';
+    const confirm = true;
+    const input = true;
+    const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
+    dialogPage.afterClosed().subscribe(res => {
+      if(res.confirm === 'confirm'){
+        const changePassword= {
+          oldPassword:res.input,
+          newPassword:this.newPassword
+        }
+        this.http.put(endPoints.user + "/" + this.userInf.telephone + "/password",changePassword,this.user.optionsAuthorization2()).subscribe((data:any)=>{
+          const title = 'Reminders';
+          const message ='Password modified successfully';
+          const confirm = false;
+          const input = false;
+          const dialogPage1 =this.openAlertDialogPage(title,message,confirm,input);
+          dialogPage1.afterClosed().subscribe(()=> this.initPassword());
+          },error => this.showError(error.status+error.message))
+      }
+    });}
 
   initPassword(){
     this.newPassword = "";
@@ -180,12 +182,15 @@ export class PersonalPageComponent implements OnInit{
           dialogPage1.afterClosed().subscribe(()=> this.initPassword())
         },error => this.showError(error.status+error.message));
       }
-    });
-  }
+    });}
+
   noNull(){
-      return  this.emailCorrectFormat(1) ? false :
-        !this.nameCorrectFormat();
+      return  !this.emailCorrectFormat(1)&&
+              !this.emailCorrectFormat(2)&&
+              !this.nameCorrectFormat(1)&&
+              !this.nameCorrectFormat(2);
   }
+
   getAvatar(){
     this.http.get(endPoints.avatar + "/" + this.userInf.telephone).subscribe(
       (data:any)=>{
@@ -199,11 +204,21 @@ export class PersonalPageComponent implements OnInit{
       return this.emailFormControl.hasError('email') && !this.emailFormControl.hasError('required');
     }else {
       return this.emailFormControl.hasError('required')
-    }
-  }
-  nameCorrectFormat(){
-    return this.nameFormControl.hasError('required');
-  }
+    }}
+
+  nameCorrectFormat(num:number){
+    if(num==1){
+      return this.nameFormControl.hasError('pattern') && !this.nameFormControl.hasError('required');
+    }else {
+      return this.nameFormControl.hasError('required')
+    }}
+
+  passwordCorrectFormat(num:number){
+    if(num==1){
+      return this.passwordFormControl.hasError('pattern') && !this.passwordFormControl.hasError('required');
+    }else {
+      return this.passwordFormControl.hasError('required')
+    }}
 
   onFileSelected(event: any){
     this.file = event.target.files[0];
@@ -216,8 +231,7 @@ export class PersonalPageComponent implements OnInit{
       reader.readAsDataURL(this.file);
     }else {
       this.avatarSelectUrl = this.avatarUrl;
-    }
-  }
+    }}
 
   avatarUpdate(){
     if(this.avatarSelectUrl !== ""){
@@ -226,8 +240,7 @@ export class PersonalPageComponent implements OnInit{
       this.http.put(endPoints.avatar + "/" + this.userInf.telephone,formData,this.user.optionsAuthorization2()).subscribe(
         () => this.getUserInf(this.userInf.telephone)
       ,error => this.showError(error.status+error.message))
-    }
-  }
+    }}
 
   getCollectionList(){
     if(this.userInf.role === "CLIENT"){
@@ -239,9 +252,7 @@ export class PersonalPageComponent implements OnInit{
           }else {
             this.showError(error.status+error.message)
           }
-        })
-    }
-  }
+        })}}
 
   remove(bookId:string){
     this.http.put(endPoints.collection+"/"+this.userInf.telephone+"/remove_book",bookId,this.user.optionsAuthorization2()).subscribe(
@@ -293,8 +304,7 @@ export class PersonalPageComponent implements OnInit{
         confirm:confirm,
         input:input
       }
-    })
-  }
+    })}
 
   openBookPage(bookId:string){
     this.dialog.open(BookPageComponent,{
@@ -315,4 +325,5 @@ export class PersonalPageComponent implements OnInit{
   public showError(notification: string): void {
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }
+
 }

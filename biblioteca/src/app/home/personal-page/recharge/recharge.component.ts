@@ -11,6 +11,7 @@ import {authService} from "../../../authService";
   templateUrl: './recharge.component.html',
   styleUrls: ['./recharge.component.css']
 })
+
 export class RechargeComponent implements OnInit{
   sumOfMoney:number=0;
   transactionRecord:any;
@@ -24,6 +25,7 @@ export class RechargeComponent implements OnInit{
   cvv="";
   expirationDate="";
   data:any;
+
   constructor(@Inject(MAT_DIALOG_DATA)data:any,
               private snackBar: MatSnackBar,
               private user:authService,
@@ -35,7 +37,6 @@ export class RechargeComponent implements OnInit{
 
   ngOnInit(): void {
     this.telephone = this.data.telephone;
-    // this.telephone = this.user.getUserData().userTelephone;
     this.getBalance();
   }
 
@@ -43,26 +44,25 @@ export class RechargeComponent implements OnInit{
     this.btnStatus(true)
     if(this.rechargeDataIsError()) {
       this.btnStatus(false)
-    }else {
-      this.transactionRecord={
-        purpose:"Recharge with " + this.card + " card [Card Number:*" + this.cardNumber.replace(/\s+/g, '').slice(-6) + "]",
-        telephone:this.telephone,
-        amount:this.sumOfMoney,
-        transactionDetails:this.transactionDetails
-      }
-      this.http.post(endPoints.wallet+"/recharge",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=> {
-        this.btnStatus(false)
-        const title = 'Successes';
-        const message= ':) Recharge account '+this.telephone+' with '+this.sumOfMoney+'€ successfully.';
-        const confirm= false;
-        const input = false;
-        this.openAlertDialogPage(title,message,confirm,input)
-        this.dialogRef.close();
-      },error => {
-        this.btnStatus(false)
-        this.showError(error.status+error.message)
-      });
+      return;}
+    this.transactionRecord={
+      purpose:"Recharge with " + this.card + " card [Card Number:*" + this.cardNumber.replace(/\s+/g, '').slice(-6) + "]",
+      telephone:this.telephone,
+      amount:this.sumOfMoney,
+      transactionDetails:this.transactionDetails
     }
+    this.http.post(endPoints.wallet+"/recharge",this.transactionRecord,this.user.optionsAuthorization2()).subscribe(()=> {
+      this.btnStatus(false)
+      const title = 'Successes';
+      const message= ':) Recharge account '+this.telephone+' with '+this.sumOfMoney+'€ successfully.';
+      const confirm= false;
+      const input = false;
+      this.openAlertDialogPage(title,message,confirm,input)
+      this.dialogRef.close();
+      },error => {
+      this.btnStatus(false)
+      this.showError(error.status+error.message)
+    });
   }
 
   rechargeDataIsError(){
@@ -106,8 +106,6 @@ export class RechargeComponent implements OnInit{
         message:message,
         confirm:confirm,
         input:input
-      }
-    })
-  }
+      }})}
 
 }

@@ -10,7 +10,6 @@
       <mat-label>Nationality</mat-label>
       <input matInput [(ngModel)]="authorDataByModify.nationality">
     </mat-form-field>
-
     <p class="author-description" *ngIf="!isEdit">Description: {{authorData.description}}</p>
     <mat-form-field class="author-description-edit" *ngIf="isEdit">
       <mat-label>Description</mat-label>
@@ -18,7 +17,6 @@
       <mat-hint>Maximum 5000 characters</mat-hint>
     </mat-form-field>
   </div>
-
   <div class="image-container">
     <img class="author-img" [src]="authorImageSelectedUrl" alt="404_no fount">
     <div class="overlay" *ngIf="isEdit">

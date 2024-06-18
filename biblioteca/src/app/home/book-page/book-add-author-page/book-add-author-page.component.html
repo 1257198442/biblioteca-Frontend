@@ -1,0 +1,10 @@
+<mat-form-field *ngIf="allAuthor" >
+  <mat-label>Select author</mat-label>
+  <mat-select [(ngModel)]="selectAuthor">
+    <mat-option *ngFor="let author of allAuthor" [value]="author">
+      {{author.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<button mat-icon-button *ngIf="selectAuthor" (click)="addAuthor()" class="aa"><mat-icon>add</mat-icon></button>
+<button mat-icon-button (click)="getAllAuthor()" class="aa"><mat-icon>refresh</mat-icon></button>

@@ -36,8 +36,7 @@ export class LoginComponent implements OnInit{
            if(token!=""||token){
              sessionStorage.setItem('jwtToken', token);
              this.dialogRef.close();
-            }
-           },
+            }},
          (error: any) => {
            if (error.status == 401) {
              this.showError("The account or password is incorrect")
@@ -47,8 +46,7 @@ export class LoginComponent implements OnInit{
              this.showError("Wrong network connection")
            }
            this.dialogRef.close();
-         })
-     }
+         })}
 
   notNull(){
      return  this.telephoneCorrectFormat(1) ? false :

@@ -50,6 +50,10 @@ import {LineChartComponent} from "./home/line-chart.component";
 import {NgChartsModule} from "ng2-charts";
 import {AuthorPageComponent} from "./home/author-page/author-page.component";
 import { BookCardComponent } from './home/book-search-page/book-card/book-card.component';
+import { AddAuthorPageComponent } from './management/add-author-page/add-author-page.component';
+import { AddTypePageComponent } from './management/add-type-page/add-type-page.component';
+import { BookAddAuthorPageComponent } from './home/book-page/book-add-author-page/book-add-author-page.component';
+import { BookAddTypePageComponent } from './home/book-page/book-add-type-page/book-add-type-page.component';
 
 
 @NgModule({
@@ -76,7 +80,11 @@ import { BookCardComponent } from './home/book-search-page/book-card/book-card.c
     FeedbackPageComponent,
     LineChartComponent,
     AuthorPageComponent,
-    BookCardComponent
+    BookCardComponent,
+    AddAuthorPageComponent,
+    AddTypePageComponent,
+    BookAddAuthorPageComponent,
+    BookAddTypePageComponent
   ],
   imports: [
     BrowserModule,

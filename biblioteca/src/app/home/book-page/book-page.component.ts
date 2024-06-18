@@ -10,6 +10,8 @@ import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
 import {DatePipe} from "@angular/common";
 import {BorrowPageComponent} from "../borrow-page/borrow-page.component";
 import {AuthorPageComponent} from "../author-page/author-page.component";
+import {FormControl, Validators} from "@angular/forms";
+
 @Component({
   selector: 'app-book-page',
   templateUrl: './book-page.component.html',
@@ -23,10 +25,6 @@ export class BookPageComponent implements OnInit{
   file: File | undefined;
   bookUpdate:BookUpLoadModel={name:"",description:"",publisher:"",authorId:[],bookType:[],deposit:0,language:"",isbn:"",issn:"",barcode:""};
   allLanguage:string[]=[];
-  allAuthor:AuthorModel[]=[];
-  allType:BookTypeModel[] = [];
-  selectAuthor:AuthorModel = {authorId:"",name:"",nationality:"",description:"",imgUrl:""};
-  selectType:BookTypeModel = {name:"",description:""};
   showAuthor:AuthorModel[] = [];
   showType:BookTypeModel[] = [];
   progressBar=false;
@@ -37,6 +35,7 @@ export class BookPageComponent implements OnInit{
   hiddenEdit=false;
   userData:any;
   data:any;
+  bookNameFormControl = new FormControl('', [Validators.required, Validators.pattern('^(?!\\s*$).+')]);
 
   myFilter = (d: Date | null): boolean => {
     const currentDate = new Date();
@@ -60,8 +59,6 @@ export class BookPageComponent implements OnInit{
 
   init(){
     this.getBookData();
-    this.getAllAuthor();
-    this.getAllBookType();
     this.getAllBookLanguage();
     this.getCollectionListData();
     if(this.user.isNoNull(this.userData)){
@@ -76,6 +73,7 @@ export class BookPageComponent implements OnInit{
       this.bookUpdate = JSON.parse(JSON.stringify(data));
       this.bookUpdate.authorId = data.author == undefined?[] : data.author.map((item:any) => item.authorId);
       this.bookUpdate.bookType = data.type == undefined?[] : data.type.map((item:any) => item.name);
+      this.bookNameFormControl.setValue(this.book.name);
       this.showAuthor = data.author;
       this.showType = data.type;
       if(this.book?.imgUrl != undefined){
@@ -84,48 +82,35 @@ export class BookPageComponent implements OnInit{
     },error => this.showError(error.status+error.message));
   }
 
-  getAllAuthor(){
-    this.http.get(endPoints.author).subscribe(
-      (data:any) => this.allAuthor = data
-      ,error => this.showError(error.status+error.message)
-    )
-  }
-
-  getAllBookType(){
-    this.http.get(endPoints.type).subscribe(
-      (data:any) => this.allType = data
-    ,error => this.showError(error.status+error.message))
-  }
-
   getAllBookLanguage(){
     this.http.get(endPoints.book + "/all_language").subscribe(
       (data:any) => this.allLanguage = data
       ,error => this.showError(error.status+error.message))
   }
 
-  addType(){
+  bookAddType(selectType:any){
     if(this.bookUpdate.bookType != undefined && this.bookUpdate.bookType && this.showType != undefined){
-      let index = this.bookUpdate.bookType.findIndex((type:string)=> type === this.selectType?.name);
-      if(index == -1 && this.selectType != undefined){
-        this.bookUpdate.bookType.push(this.selectType.name);
-        this.showType.push(this.selectType)
+      let index = this.bookUpdate.bookType.findIndex((type:string)=> type === selectType?.name);
+      if(index == -1 && selectType != undefined){
+        this.bookUpdate.bookType.push(selectType.name);
+        this.showType.push(selectType)
       }
     }else {
-      this.bookUpdate.bookType=[this.selectType.name]
-      this.showType = [this.selectType]
+      this.bookUpdate.bookType=[selectType.name]
+      this.showType = [selectType]
     }
   }
 
-  addAuthor(){
+  bookAddAuthor(selectAuthor:any){
     if(this.bookUpdate.authorId != undefined && this.bookUpdate.authorId && this.showAuthor != undefined){
-      let index = this.bookUpdate.authorId.findIndex((author:string)=> author === this.selectAuthor?.authorId);
-      if(index == -1 && this.selectAuthor != undefined){
-        this.bookUpdate.authorId.push(this.selectAuthor.authorId);
-        this.showAuthor.push(this.selectAuthor);
+      let index = this.bookUpdate.authorId.findIndex((author:string)=> author === selectAuthor?.authorId);
+      if(index == -1 && selectAuthor != undefined){
+        this.bookUpdate.authorId.push(selectAuthor.authorId);
+        this.showAuthor.push(selectAuthor);
       }
     }else {
-      this.bookUpdate.authorId=[this.selectAuthor.authorId]
-      this.showAuthor = [this.selectAuthor]
+      this.bookUpdate.authorId=[selectAuthor.authorId]
+      this.showAuthor = [selectAuthor]
     }
   }
 
@@ -144,6 +129,16 @@ export class BookPageComponent implements OnInit{
   }
 
   update(){
+    this.bookUpdate.name = this.bookNameFormControl.value == null ? "" : this.bookNameFormControl.value;
+    if(this.bookUpdate.name.trim().length===0){
+      this.showError("Book name is empty")
+      return}
+    if(this.bookUpdate.issn===""&&this.bookUpdate.isbn===""){
+      this.showError("Isbn or issn can not be empty")
+      return}
+    if(this.bookUpdate.deposit < 0){
+      this.showError("Deposit cannot be less that ZERO")
+      return}
     this.http.put(endPoints.book + "/" + this.bookId,this.bookUpdate,this.user.optionsAuthorization2()).subscribe(()=>{
       this.updateImage();
       this.init();
@@ -152,6 +147,14 @@ export class BookPageComponent implements OnInit{
       this.showError(error.status+error.message);
       this.step=0;
     })
+  }
+
+  updateBtn(){
+    return !this.bookNameCorrectFormat(1)&&
+      !this.bookNameCorrectFormat(2)&&
+      (this.bookUpdate.issn!==""|| this.bookUpdate.isbn!=="")&&
+      this.bookUpdate.language!==""&&
+      this.bookUpdate.deposit >= 0;
   }
 
   updateImage(){
@@ -174,29 +177,30 @@ export class BookPageComponent implements OnInit{
   }
 
   borrow(date:string){
-    if(date !== ""){
-        if(this.book.deposit>this.wallet){
-          this.showError("Your wallet balance is low.")
-          return
-        }
-        if(this.confirm){
-          const title='A deposit of €' + this.book.deposit + ' will be deducted from the ' + this.userData.userTelephone + ' account after confirmation.';
-          const message = 'Account password';
-          const confirm = true;
-          const input = true;
-          const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
-          dialogPage.afterClosed().subscribe(res => {
-            if(res?.confirm === 'confirm') {
-              this.progressBar = true;
-              this.postLendingData(this.lendingData(date,res.input));
-            }
-          })
-        }else {
-          this.snackBar.open("Please tick the box to confirm the terms and conditions", 'Error', {duration: 5000});
-        }
-    }else {
-      this.snackBar.open("Please select a return time!", 'Error', {duration: 5000});
+    if(date === ""){
+      this.showError("Please select a return time!")
+      return;
     }
+    if(this.book.deposit>this.wallet){
+      this.showError("Your wallet balance is low.")
+      return
+    }
+    if(this.confirm){
+      const title='A deposit of €' + this.book.deposit + ' will be deducted from the ' + this.userData.userTelephone + ' account after confirmation.';
+      const message = 'Account password';
+      const confirm = true;
+      const input = true;
+      const dialogPage = this.openAlertDialogPage(title,message,confirm,input);
+      dialogPage.afterClosed().subscribe(res => {
+        if(res?.confirm === 'confirm') {
+          this.progressBar = true;
+          this.postLendingData(this.lendingData(date,res.input));
+        }
+      })
+    }else {
+      this.showError("Please tick the box to confirm the terms and conditions.")
+    }
+
   }
 
   lendingData(date:string,password:string){
@@ -257,8 +261,12 @@ export class BookPageComponent implements OnInit{
     ,error => this.showError(error.status + error.message))
   }
 
-  isCLIENT(rol:string){
-    return rol === "CLIENT";
+  bookNameCorrectFormat(num:number){
+    if(num==1){
+      return this.bookNameFormControl.hasError('pattern') && !this.bookNameFormControl.hasError('required');
+    }else {
+      return this.bookNameFormControl.hasError('required')
+    }
   }
 
   openBorrowPage(reference:string){

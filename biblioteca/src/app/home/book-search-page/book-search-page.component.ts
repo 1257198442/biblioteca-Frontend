@@ -10,6 +10,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   templateUrl: './book-search-page.component.html',
   styleUrls: ['./book-search-page.component.css']
 })
+
 export class BookSearchPageComponent implements OnInit{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   pageSize = 16;
@@ -24,6 +25,7 @@ export class BookSearchPageComponent implements OnInit{
   allLanguage=["All","Chinese","English","Spanish","French","German","Latin","Japanese","Arabic","Hindi","Portuguese","Korean","Ukrainian","Italian","Norwegian","Dutch","Polish"];
   ENABLEOnly=false;
   showBorrowCount=false;
+
   constructor(private http:HttpClient,
               private snackBar: MatSnackBar) {}
 

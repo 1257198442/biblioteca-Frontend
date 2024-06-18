@@ -7,7 +7,10 @@
             matSuffix>
       <mat-icon>close</mat-icon>
     </button>
-    <mat-error *ngIf="nameCorrectFormat()">
+    <mat-error *ngIf="nameCorrectFormat(1)">
+      Name cannot be just spaces
+    </mat-error>
+    <mat-error *ngIf="nameCorrectFormat(2)">
       Name is <strong>required</strong>
     </mat-error>
   </mat-form-field>

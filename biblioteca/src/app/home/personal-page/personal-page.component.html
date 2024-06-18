@@ -34,8 +34,11 @@
         <mat-form-field *ngIf="userUpdate">
           <mat-label>Name</mat-label>
           <input matInput  [formControl]="nameFormControl">
-          <mat-error *ngIf="nameCorrectFormat()">
-            name is <strong>required</strong>
+          <mat-error *ngIf="nameCorrectFormat(1)">
+            Name cannot be just spaces
+          </mat-error>
+          <mat-error *ngIf="nameCorrectFormat(2)">
+            Name is <strong>required</strong>
           </mat-error>
         </mat-form-field>
 
@@ -94,15 +97,21 @@
       <mat-card>
         <mat-form-field class="example-full-width" >
           <mat-label>New Password</mat-label>
-          <input matInput type="password" [(ngModel)]="newPassword">
+          <input matInput type="password" [formControl]="passwordFormControl">
+          <mat-error *ngIf="passwordCorrectFormat(1)">
+            Password must contain at least one letter and one number
+          </mat-error>
+          <mat-error *ngIf="passwordCorrectFormat(2)">
+            Password is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
-        <mat-label *ngIf="confirmPassword != '' && newPassword != confirmPassword" class="confirm_password">The password entered twice is different</mat-label>
         <mat-form-field class="example-full-width" >
           <mat-label >Confirm Password</mat-label>
-          <input matInput type="password" [(ngModel)]="confirmPassword">
+          <input matInput type="password" [(ngModel)]="confirmPassword" [required]="confirmPassword===''">
         </mat-form-field>
+        <mat-label *ngIf="confirmPassword != '' && passwordFormControl.value != confirmPassword" class="confirm_password">The password entered twice is different</mat-label>
         <button mat-flat-button *ngIf="user.isROOT(userData)" (click)="resetPassword()" class="resetPassword">Reset Password</button>
-        <button mat-flat-button *ngIf="newPassword.length != 0 && newPassword == confirmPassword" (click)="changePassword()" class="changePassword">OK</button>
+        <button mat-flat-button [disabled]="!changePasswordBut()" (click)="changePassword()" class="changePassword">OK</button>
       </mat-card>
     </mat-expansion-panel>
   </mat-card-content>

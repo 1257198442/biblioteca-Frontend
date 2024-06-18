@@ -109,7 +109,7 @@ label h3{
   margin: 0;
 }
 .resetPassword,.changePassword{
-  width: 50%;
+  width: 100%;
 }
 .setting-item{
   display: block;

@@ -1,0 +1,58 @@
+main{
+  width: 80%;
+  margin: auto;
+}
+
+mat-card{
+  width: 100%;
+  padding: 0 20px 20px 20px;
+  display: inline-block;
+  text-align: center;
+}
+
+table{
+  margin-top: 8px;
+}
+
+.example-full-width{
+  width: 80%;
+}
+
+.add_author{
+  margin-top:20px ;
+}
+
+.search{
+  height: 56px;
+  margin-left: 20px;
+  width: 56px;
+}
+
+h1{
+  margin-top: 20px;
+}
+
+.admin-list{
+  height: 32px;
+}
+
+.check{
+  height: 32px;
+  float: right;
+}
+
+.type-chip{
+  margin: 8px;
+}
+.type-card{
+  text-align: left;
+}
+.type-page-title{
+  font-size: 32px;
+  padding: 12px;
+}
+.type-panel{
+  margin-top: 24px;
+}
+
+

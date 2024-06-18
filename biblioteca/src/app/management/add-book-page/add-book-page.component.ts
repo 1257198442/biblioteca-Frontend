@@ -3,10 +3,10 @@ import {HttpClient} from "@angular/common/http";
 import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
 import {authService} from "../../authService";
 import {AuthorAddData, AuthorModel, BookTypeModel, BookUpLoadModel} from "../../model/book.model";
-
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {endPoints} from "../../endPoints";
 import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
+import {FormControl, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-add-book-page',
@@ -15,39 +15,19 @@ import {AlertDialogComponent} from "../../sign-up/alert-dialog.component";
 })
 export class AddBookPageComponent implements OnInit{
   bookUpload:BookUpLoadModel={name:"",description:"",publisher:"",authorId:[],bookType:[],deposit:0,language:"",isbn:"",issn:"",barcode:""}
-  allAuthor:AuthorModel[]=[];
-  allType:BookTypeModel[]=[];
   showAuthor:AuthorModel[]=[];
   showType:BookTypeModel[]=[];
   allLanguage=[];
-  selectType:BookTypeModel|undefined;
-  selectAuthor:AuthorModel|undefined;
-  stepAuthor=0;
-  stepType= 0;
   type:BookTypeModel = {name:"",description:""}
   author:AuthorAddData = {name:"", description:"", nationality:""}
-
+  bookNameFormControl = new FormControl('', [Validators.required, Validators.pattern('^(?!\\s*$).+')]);
   constructor(private http:HttpClient,
               private user:authService,
               private dialog:MatDialog,
               private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
-    this.getAllAuthor();
-    this.getAllBookType();
     this.getAllBookLanguage();
-  }
-
-  getAllAuthor(){
-    this.http.get(endPoints.author).subscribe(
-      (data:any) => this.allAuthor = data
-    ,error => this.showError(error.status+error.message))
-  }
-
-  getAllBookType(){
-    this.http.get(endPoints.type).subscribe(
-      (data:any) => this.allType = data
-    ,error => this.showError(error.status+error.message))
   }
 
   getAllBookLanguage(){
@@ -56,81 +36,71 @@ export class AddBookPageComponent implements OnInit{
     ,error => this.showError(error.status+error.message))
   }
 
-  addType(){
-    if(this.selectType){
-      if(this.bookUpload.bookType != undefined){
-        let index = this.bookUpload.bookType.findIndex((type:string)=> type === this.selectType?.name);
-        if(index==-1){
-          this.bookUpload.bookType.push(this.selectType.name);
-          this.showType.push(this.selectType);
-        }
-      }else {
-        this.bookUpload.bookType=[this.selectType.name]
-        this.showType=[this.selectType]
+  bookAddType(selectType:any){
+    if(!selectType){
+      this.showError("Book add type error");
+      return}
+    if(this.bookUpload.bookType != undefined){
+      let index = this.bookUpload.bookType.findIndex((type:string)=> type === selectType?.name);
+      if(index==-1){
+        this.bookUpload.bookType.push(selectType.name);
+        this.showType.push(selectType);
       }
     }else {
-      this.showError("error");
+      this.bookUpload.bookType=[selectType.name]
+      this.showType=[selectType]
     }
   }
 
-  bookAddAuthor(){
-    if(this.selectAuthor){
-      if(this.bookUpload.authorId!=undefined){
-        let index = this.bookUpload.authorId.findIndex((author:string)=>author===this.selectAuthor?.authorId);
-        if(index==-1){
-          this.bookUpload.authorId.push(this.selectAuthor.authorId);
-          this.showAuthor.push(this.selectAuthor)
-        }
-      }else {
-        this.bookUpload.authorId=[this.selectAuthor.authorId]
-        this.showAuthor=[this.selectAuthor]
+  bookAddAuthor(selectAuthor:any){
+    if(!selectAuthor){
+      this.showError("Book add author error");
+      return}
+    if(this.bookUpload.authorId!=undefined){
+      let index = this.bookUpload.authorId.findIndex((author:string)=>author===selectAuthor?.authorId);
+      if(index==-1){
+        this.bookUpload.authorId.push(selectAuthor.authorId);
+        this.showAuthor.push(selectAuthor)
       }
     }else {
-      this.showError("error");
+      this.bookUpload.authorId=[selectAuthor.authorId]
+      this.showAuthor=[selectAuthor]
+    }
+  }
+
+  bookNameCorrectFormat(num:number){
+    if(num==1){
+      return this.bookNameFormControl.hasError('pattern') && !this.bookNameFormControl.hasError('required');
+    }else {
+      return this.bookNameFormControl.hasError('required')
     }
   }
 
   uploadBook(){
-    if(this.bookUpload.name){
-      if(this.bookUpload.isbn===""&&this.bookUpload.issn==="") {
-        this.showError("Isbn or issn can not be empty");
-      }else if(this.bookUpload.language===''){
-        this.showError("Language can not be empty")
-      }else {
-        this.http.post(endPoints.book,this.bookUpload,this.user.optionsAuthorization2()).subscribe(
-          () => this.dialog.closeAll()
-          ,error => this.showError(error.status+error.message))}
-    }else {
+    this.bookUpload.name = this.bookNameFormControl.value == null ? "" : this.bookNameFormControl.value;
+    if(this.bookUpload.name.trim().length===0){
       this.showError("Please fill in the name of the book");
-    }
+      return}
+    if(this.bookUpload.deposit < 0){
+      this.showError("Deposit cannot be less that ZERO")
+      return}
+    if(this.bookUpload.isbn===""&&this.bookUpload.issn==="") {
+      this.showError("Isbn or issn can not be empty");
+      return;}
+    if(this.bookUpload.language===''){
+      this.showError("Language can not be empty")
+      return;}
+    this.http.post(endPoints.book,this.bookUpload,this.user.optionsAuthorization2()).subscribe(
+      () => this.dialog.closeAll()
+      ,error => this.showError(error.status+error.message))
   }
 
-  addAuthor(){
-    if (this.author.name!=""){
-      this.http.post(endPoints.author,this.author,this.user.optionsAuthorization2()).subscribe(()=> {
-        this.stepAuthor=0;
-        this.getAllAuthor();
-        const title = 'Successfully';
-        const message = 'Author [' + this.author.name + '] added successfully';
-        const confirm = false;
-        const input = false;
-        this.author = {name:"", description:"", nationality:""};
-        this.openAlertDialogPage(title,message,confirm,input)
-      },error => this.showError(error.status+error.message));
-    }
-  }
-
-  addBookType(){
-    this.http.post(endPoints.type,this.type,this.user.optionsAuthorization2()).subscribe(()=>{
-      this.stepType = 0;
-      this.getAllBookType();
-      const title = 'Successfully';
-      const message = 'Book type [' + this.type.name + '] added successfully';
-      const confirm = false;
-      const input = false;
-      this.type = {name:"",description:""};
-      this.openAlertDialogPage(title,message,confirm,input)
-    },error => this.showError(error.status+error.message));
+  postBtn(){
+    return !this.bookNameCorrectFormat(1)&&
+      !this.bookNameCorrectFormat(2)&&
+      (this.bookUpload.issn!==""|| this.bookUpload.isbn!=="")&&
+      this.bookUpload.language!==""&&
+      this.bookUpload.deposit >= 0;
   }
 
   removeType(type:BookTypeModel){
@@ -154,9 +124,7 @@ export class AddBookPageComponent implements OnInit{
         title:title,
         message:message,
         confirm:confirm,
-        input:input
-      }
-    })
+        input:input}})
   }
 
   public showError(notification: string){

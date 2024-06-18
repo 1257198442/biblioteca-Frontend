@@ -20,7 +20,7 @@ export class SignUpComponent implements OnInit{
   telephoneFormControl = new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]);
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('',[Validators.required,Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$')]);
-  nameFormControl = new FormControl('',[Validators.required]);
+  nameFormControl = new FormControl('',[Validators.required,Validators.pattern('^(?!\\s*$).+')]);
   dialCode:string="+34";
 
   constructor(private http:HttpClient,
@@ -60,10 +60,14 @@ export class SignUpComponent implements OnInit{
   }
 
   notNull(){
-    return this.telephoneCorrectFormat(1) ? false :
-      this.emailCorrectFormat(1) ? false :
-        this.nameCorrectFormat() ? false :
-          !this.passwordCorrectFormat(1);
+    return !this.telephoneCorrectFormat(1)&&
+      !this.telephoneCorrectFormat(2)&&
+      !this.emailCorrectFormat(1)&&
+      !this.emailCorrectFormat(2)&&
+      !this.nameCorrectFormat(1)&&
+      !this.nameCorrectFormat(2)&&
+      !this.passwordCorrectFormat(1)&&
+      !this.passwordCorrectFormat(2);
   }
 
   public showError(notification: string) {
@@ -73,8 +77,12 @@ export class SignUpComponent implements OnInit{
   onSelectCountryDialCode(dialCode:any){
     this.dialCode = dialCode.target.value.dialCode;
   }
-  nameCorrectFormat(){
-      return this.telephoneFormControl.hasError('required')
+  nameCorrectFormat(num:number){
+    if(num==1){
+      return this.nameFormControl.hasError('pattern') && !this.nameFormControl.hasError('required');
+    }else {
+      return this.nameFormControl.hasError('required')
+    }
   }
 
   telephoneCorrectFormat(num:number){

@@ -14,6 +14,7 @@ import {AddBookPageComponent} from "./add-book-page/add-book-page.component";
 import {BookPageComponent} from "../home/book-page/book-page.component";
 import {AuthorAddData, BookTypeModel} from "../model/book.model";
 import {AuthorPageComponent} from "../home/author-page/author-page.component";
+import {FormControl, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-management',
@@ -35,11 +36,7 @@ export class ManagementComponent implements OnInit{
   selectRolesList:string[]=[];
   origenLibraryData:any;
   updateLibraryData:any;
-  type:BookTypeModel = {name:"",description:""}
   typeNeedModify:BookTypeModel = {name:"",description:""}
-  author:AuthorAddData = {name:"", description:"", nationality:""}
-  stepType= 0;
-  step= 0;
   stepTypeModify = 0
   typeNameDisabled = false;
   userDataSource:any;
@@ -174,11 +171,9 @@ export class ManagementComponent implements OnInit{
 
   shouldDisplayElement(element:any){
     if (this.userData.userTelephone === element.telephone) {
-      return false;
-    }
+      return false;}
     if (element.role === 'ROOT') {
-      return false;
-    }
+      return false;}
     return !(this.user.isADMINISTRATOR(this.userData) && (element.role === 'ADMINISTRATOR' || element.role === 'BAN'));
   }
 
@@ -246,19 +241,6 @@ export class ManagementComponent implements OnInit{
       ,error => this.showError(error.status+error.message));
   }
 
-  addBookType(){
-    this.http.post(endPoints.type,this.type,this.user.optionsAuthorization2()).subscribe(()=>{
-      this.stepType = 0;
-      this.getAllBookType();
-      const title = 'Successfully';
-      const message = 'Book type [' + this.type.name + '] added successfully';
-      const confirm = false;
-      const input = false;
-      this.openAlertDialogPage(title,message,confirm,input)
-      this.type = {name:"",description:""};
-    });
-  }
-
   deleteType(name:string){
     const title = 'Warning';
     const message = 'Are you sure you want to delete the type [' + name + ']? This may result in the loss of the category for books that were already in that genre!';
@@ -305,20 +287,6 @@ export class ManagementComponent implements OnInit{
         ,error => this.showError(error.status+error.message))}});
   }
 
-  addAuthor(){
-    if (this.author.name !== ""){
-      this.http.post(endPoints.author,this.author,this.user.optionsAuthorization2()).subscribe((authorData:any)=> {
-        const title = 'Reminders';
-        const message = ':) Author ' + authorData.body.name + ' added successfully.';
-        const confirm = false;
-        const input = false;
-        const dialogRef = this.openAlertDialogPage(title,message,confirm,input)
-        dialogRef.afterClosed().subscribe(()=> {
-          this.getAuthorList();
-          this.step = 0;});
-      },error => this.showError(error.status + error.message));}
-  }
-
   needModify(type:any){
     this.typeNeedModify = type;
     this.stepTypeModify = 1;
@@ -339,14 +307,6 @@ export class ManagementComponent implements OnInit{
   initTypeNeedModify(){
     this.typeNeedModify = {name:"",description:""};
     this.typeNameDisabled = false;
-  }
-
-  clear(){
-    this.author = {
-      name:"",
-      description:"",
-      nationality:""
-    };
   }
 
   openPersonalPage(telephone:string){

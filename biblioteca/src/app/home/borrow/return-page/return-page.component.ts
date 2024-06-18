@@ -18,8 +18,7 @@ export class ReturnPageComponent implements OnInit{
               private http:HttpClient,
               private snackBar:MatSnackBar,
               private user:authService,) {
-    this.data = data;
-  }
+    this.data = data;}
 
   ngOnInit(): void {
     this.reference = this.data.reference;
@@ -31,6 +30,7 @@ export class ReturnPageComponent implements OnInit{
         (data:any) => this.returnData=data.body
       ,error => this.showError(error))
   }
+
   public showError(notification: string){
     this.snackBar.open(notification, 'Error', {duration: 5000});
   }

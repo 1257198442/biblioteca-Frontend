@@ -36,4 +36,9 @@ mat-card-content{
   margin-left: 5%;
   width: 35%;
 }
+.btn{
+  width: 30%;
+  margin-left:10% ;
+  margin-right: 10%;
+}
 

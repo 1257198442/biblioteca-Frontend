@@ -1,0 +1,11 @@
+<br>
+<mat-form-field *ngIf="allType">
+  <mat-label>Select type</mat-label>
+  <mat-select [(ngModel)]="selectType">
+    <mat-option *ngFor="let type of allType" [value]="type">
+      {{type.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<button mat-icon-button (click)="addType()" *ngIf="selectType" class="aa"><mat-icon>add</mat-icon></button>
+<button mat-icon-button (click)="getAllBookType()" class="aa"><mat-icon>refresh</mat-icon></button>

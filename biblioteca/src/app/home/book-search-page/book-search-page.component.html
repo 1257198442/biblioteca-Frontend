@@ -43,7 +43,6 @@
       <mat-checkbox [(ngModel)]="showBorrowCount">Show Borrow Count</mat-checkbox>
     </section>
   </mat-card>
-
   <mat-card class="bookSearch">
     <ng-container *ngFor="let b of paginatedBooks">
       <app-book-card [book]="b" [showBorrowCount]="showBorrowCount"

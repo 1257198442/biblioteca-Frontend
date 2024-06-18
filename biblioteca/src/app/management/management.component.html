@@ -124,29 +124,7 @@
           </table>
           <mat-paginator #authorPaginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
         </mat-card-content>
-        <mat-expansion-panel [expanded]= "step === 1" (opened)="step=1" (closed)="step=0;clear()" class="add_author">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Add Author
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-form-field class="example-full-width">
-            <mat-label>Author Name</mat-label>
-            <input matInput [(ngModel)]="author.name" >
-          </mat-form-field>
-          <mat-form-field class="example-full-width">
-            <mat-label>Nationality</mat-label>
-            <input matInput [(ngModel)]="author.nationality" >
-          </mat-form-field>
-          <mat-form-field class="example-full-width">
-            <mat-label>Description</mat-label>
-            <textarea  matInput [(ngModel)]="author.description" [maxlength]="5000"></textarea>
-            <mat-hint>Maximum 5000 characters</mat-hint>
-          </mat-form-field>
-
-          <br>
-          <button mat-flat-button  (click)="addAuthor();step=0" *ngIf="author.name!=''">OK</button>
-        </mat-expansion-panel>
+        <app-add-author-page (uploadOk)="getAuthorList()"></app-add-author-page>
       </mat-tab>
 
       <mat-tab label="Book Type">
@@ -158,29 +136,7 @@
             <mat-label [matTooltip]="type.description" (click)="needModify(type)" >{{type.name}}</mat-label>
             <button matChipRemove (click)="deleteType(type.name)" class="add"><mat-icon>cancel</mat-icon></button>
           </mat-chip>
-
-          <mat-expansion-panel class="type-panel" [expanded]="stepType === 1" (opened)="stepType=1" (closed)="stepType=0" >
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Add Book Type
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-card>
-              <mat-form-field class="example-full-width">
-                <mat-label>Type Name</mat-label>
-                <input matInput [(ngModel)]="type.name" >
-              </mat-form-field>
-
-              <mat-form-field class="example-full-width">
-                <mat-label>Description</mat-label>
-                <textarea  matInput [(ngModel)]="type.description" [maxlength]="5000"></textarea>
-                <mat-hint>Maximum 5000 characters</mat-hint>
-              </mat-form-field>
-
-              <button mat-flat-button class="example-full-width" (click)="addBookType();stepType=0" *ngIf="type.name!=''&&type.description!=''">OK</button>
-            </mat-card>
-          </mat-expansion-panel>
-
+          <app-add-type-page (uploadOk)="getAllBookType()"></app-add-type-page>
           <mat-expansion-panel class="type-panel" [expanded]="stepTypeModify === 1" (opened)="stepTypeModify=1" (closed)="stepTypeModify=0;initTypeNeedModify()" >
             <mat-expansion-panel-header>
               <mat-panel-title>

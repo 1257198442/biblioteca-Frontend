@@ -1,0 +1,27 @@
+<mat-expansion-panel [expanded]= "step === 1" (opened)="step=1" (closed)="step=0;clear()" class="add_author">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Add Author
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <mat-form-field class="example-full-width">
+    <mat-label>Author Name</mat-label>
+    <input matInput [formControl]="authorNameFormControl">
+    <mat-error *ngIf="authorNameCorrectFormat(1)">
+      Author name cannot be just spaces
+    </mat-error>
+    <mat-error *ngIf="authorNameCorrectFormat(2)">
+      Author name is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label>Nationality</mat-label>
+    <input matInput [(ngModel)]="author.nationality" >
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label>Description</mat-label>
+    <textarea  matInput [(ngModel)]="author.description" [maxlength]="5000"></textarea>
+    <mat-hint>Maximum 5000 characters</mat-hint>
+  </mat-form-field><br>
+  <button (click)="addAuthor();step=0" [disabled]="!notNull()" mat-flat-button >OK</button>
+</mat-expansion-panel>

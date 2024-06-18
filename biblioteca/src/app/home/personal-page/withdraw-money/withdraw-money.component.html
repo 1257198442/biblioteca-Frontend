@@ -45,9 +45,7 @@
       <mat-label>Billing Address</mat-label>
       <input matInput [(ngModel)]="transactionDetails.billingAddress">
     </mat-form-field>
-
     <mat-spinner *ngIf="spinner" class="spinner"></mat-spinner>
-
     <button mat-flat-button [disabled]="WithdrawMoneyBtn" (click)="withdrawMoney()">Confirm</button>
     <button mat-flat-button mat-dialog-close>Close</button>
   </mat-card-content>
