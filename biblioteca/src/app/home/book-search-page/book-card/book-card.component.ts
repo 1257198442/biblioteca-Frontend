@@ -22,7 +22,7 @@ export class BookCardComponent implements OnInit{
       width:"800px",
       minWidth:"800px",
       height:"auto",
-      maxHeight:"900px",
+      maxHeight:"90vh",
       data:{
         bookId:bookId,
       }

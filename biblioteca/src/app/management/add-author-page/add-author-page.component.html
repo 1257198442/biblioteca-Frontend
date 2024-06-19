@@ -23,5 +23,5 @@
     <textarea  matInput [(ngModel)]="author.description" [maxlength]="5000"></textarea>
     <mat-hint>Maximum 5000 characters</mat-hint>
   </mat-form-field><br>
-  <button (click)="addAuthor();step=0" [disabled]="!notNull()" mat-flat-button >OK</button>
+  <button class="example-full-width bt" (click)="addAuthor();step=0" [disabled]="!notNull()" mat-flat-button >OK</button>
 </mat-expansion-panel>

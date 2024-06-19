@@ -16,6 +16,10 @@ mat-card-content{
   width: 60%;
 }
 
+mat-chip{
+  margin: 8px;
+}
+
 .description,.publisher{
   width: 75%;
 }
@@ -40,5 +44,9 @@ mat-card-content{
   width: 30%;
   margin-left:10% ;
   margin-right: 10%;
+}
+chips{
+  padding: 10px 0px;
+  width: 100%;
 }
 

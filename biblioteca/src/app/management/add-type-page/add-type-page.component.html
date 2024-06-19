@@ -4,7 +4,6 @@
       Add Book Type
     </mat-panel-title>
   </mat-expansion-panel-header>
-  <mat-card>
     <mat-form-field class="example-full-width">
       <mat-label>Type Name</mat-label>
       <input matInput [formControl]="typeNameFormControl">
@@ -22,6 +21,5 @@
       <mat-hint>Maximum 5000 characters</mat-hint>
     </mat-form-field>
 
-    <button mat-flat-button class="example-full-width" (click)="addBookType();stepType=0" [disabled]="!noNull()">OK</button>
-  </mat-card>
+    <button mat-flat-button class="example-full-width bt" (click)="addBookType();stepType=0" [disabled]="!noNull()">OK</button>
 </mat-expansion-panel>

@@ -45,26 +45,33 @@
       <textarea matInput [(ngModel)]="bookUpload.description" maxlength="5000" name="book_upload_description"></textarea>
       <mat-hint>Maximum 5000 characters</mat-hint>
     </mat-form-field><br>
+
     <mat-card-title><h3>Book Author</h3></mat-card-title>
     <mat-card-content>
-      <mat-chip *ngFor="let author of showAuthor" >
-        <mat-label>{{author.name}}</mat-label>
-        <button matChipRemove (click)="removeAuthor(author)" class="add"><mat-icon>cancel</mat-icon></button>
-      </mat-chip><br>
-  <app-book-add-author-page (_addAuthor)="bookAddAuthor($event)"></app-book-add-author-page>
+      <div class="chips">
+        <mat-chip *ngFor="let author of showAuthor" >
+          <mat-label>{{author.name}}</mat-label>
+          <button matChipRemove (click)="removeAuthor(author)" class="add"><mat-icon>cancel</mat-icon></button>
+        </mat-chip>
+      </div><br>
+      <app-book-add-author-page (_addAuthor)="bookAddAuthor($event)"></app-book-add-author-page>
+      <app-add-author-page></app-add-author-page>
     </mat-card-content>
-    <br>
-    <app-add-author-page></app-add-author-page>
-    <br>
+
+
   <mat-card-title><h3>Book Type</h3></mat-card-title>
-  <mat-card-content>
-    <mat-chip *ngFor="let type of showType" >
-      <mat-label>{{type.name}}</mat-label>
-      <button matChipRemove (click)="removeType(type)" class="add"><mat-icon>cancel</mat-icon></button>
-    </mat-chip><br>
-  <app-book-add-type-page (_addType)="bookAddType($event)"></app-book-add-type-page>
-  </mat-card-content>
-    <app-add-type-page></app-add-type-page>
+    <mat-card-content>
+      <div class="chips">
+        <mat-chip *ngFor="let type of showType" >
+          <mat-label>{{type.name}}</mat-label>
+          <button matChipRemove (click)="removeType(type)" class="add"><mat-icon>cancel</mat-icon></button>
+      </mat-chip>
+      </div><br>
+      <app-book-add-type-page (_addType)="bookAddType($event)"></app-book-add-type-page>
+      <app-add-type-page></app-add-type-page>
+    </mat-card-content>
+
+
     <br>
     <button mat-dialog-close mat-raised-button class="btn">Close</button>
     <button mat-flat-button (click)="uploadBook()"  [disabled]="!postBtn()" class="btn">OK</button>

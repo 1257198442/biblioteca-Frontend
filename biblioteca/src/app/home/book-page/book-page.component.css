@@ -59,6 +59,7 @@ mat-expansion-panel{
 .image{
   margin-bottom: 20px;
   margin-left: 0;
+  display: block;
 }
 .fileInput{
   position: absolute;
@@ -141,5 +142,8 @@ mat-expansion-panel {
 }
 .description-t {
 height: 150px;
+}
+mat-chip{
+  margin: 8px;
 }
 

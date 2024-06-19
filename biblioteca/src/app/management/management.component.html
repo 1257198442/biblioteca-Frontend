@@ -132,10 +132,12 @@
           <mat-card-title class="type-page-title">
             All Type
           </mat-card-title>
-          <mat-chip *ngFor="let type of allType" class="type-chip">
-            <mat-label [matTooltip]="type.description" (click)="needModify(type)" >{{type.name}}</mat-label>
-            <button matChipRemove (click)="deleteType(type.name)" class="add"><mat-icon>cancel</mat-icon></button>
-          </mat-chip>
+          <div class="chips">
+            <mat-chip *ngFor="let type of allType" class="type-chip">
+              <mat-label [matTooltip]="type.description" (click)="needModify(type)" >{{type.name}}</mat-label>
+              <button matChipRemove (click)="deleteType(type.name)" class="add"><mat-icon>cancel</mat-icon></button>
+            </mat-chip>
+          </div>
           <app-add-type-page (uploadOk)="getAllBookType()"></app-add-type-page>
           <mat-expansion-panel class="type-panel" [expanded]="stepTypeModify === 1" (opened)="stepTypeModify=1" (closed)="stepTypeModify=0;initTypeNeedModify()" >
             <mat-expansion-panel-header>
@@ -143,20 +145,16 @@
                 Modify Book Type
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <mat-card>
               <mat-form-field class="example-full-width">
                 <mat-label>Type Name</mat-label>
                 <input matInput [disabled]="typeNameDisabled" [(ngModel)]="typeNeedModify.name" >
               </mat-form-field>
-
               <mat-form-field class="example-full-width">
                 <mat-label>Description</mat-label>
                 <textarea  matInput [(ngModel)]="typeNeedModify.description" [maxlength]="5000"></textarea>
                 <mat-hint>Maximum 5000 characters</mat-hint>
               </mat-form-field>
-
-              <button mat-flat-button class="example-full-width" (click)="modifyBookType();stepTypeModify=0" *ngIf="typeNeedModify.name!=''&&typeNeedModify.description!=''">OK</button>
-            </mat-card>
+              <button mat-flat-button class="example-full-width bt" (click)="modifyBookType();stepTypeModify=0" *ngIf="typeNeedModify.name!=''&&typeNeedModify.description!=''">OK</button>
           </mat-expansion-panel>
         </mat-card>
       </mat-tab>

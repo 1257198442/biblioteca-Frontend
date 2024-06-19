@@ -116,6 +116,7 @@
             <button matChipRemove (click)="removeAuthor(author)"><mat-icon>cancel</mat-icon></button>
           </mat-chip>
         </mat-card-content>
+        <br>
         <app-book-add-author-page (_addAuthor)="bookAddAuthor($event)"></app-book-add-author-page>
         <app-add-author-page ></app-add-author-page>
 
@@ -126,8 +127,10 @@
             <button matChipRemove (click)="removeType(type)"><mat-icon>cancel</mat-icon></button>
           </mat-chip>
         </mat-card-content>
+        <br>
         <app-book-add-type-page (_addType)="bookAddType($event)"></app-book-add-type-page>
         <app-add-type-page ></app-add-type-page>
+
         <br>
         <img *ngIf="selectedImage" [src]="selectedImage" alt="Selected Image" class="image">
         <br>
@@ -141,7 +144,6 @@
       <button mat-flat-button *ngIf="isWishBook&&user.isCLIENT(userData)" (click)="removeWishList()"> Remove</button>
       <button mat-dialog-close mat-raised-button >Close</button>
     </mat-card-content>
-
 </mat-card>
 
 
